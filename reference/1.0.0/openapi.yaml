@@ -63,6 +63,8 @@ paths:
           $ref: '#/components/responses/200-CreateSessionTokenResponsePayloadSamples'
         '401': 
           $ref: '#/components/responses/401-AuthenticationErrorPayloadSample'
+      x-proxy-name: Create Session
+      x-group-name: Security Services
   '/onlinebanklogin/establish':
     post:
       tags:
@@ -95,6 +97,8 @@ paths:
           $ref: '#/components/responses/200-EstablishResponsePayloadSamples'
         '401': 
           $ref: '#/components/responses/401-AuthenticationErrorPayloadSample'
+      x-proxy-name: Establish
+      x-group-name: Online Bank Login
   '/onlinebanklogin/validate':
     post:
       tags:
@@ -127,6 +131,8 @@ paths:
           $ref: '#/components/responses/200-ValidateResponsePayloadSamples'
         '401':
           $ref: '#/components/responses/401-ComponentFallbackPayloadSample'
+      x-proxy-name: Validate
+      x-group-name: Online Bank Login
 components:
   parameters:
     apiKeyParam:
