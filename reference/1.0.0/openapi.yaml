@@ -1,371 +1,732 @@
-################################################################################
-# Copyrights © 2021-2022 Fiserv, Inc. or its affiliates. 
-# Fiserv is a trademark of Fiserv, Inc., 
-# registered or used in the United States and foreign countries, 
-# and may or may not be registered in your country.  
-# All trademarks, service marks, 
-# and trade names referenced in this 
-# material are the property of their 
-# respective owners. This work, including its contents 
-# and programming, is confidential and its use 
-# is strictly limited. This work is furnished only 
-# for use by duly authorized licensees of Fiserv, Inc. 
-# or its affiliates, and their designated agents 
-# or employees responsible for installation or 
-# operation of the products. Any other use, 
-# duplication, or dissemination without the 
-# prior written consent of Fiserv, Inc. 
-# or its affiliates is strictly prohibited. 
-# Except as specified by the agreement under 
-# which the materials are furnished, Fiserv, Inc. 
-# and its affiliates do not accept any liabilities 
-# with respect to the information contained herein 
-# and are not responsible for any direct, indirect, 
-# special, consequential or exemplary damages 
-# resulting from the use of this information. 
-# No warranties, either express or implied, 
-# are granted or extended by this work or 
-# the delivery of this work
-################################################################################
+openapi: 3.0.3
 
-openapi: 3.0.2
+# This is your document metadata.
 info:
-  title: Dev Portal Tenant APIs.
-  description: To onboard properly into the Fiserv Developer Studio as a tenant each
-    product must support these APIs so that we can retrieve product specific API specifications
-    and documentation.
-  version: 1.0.0
-servers:
-  - url: https://tenants.fiserv.com/
+  version: 4.7.0
+  title: ConnectPayAPI Specification
+  description: |
+    ### Fiserv ConnectPayAPI solution exposes a set of services to facilitate ACH account vaulting, authorization and settlement. 
+    ConnectPayAPI follows an enroll first and pay later model. Consumer needs to first enroll himself into the system by providing demographic and ACH payment information. The payment information is tokenized and ACH transactions can be sent in by merchants using the ConnectPay token.
+    Authorization, Risking, Settlement are all inhouse functionalities to TeleCheck.
+
+    ConnectPayAPI solution enforces a full payload encryption. Details of encryption and decryption can be found at [Encryption/Decryption Methodology](https://escmconfluence.1dc.com/pages/viewpage.action?pageId=498239026).
+
+  termsOfService: https://merchants.fiserv.com/en-us/privacy/?utm_source=firstdataus
+  contact:
+    name: API Support
+    email: dl-na-cp-leads@fiserv.com
+# Servers where this API is hosted
+servers: 
+  - url: https://cat.api.firstdata.com/gateway/v2/connectpay
+    description: Certification Environment
+  - url: https://prod.api.firstdata.com/gateway/v2/connectpay
+    description: Production Environment
+tags:
+  - name: Security Services
+    description: These set of services are used to assist in the encryption of request payload and pulling consumer information. These set of services should always be called from merchants secure server.
+  - name: Online Bank Login
+    description: These set of services are used to assist online bank login use cases
+  - name: Consumer Profile Management
+    description: These set of services assist in managing consumer profile information **create** **update** **authenticate** **close**
+  - name: ACH Transactions
+    description: These set of services are for processing ACH Transactions
 paths:
-  /v1/products:
-    get:
-      tags:
-        - Tenant
-      x-group-name: Tenant
-      x-proxy-name: products
-      summary: Returns tenant provider API.
-      operationId: TenantProviderID
-      responses:
-        200:
-          description: Tenant provider response. <a href="https://fiserv.com" rel="noopener noreferrer" target="_blank">external link</a> <a href="../docs?path=docs/getting-started/setup-tenant/setup-tenant.md">Setup Tenant</a>
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/TenantProviderResponse'
-            text/yaml:
-              schema:
-                $ref: '#/components/schemas/TenantProviderResponse'
-            text/plain:
-              schema:
-                $ref: '#/components/schemas/TenantProviderResponse'
-  /v1/apis:
+  '/security/createsessiontoken':
     post:
       tags:
-        - Specs
-      x-group-name: Specs
-      x-proxy-name: apis
-      summary: Returns OpenAPI Spec.
-      operationId: APISpecProviderId
+        - Security Services
+      summary: |
+                PreRequisite before invoking any business functionality on ConnectPayAPI
+      description: |
+                    Create session token response would contain response in unencrypted / clear / readable format. RSA public key from the response of this call would be used to encrypt the AES key and IV for the subsequent calls. So till the end of this call we would not have all the necessary pieces of information for doing a full payload encryption / decryption. 
+                    Create session token also returns a tokenID which would be required for initializing the ConnectPaySDK.
+      parameters:
+        - $ref: '#/components/parameters/contentTypeParam'
+        - $ref: '#/components/parameters/apiKeyParam'
+        - $ref: '#/components/parameters/timestampParam'
+        - $ref: '#/components/parameters/authorizationParam'
+        - $ref: '#/components/parameters/corelationIDParam'
+        - $ref: '#/components/parameters/isSecureCallParam'
       requestBody:
-        description: Filter Request
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/SpecsFilterRequest'
-        required: false
+              oneOf:
+                - $ref: '#/components/schemas/ClearCreateSessionTokenRequest'
+            examples:
+              ClearRequestPayloadSample: 
+                $ref: '#/components/examples/ClearCreateSessionTokenRequestPayloadSample'
+              ClearRequestWithAccountInformationPayloadSample: 
+                $ref: '#/components/examples/ClearCreateSessionTokenRequestWithAccountInformationPayloadSample'
       responses:
-        200:
-          description: ""
-          content: {}
-      x-codegen-request-body-name: Body
-  /v1/docs:
-    get:
+        '200':
+          $ref: '#/components/responses/200-CreateSessionTokenResponsePayloadSamples'
+        '401': 
+          $ref: '#/components/responses/401-AuthenticationErrorPayloadSample'
+  '/onlinebanklogin/establish':
+    post:
       tags:
-        - Documents
-      x-group-name: Documents
-      x-proxy-name: docs
-      summary: Returns Docs in markdown format.
-      operationId: DocsAPIId
+        - Online Bank Login
+      summary: 'First step in the online bank login process.'
+      description: |
+        Establish a session for online bank login operation.
       parameters:
-        - in: query
-          name: path
-          schema:
-            type: string
-          required: true
-          description: Markdown document path
+        - $ref: '#/components/parameters/contentTypeParam'
+        - $ref: '#/components/parameters/apiKeyParam'
+        - $ref: '#/components/parameters/timestampParam'
+        - $ref: '#/components/parameters/authorizationParam'
+        - $ref: '#/components/parameters/clientTokenParam'
+        - $ref: '#/components/parameters/corelationIDParam'
+        - $ref: '#/components/parameters/isSecureCallParam'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              oneOf:
+                - $ref: '#/components/schemas/EncryptedRequest'
+                - $ref: '#/components/schemas/ClearEstablishRequest'
+            examples:
+              EncryptedRequestPayloadSample: 
+                $ref: '#/components/examples/EncryptedEstablishRequestPayloadSample'
+              ClearRequestPayloadSample: 
+                $ref: '#/components/examples/ClearEstablishRequestPayloadSample'
       responses:
-        200:
-          description: ""
-          content: {}
-      x-codegen-request-body-name: Body
-  /v1/layouts:
-    get:
+        '200':
+          $ref: '#/components/responses/200-EstablishResponsePayloadSamples'
+        '401': 
+          $ref: '#/components/responses/401-AuthenticationErrorPayloadSample'
+  '/onlinebanklogin/validate':
+    post:
       tags:
-        - Layout
-      x-group-name: Layout
-      x-proxy-name: layouts
-      summary: Returns the product page layout.
-      operationId: LayoutAPIId
+        - Online Bank Login
+      summary: 'Third step in the online bank login process'
+      description: |
+        After user has logged into bank account and selected account to used for enrollment/transaction, this call is used to fetch the consumer and/or banking information on file from the bank.
+      parameters:
+        - $ref: '#/components/parameters/contentTypeParam'
+        - $ref: '#/components/parameters/apiKeyParam'
+        - $ref: '#/components/parameters/timestampParam'
+        - $ref: '#/components/parameters/authorizationParam'
+        - $ref: '#/components/parameters/clientTokenParam'
+        - $ref: '#/components/parameters/corelationIDParam'
+        - $ref: '#/components/parameters/isSecureCallParam'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              oneOf:
+                - $ref: '#/components/schemas/EncryptedRequest'
+                - $ref: '#/components/schemas/ClearValidateRequest'
+            examples:
+              EncryptedRequestPayloadSample:
+                $ref: '#/components/examples/EncryptedValidateRequestPayloadSample'
+              ClearRequestPayloadSample:
+                $ref: '#/components/examples/ClearValidateRequestPayloadSample'
       responses:
-        200:
-          description: This text will appear as description of your response body.
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/PageLayoutResponse'
-            text/yaml:
-              schema:
-                $ref: '#/components/schemas/PageLayoutResponse'
-            text/plain:
-              schema:
-                $ref: '#/components/schemas/PageLayoutResponse'
-  /live:
-    get:
-      tags:
-        - HealthCheck
-      x-group-name: HealthCheck
-      x-proxy-name: live
-      summary: Health check probes.
-      operationId: healthCheckId
-      x-links: 
-        link1: 
-          description: Developer Studio
-          flag: external
-          url:  'https://dev-developerstudio.fiserv.com/'
-        link2: 
-          description: Setup tenant
-          flag: internal
-          url:  '../docs?path=docs/getting-started/setup-tenant/setup-tenant.md'
-        link3: 
-          description: Fiserv Portal
-          flag: external
-          url:  'https://fiserv.com'
-      responses:
-        200:
-          description: Health check.
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/LiveProbeResponse'
-  
+        '200':
+          $ref: '#/components/responses/200-ValidateResponsePayloadSamples'
+        '401':
+          $ref: '#/components/responses/401-ComponentFallbackPayloadSample'
 components:
+  parameters:
+    apiKeyParam:
+      name: Api-Key
+      description: An API key is a string value passed by a client app or sdk to the ConnectPayAPI. The key uniquely identifies the client app or sdk.
+      in: header
+      required: true
+      schema:
+        type: string
+    timestampParam:
+      name: Timestamp
+      description: Epoch timestamp in the request initiating system.
+      in: header
+      required: true
+      schema:
+        type: string
+    authorizationParam:
+      name: Authorization
+      description: Authorization information for the request. Format- `HMAC {hmacToken}`. If Client-Token HTTP Header is not passed, this header is mandatory.
+      in: header
+      required: false
+      schema:
+        type: string
+    clientTokenParam:
+      name: Client-Token
+      description: This is OAuth token generated by ConnectPayAPI security services. If Authorization header is not passed, this header is mandatory.
+      in: header
+      required: false
+      schema:
+        type: string
+    contentTypeParam:
+      name: Content-Type
+      description: application/JSON is the only supported type.
+      in: header
+      required: true
+      schema:
+        type: string
+    corelationIDParam:
+      name: corelationID
+      description: For server to server partner setup, Merchant Application Server needs to pass the same reference transaction id in this header for transaction tracking or related transactions.
+      in: header
+      required: false
+      schema:
+        type: string
+    isSecureCallParam:
+      name: isSecureCall
+      description: For server to server partner setup, Merchant Application Server needs to send value Y in this header.
+      in: header
+      required: false
+      schema:
+        type: string
   schemas:
-    LiveProbeResponse:
+    DecryptedCPAPIGenericResponse:
       type: object
       properties:
-        message:
+        transactionStatus:
+          description: Overall status of the call.
           type: string
-          description: Message
-    PageLayoutResponse:
-      type: array
-      items:
-        type: object
-        properties:
-          hero:
-            type: array
-            items:
-              type: object
-              properties:
-                descrption:
-                  type: string
-                  description: Descrption
-                image:
-                  type: string
-                  description: Image
-            description: Hero
-          journey Cards:
-            type: array
-            items:
-              type: object
-              properties:
-                journeyCard:
-                  type: array
-                  items:
-                    type: object
-                    properties:
-                      contextualNavigationCards:
-                        type: array
-                        items:
-                          type: object
-                          properties:
-                            contextualNavigationCard:
-                              type: array
-                              items:
-                                type: object
-                                properties:
-                                  description:
-                                    type: string
-                                    description: Description
-                                  link:
-                                    type: array
-                                    items:
-                                      type: object
-                                      properties:
-                                        type:
-                                          type: string
-                                          description: Type
-                                        uri:
-                                          type: string
-                                          description: URI
-                                    description: Link
-                                  title:
-                                    type: string
-                                    description: Title
-                              description: ContextualNavigationCard
-                        description: ContextualNavigationCards
-                      description:
-                        type: string
-                        description: Description
-                      link:
-                        type: array
-                        items:
-                          type: object
-                          properties:
-                            type:
-                              type: string
-                              description: Type
-                            uri:
-                              type: string
-                              description: URI
-                        description: Link
-                      title:
-                        type: string
-                        description: Title
-                  description: JourneyCard
-            description: JourneyCards
-    SpecsFilterRequest:
-      type: object
-      properties:
-        categories:
+          enum:
+            - APPROVED
+            - DECLINED
+            - ERROR
+          maxItems: 1
+          minItems: 1
+          minLength: 5
+          maxLength: 8
+          nullable: false
+        transactionStatusCode:
+          type: number
+          description: Unique code signifying detailed transaction status.
+          maxItems: 1
+          minItems: 1
+          minLength: 1
+          maxLength: 3
+          nullable: false
+        referenceTransactionID:
+          type: string
+          description: Unique ID for each Transaction which could be used to trace a transaction. *** It is highly recommended that merchants should store the ID on their side. This can be used for researching the transactions in case issue arises ***
+          maxItems: 1
+          minItems: 1
+          minLength: 37
+          maxLength: 42
+          nullable: false
+        transactionStatusDescription:
+          type: string
+          description: Short description of statusCode.
+          maxItems: 1
+          minItems: 1
+          minLength: 1
+          maxLength: 30
+          nullable: true
+        responseVerbiage:
+          type: string
+        nonce:
+          type: string
+        errorDetails:
           type: array
           items:
             type: object
             properties:
-              name:
+              errorCode:
                 type: string
-                description: Name
-              subcategories:
-                type: array
-                items:
-                  type: object
-                  properties:
-                    name:
-                      type: string
-                      description: Name
-                description: Subcategories
-          description: Categories
-    TenantProviderResponse:
-      type: object
-      properties:
-        brand:
-          type: string
-          description: Brand
-        brandDescription:
-          type: string
-          description: BrandDescription
-        brandLogoURL:
-          type: string
-          description: BrandLogoURL
-        categories:
+              errorField:
+                type: string
+              errorReason:
+                type: string
+        account:
           type: array
           items:
             type: object
             properties:
-              name:
+              accountStatus:
                 type: string
-                description: Name
-              subcategories:
+              accountStatusDesc:
+                type: string
+              accountValidationDetails:
                 type: array
                 items:
                   type: object
                   properties:
-                    name:
+                    validationCode:
                       type: string
-                      description: Name
-                    value:
+                    validationCodeDesc:
                       type: string
-                      description: Value
-                description: Subcategories
-              value:
-                type: string
-                description: Value
-          description: Categories
-        name:
-          type: string
-          description: Name
-        product:
+                    validationCodeStatus:
+                      type: string
+              userDetails:
+                type: object
+                properties:
+                  firstName:
+                    type: string
+                  lastName:
+                    type: string
+                  email:
+                    type: string
+              userAddressDetails:
+                type: object
+                properties:
+                  street:
+                    type: string
+                  street2:
+                    type: string
+                  state:
+                    type: string
+                  city:
+                    type: string
+                  postalCode:
+                    type: string
+              userIdentificationDetails:
+                type: object
+                properties:
+                  routingNumber:
+                    type: string
+                  accountNumber:
+                    type: string
+                  onlineBankTransactionId:
+                    type: string
+                  bankName:
+                    type: string
+                  connectPayPaymentNumber:
+                    type: string
+                  corporateAccountFlag:
+                    type: string
+                  userPhone:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        number:
+                          type: string
+        teleCheckDetails:
           type: object
           properties:
-            apiSpecification:
+            transactionId:
               type: string
-              description: APISpecification 
+            tckResponseCode:
+              type: string
+            approvalCode:
+              type: string
+            denialRecordNumber:
+              type: string
+            displayText:
+              type: string
+            sequenceId:
+              type: string
+            ecaOfferCode:
+              type: string
+            achTransactionStatus:
+              type: string
+            amount:
+              type: string
+            currency:
+              type: string
+            responseMessageMisc:
+              type: string
+            dateTime:
+              type: string
+            returnCheckFee:
+              type: string
+            returnCheckNote:
+              type: string
+            key:
+              type: string
+            accessId:
+              type: string
+            merchantId:
+              type: string
             description:
               type: string
-              description: Description
-            documentation:
+            merchantReference:
               type: string
-              description: Documentation
-            featured:
-              type: boolean
-              description: Featured
-            layout:
+            paymentType:
               type: string
-              description: Layout
-            logoURL:
+            returnUrl:
               type: string
-              description: LogoURL
-          description: Product
-        solution:
+            cancelUrl:
+              type: string
+            requestSignature:
+              type: string
+            onlineBankTransactionId:
+              type: string
+        customer:
+          type: object
+          properties:
+            fdCustomerID:
+              type: string
+            externalID:
+              type: string
+        security:
+          type: object
+          properties:
+            tokenID:
+              type: string
+              description: Token ID associated Public Key generated for SDK initialization.
+              maxItems: 1
+              minItems: 0
+              minLength: 1
+              maxLength: 32
+              nullable: true
+            issuedOn:
+              type: number
+              description: Date on which the Public Key was issued.
+              maxItems: 1
+              minItems: 0
+              minLength: 1
+              maxLength: 15
+              nullable: true
+            expiresInSeconds:
+              type: number
+              description: Defines the number of seconds after which the Public Key expires.
+              maxItems: 1
+              minItems: 0
+              minLength: 1
+              maxLength: 9
+              nullable: true
+            publicKey:
+              type: string
+              description: RSA Public Key to encrypt AES Key and IV.
+              maxItems: 1
+              minItems: 0
+              minLength: 1
+              maxLength: 500
+              nullable: true
+            alogorithm:
+              type: string
+              description: Encryption algorithm that should be used with the Public Key for doing the field level encryption.
+              maxItems: 1
+              minItems: 0
+              minLength: 1
+              maxLength: 40
+              nullable: true
+            status:
+              type: string
+              description: Status of the token ID.
+              maxItems: 1
+              minItems: 0
+              minLength: 1
+              maxLength: 32
+              nullable: true
+    EncryptedRequest:
+      description: The clear payload needs to be encrypted with AES encryption and value provided in componentDelta attribute of clear payload. AES Key and IV needs to be encrypted with RSA Public Key from Create Session Token call and needs to be provided in componentX and componentY attributes in the encrypted payload.
+      type: object
+      properties:
+        componentX:
           type: string
-          description: Solution
-        title:
+          description: The value of this attribute should be AES Encryption Key value encrypted with RSA Public Key.
+        componentY:
           type: string
-          description: Title
+          description: The value of this attribute should be AES Encryption IV value encrypted with RSA Public Key.
+        componentDelta:
+          type: string
+    EncryptedResponse:
+      description: The clear response payload encrypted with AES encryption and value provided in componentDelta attribute. AES Key and IV remains the same as for the request payload encryption.
+      type: object
+      properties:
+        componentDelta:
+          type: string
+        componentFallBack:
+          description: The CPAPI generic response is passed as an escaped string in this attribute in case there was an issue with encryption/decryption or network communication error within Fiserv.
+          type: string
+    ClearEstablishRequest:
+      type: object
+      properties:
+        customer:
+          type: object
+          properties:
+            fdCustomerID:
+              type: string
+              description: Consumer’s fdCustomerID associated with this request.
+        account:
+          type: array
+          items:
+            type: object
+            properties:
+              type:
+                type: string
+                description: Value "ACH" always needs to be passed in this field.
+              callType:
+                type: string
+                description: Defines the type of data pulled from bank. Should be agreed upon value during onboarding of a merchant. Allowable values are "pwmb.getBankInfo", "pwmb.getConsumerInfo", "pwmb.getAll"
+              returnUrl:
+                type: string
+                description: When using a web interface, after the user completes the online bank login service, this url will be loaded to the browser with all the online bank login parameters appended to it.
+    ClearValidateRequest:
+      type: object
+      properties:
+        customer:
+          type: object
+          properties:
+            fdCustomerID:
+              type: string
+        account:
+          type: array
+          items:
+            type: object
+            properties:
+              type:
+                type: string
+              userIdentificationDetails:
+                type: object
+                properties:
+                  onlineBankTransactionId:
+                    type: string
+              requestSignature:
+                type: string
+              callType:
+                type: string
+              oblTransactionType:
+                type: string
+              merchantReference:
+                type: string
+              status:
+                type: string
+              panel:
+                type: string
+              paymentType:
+                type: string
+              paymentProviderType:
+                type: string
+              paymentAccountVerified:
+                type: string
+              returnUrl:
+                type: string
+    ClearCreateSessionTokenRequest:
+      type: object
+      properties:
+        security:
+          type: object
+          properties:
+            publicKeyRequired:
+              type: string
+              description: Value should be 'true' is RSA public key is being requested
+        account:
+          description: account array object is only required in CreateSessionToken call request body only for microDepositValidation, update, close consumer requests. For other requests account section is optional and not required.
+          type: array
+          items:
+            type: object
+            properties:
+              type:
+                type: string
+                description: Value "ACH" always needs to be passed in this field.
+              fdAccountID:
+                type: string
+                description: fdAccountID for the consumers account is required in CreateSessionToken call request body only for microDepositValidation, update, close consumer requests. For other requests account section is optional and not required.
+  examples:
+    EncryptedEstablishRequestPayloadSample:
+      value:
+        componentX: ju5PPi7k4K2jtI0z47qKcHnQGRrIymN+dK+PVlWjKyufoaUHJqjqOAbjsQZ0q3sLciBkEVWm5jGbWQoGf2e9Us+yfYu8ua2hz3wOIRSymHdx8qKuoexQiKhLWnp/GAL0+TIdzb/CvNijuJkOe1XSzEoFdFjYgRNMV8LJM3G/izn48kZm9gexM/iJenJyzwFoqXJc7EcWrC3C0RlkBF5jTgZzTGCvBpxDq4pw3CjFDsGvFy5Gg26B1KRcRDctrFpLV697QAW//hWyS91NYB68S3TIo/B6/LfUjj9bOY3fM+i+5BY2oV7zbLLyvA+CKfLFRBoXtevfBJyndrUDFD0EBA==
+        componentY: CqTTfUbNR66rGRhAKGqnEYJBGona07l2lvV7s7sEG97b0eohkWCqcw/XhCSy2+A6rYxhhuvvQ+orjfmCzssIl4Uz+4gu3GE3lfMGeykjRuhipyV+fjnjOBcw/VDOg3IXffr4Oe/isRYTZ5gp0uht89Rpu9VXfWktKH5uEJiZdNyD9TY+xZ2Ekwc6trDjTSFPbxVNaITJGqMBFsuWXGcHvaqoo6bC7Q9r/pVsUHq5KDdoi0zuW+xBilMxk/hZE8fBifXkUZ+KGGibyHlseh/uH9U32UHgvyVSsiUjI1j44WNulRnvfN7Mi5HozJTiYbX2iGrL5QQLKkQIWQPWV37VgQ==
+        componentDelta: OEIyAAUL1Py3/oKewtNXswtkYOw+krJP0EFhucFWFXSug0TCV7kqL67Mk5PTzVqNWTAyPl0lK6ac2EBK3kxskC6WpzpJI4qSv7/9JSfQ7zAYUiKAKPobIXpHAJ7BuHSMlMkv/6UTJvdIRsgDaqfAbD5pqG5KDbRzXpzmLIpVJnGyPCkwwm+F36wGbe1ccuvzDHNL77e6XSmm2LpzO/NAGJRjMGXdLQ9XKFvjr/gK0ruO2gdqglomlvy3MG8BSvLCAYkOL1CAB4wF8ovsfpOAAV92KRdqxeMISntCc0/Fxg7fs9JILmn4ZkgiSgha1CsN
+    ClearEstablishRequestPayloadSample:
+      value:
+        account: 
+          - type: ACH
+            callType: pwmb.getAll
+            returnUrl: https://qa.api.firstdata.com/gateway/v2/connectpay/static/v1/build/index.html#/CPBankOnlyWidget/
+        customer:
+          fdCustomerID: CPHZ5J15829135992040000839bCQExj
+    EncryptedValidateRequestPayloadSample:
+      value:
+        componentX: ju5PPi7k4K2jtI0z47qKcHnQGRrIymN+dK+PVlWjKyufoaUHJqjqOAbjsQZ0q3sLciBkEVWm5jGbWQoGf2e9Us+yfYu8ua2hz3wOIRSymHdx8qKuoexQiKhLWnp/GAL0+TIdzb/CvNijuJkOe1XSzEoFdFjYgRNMV8LJM3G/izn48kZm9gexM/iJenJyzwFoqXJc7EcWrC3C0RlkBF5jTgZzTGCvBpxDq4pw3CjFDsGvFy5Gg26B1KRcRDctrFpLV697QAW//hWyS91NYB68S3TIo/B6/LfUjj9bOY3fM+i+5BY2oV7zbLLyvA+CKfLFRBoXtevfBJyndrUDFD0EBA==
+        componentY: CqTTfUbNR66rGRhAKGqnEYJBGona07l2lvV7s7sEG97b0eohkWCqcw/XhCSy2+A6rYxhhuvvQ+orjfmCzssIl4Uz+4gu3GE3lfMGeykjRuhipyV+fjnjOBcw/VDOg3IXffr4Oe/isRYTZ5gp0uht89Rpu9VXfWktKH5uEJiZdNyD9TY+xZ2Ekwc6trDjTSFPbxVNaITJGqMBFsuWXGcHvaqoo6bC7Q9r/pVsUHq5KDdoi0zuW+xBilMxk/hZE8fBifXkUZ+KGGibyHlseh/uH9U32UHgvyVSsiUjI1j44WNulRnvfN7Mi5HozJTiYbX2iGrL5QQLKkQIWQPWV37VgQ==
+        componentDelta: OEIyAAUL1Py3/oKewtNXswtkYOw+krJP0EFhucFWFXSug0TCV7kqL67Mk5PTzVqNWTAyPl0lK6ac2EBK3kxskC6WpzpJI4qSv7/9JSfQ7zAYUiKAKPobIXpHAJ7BuHSMlMkv/6UTJvdIRsgDaqfAbD5pqG5KDbRzXpzmLIpVJnGyPCkwwm+F36wGbe1ccuvzDHNL77e6XSmm2LpzO/NAGJRjMGXdLQ9XKFvjr/gK0ruO2gdqglomlvy3MG8BSvLCAYkOL1CAB4wF8ovsfpOAAV92KRdqxeMISntCc0/Fxg7fs9JILmn4ZkgiSgha1CsN
+    ClearValidateRequestPayloadSample:
+      value:
+        customer: 
+          fdCustomerID : CPX8lY15653275885410000003vPLqiF
+        account:
+          - type: ACH
+            userIdentificationDetails: 
+            onlineBankTransactionId: 1002536270
+            requestSignature: QCXCovlWAGq/OmyDAl7pcAmK+ek=
+            callType : pwmb.getAll
+            oblTransactionType: 1
+            merchantReference: 1961
+            status: 2
+            panel: 1
+            paymentType: 6
+            paymentProviderType: 1
+            paymentAccountVerified: true
+            returnUrl: https://cat.api.firstdata.com/gateway/v2/connectpay/static/v1/build/index.html#/CPBankOnlyWidget/
+    ClearCreateSessionTokenRequestPayloadSample:
+      value:
+        security:
+          publicKeyRequired: true
+    ClearCreateSessionTokenRequestWithAccountInformationPayloadSample:
+      value:
+        security:
+          publicKeyRequired: true
+        account: 
+          - type: ACH
+            fdAccountID: CPlgPO15804795190661084P4u9zY
   responses:
-    apiSpecResponseWrapper:
-      description: OpenAPI Spec for the APIs. 
-      content: {}
-    docsResponseWrapper:
-      description: Markdown files.
-      content: {}
-    liveResponse:
-      description: Health check.
+    200-CreateSessionTokenResponsePayloadSamples:
+      description: | 
+                    ### HTTP 200 Response.
       content:
         application/json:
           schema:
-            $ref: '#/components/schemas/LiveProbeResponse'
-        text/yaml:
-          schema:
-            $ref: '#/components/schemas/LiveProbeResponse'
-        text/plain:
-          schema:
-            $ref: '#/components/schemas/LiveProbeResponse'
-    productPage:
-      description: This text will appear as description of your response body. 
+            oneOf:
+              - $ref: '#/components/schemas/DecryptedCPAPIGenericResponse'
+          examples:
+           ClearResponsePayloadSample-Approved:
+                  value:
+                    transactionStatus: APPROVED
+                    transactionStatusCode: 0
+                    referenceTransactionID: 0021-039d7190-069a-cde1-3043-de622362f15e
+                    transactionStatusDescription: OK
+                    security:
+                      tokenID: 5m1ew614uiwStDegPq48MSA9ej5E
+                      issuedOn: 1683296193218
+                      expiresInSeconds: 899
+                      publicKey: MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAo8jR693ueb0BGPasFMf1V9QP6VpElKu1x/Qpu8M4DhX0o0VimgAd3TY0TPAK6Tl+DkkC0ana1u/NjEVomoZXP15jWEBSFG2DciiMPLtzbvrobwdmWnWQHSX9licUb5jf0fOKe2gx7q0CY095+SkVjytnQGdc315WYMMo/a1EUXzFhy1ZMkj6riZ+wEneQITsN1haKqS6Q6wQMBjHBrsFomaU2qPrnlrpuZjXUP5rt5+CYCGdwLEiCGNGe47tqP48Yk3snn+yVdPWnOfuz5aG3dNdteV5zVhMkVGIdmrJTgAh1auCOxNc44GTGo3rQn9WD5p4Lo8aLGkyHjv3kmvDLQIDAQAB
+                      algorithm: RSA/None/OAEPWithSHA512AndMGF1Padding
+                      status: ACTIVE
+           ClearResponsePayloadSample-Declined:
+                  value:
+                    transactionStatus: DECLINED
+                    transactionStatusCode: 450
+                    referenceTransactionID: 0021-24efedc1-8764-b930-7f84-47ce4b463433
+                    transactionStatusDescription: Partner Not Found
+                    errorDetails:
+                      errorCode: 4550
+                      errorField: PartnerID
+                      errorReason: PartnerID not Found
+           ClearResponsePayloadSample-Error:
+                  value:
+                    transactionStatus: ERROR
+                    transactionStatusCode: 100
+                    referenceTransactionID: 0021-24efedc1-8764-b930-7f84-47ce4b463433
+                    transactionStatusDescription: Input is invalid
+                    errorDetails:
+                      errorCode: 1060
+                      errorField: Content-Type
+                      errorReason: Required Header field is missing
+    401-AuthenticationErrorPayloadSample:
+     description: |
+                    ### HTTP 401 Response.
+                    #### Authentication error. Probably due to incorrect Authorization header calculation.
+    200-EstablishResponsePayloadSamples:
+      description: The request cannot be validated.
       content:
         application/json:
           schema:
-            $ref: '#/components/schemas/PageLayoutResponse'
-        text/yaml:
-          schema:
-            $ref: '#/components/schemas/PageLayoutResponse'
-        text/plain:
-          schema:
-            $ref: '#/components/schemas/PageLayoutResponse'
-    tenant:
-      description: This text will appear as description of your response body. 
+            oneOf:
+              - $ref: '#/components/schemas/EncryptedResponse'
+              - $ref: '#/components/schemas/DecryptedCPAPIGenericResponse'
+          examples:
+            EncryptedResponsePayloadSample:
+              value:
+                componentDelta: OEIyAAUL1Py3/oKewtNXswtkYOw+krJP0EFhucFWFXSug0TCV7kqL67Mk5PTzVqNWTAyPl0lK6ac2EBK3kxskC6WpzpJI4qSv7/9JSfQ7zAYUiKAKPobIXpHAJ7BuHSMlMkv/6UTJvdIRsgDaqfAbD5pqG5KDbRzXpzmLIpVJnGyPCkwwm+F36wGbe1ccuvzDHNL77e6XSmm2LpzO/NAGJRjMGXdLQ9XKFvjr/gK0ruO2gdqglomlvy3MG8BSvLCAYkOL1CAB4wF8ovsfpOAAV92KRdqxeMISntCc0/Fxg7fs9JILmn4ZkgiSgha1CsN
+            DecryptedResponsePayloadSample-Approved:
+                  value:
+                    transactionStatus: APPROVED
+                    transactionStatusCode: 0
+                    referenceTransactionID: 186ad875-1695-3254-68a4-b578034b94e7
+                    transactionStatusDescription: OK
+                    teleCheckDetails:
+                      amount: 0.00
+                      currency: USD
+                      accessId: RqBNyqzgTVGhmvyV74NM
+                      merchantId: 1001200367
+                      description: TCK_PWMB Call
+                      merchantReference: 18096
+                      paymentType: Retrieval
+                      returnUrl: https://cat.api.firstdata.com/gateway/v2/connectpay/static/v1/build/index.html#/CPBankOnlyWidget/
+                      cancelUrl: https://cat.api.firstdata.com/gateway/v2/connectpay/static/v1/build/index.html#/CPBankOnlyWidget/
+                      requestSignature: 76XVsxZbD9BGJQWRWgWeEPs7V5M=
+                    customer:
+                      fdCustomerID: CP0hCA15725561636040000017vlLFeL
+            DecryptedResponsePayloadSample-Declined:
+                  value:
+                    transactionStatus: DECLINED
+                    transactionStatusCode: 401
+                    referenceTransactionID: 24efedc1-8764-b930-7f84-47ce4b463433
+                    transactionStatusDescription: Unauthorize
+                    responseVerbiage: Unauthorize
+                    errorDetails:
+                      errorCode: 4550
+                      errorField: PartnerID
+                      errorReason: Partner is not opt for this service
+            DecryptedResponsePayloadSample-Error:
+                  value:
+                    transactionStatus: ERROR
+                    transactionStatusCode: 100
+                    referenceTransactionID: 97dd7979-8fa4-9e80-75df-4bb6924863ae
+                    transactionStatusDescription: Input is invalid
+                    responseVerbiage: Input is invalid
+                    errorDetails:
+                      errorCode: 1035
+                      errorField: CallType
+                      errorReason: Required field is missing
+    200-ValidateResponsePayloadSamples:
+      description: The request cannot be validated.
       content:
         application/json:
           schema:
-            $ref: '#/components/schemas/TenantProviderResponse'
-        text/yaml:
+            oneOf:
+              - $ref: '#/components/schemas/EncryptedResponse'
+              - $ref: '#/components/schemas/DecryptedCPAPIGenericResponse'
+          examples:
+            EncryptedResponsePayloadSample:
+              value:
+                componentDelta: OEIyAAUL1Py3/oKewtNXswtkYOw+krJP0EFhucFWFXSug0TCV7kqL67Mk5PTzVqNWTAyPl0lK6ac2EBK3kxskC6WpzpJI4qSv7/9JSfQ7zAYUiKAKPobIXpHAJ7BuHSMlMkv/6UTJvdIRsgDaqfAbD5pqG5KDbRzXpzmLIpVJnGyPCkwwm+F36wGbe1ccuvzDHNL77e6XSmm2LpzO/NAGJRjMGXdLQ9XKFvjr/gK0ruO2gdqglomlvy3MG8BSvLCAYkOL1CAB4wF8ovsfpOAAV92KRdqxeMISntCc0/Fxg7fs9JILmn4ZkgiSgha1CsN
+            DecryptedResponsePayloadSample-Approved:
+              value:
+                transactionStatus: APPROVED
+                transactionStatusCode: 0
+                referenceTransactionID: 1875dd9b-8b5e-41c5-9688-c37f3c9f0376
+                transactionStatusDescription: OK
+                customer:
+                  fdCustomerID: CPX8lY15653275885410000003vPLqiF
+                account:
+                  - userDetails:
+                      firstName: John
+                      lastName: Smith
+                      email: john123@fiserv.com
+                    userAddressDetails:
+                      street: 763 Robin Street
+                      street2: Donbosco Lane
+                      state: Whayend
+                      city: DJSOO
+                      postalCode: 70923
+                    userIdentificationDetails:
+                      routingNumber: "*****3116"
+                      accountNumber: "*****6576"
+                      onlineBankTransactionId: 1002536270
+                    userPhone:
+                      - number : 9876543212
+            DecryptedResponsePayloadSample-Declined:
+              value:
+                transactionStatus: DECLINED
+                transactionStatusCode: 440
+                referenceTransactionID: bbb59fe8-492f-9c53-3a30-73637cb2d7d9
+                transactionStatusDescription: Other Telecheck Decline
+                responseVerbiage: Other Telecheck Decline
+                errorDetails:
+                  errorCode: 4410
+                  errorField: OnlineBankTransactionId
+                  errorReason: Field contained a bad value
+            DecryptedResponsePayloadSample-Error:
+              value:
+                transactionStatus: ERROR
+                transactionStatusCode: 100
+                referenceTransactionID: 906c517e-5570-4286-86c2-33dc3e0d18cc
+                transactionStatusDescription: Input is invalid
+                errorDetails:
+                  errorCode: 1035
+                  errorField: CallType
+                  errorReason: Required field is missing
+    401-ComponentFallbackPayloadSample:
+      description: The request cannot be validated.
+      content:
+        application/json:
           schema:
-            $ref: '#/components/schemas/TenantProviderResponse'
-        text/plain:
-          schema:
-            $ref: '#/components/schemas/TenantProviderResponse'
-  securitySchemes:
-    basic:
-      type: http
-      scheme: basic
+            oneOf:
+              - $ref: '#/components/schemas/EncryptedResponse'
+              - $ref: '#/components/schemas/DecryptedCPAPIGenericResponse'
+          examples:
+            ComponentFallbackPayloadSample:
+              value:
+                componentFallBack: "{\r\n  \"transactionStatus\" : \"DECLINED\",\r\n  \"transactionStatusCode\" : 420,\r\n  \"referenceTransactionID\" : \"APIGEE-a-90f-4946-ff14-36aa4b9a6325\",\r\n  \"transactionStatusDescription\" : \"Unauthorized\",\r\n  \"responseVerbiage\" : \"Unauthorized\",\r\n  \"errorDetails\" : [ {\r\n    \"errorCode\" : 4250,\r\n    \"errorField\" : \"Client-Token\",\r\n    \"errorReason\" : \"Session time out\"\r\n  } ]\r\n}"
+    
