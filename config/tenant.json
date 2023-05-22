@@ -1,6 +1,6 @@
 {
-  "title": "connect-pay",
-  "name": "connect-pay",
+  "title": "Connect Pay",
+  "name": "ConnectPay",
   "brand": "Fiserv",
   "brandLogoURL": "https://raw.githubusercontent.com/Fiserv/Banking-Product-Cards/develop/assets/images/4_Cards-min%20copy.jpg",
   "solution": [
@@ -25,12 +25,12 @@
     "description": "Developer Studio Support pages",
     "longDescription": "Developer Studio Support pages",
     "layout": "/v1/layouts/connect-pay",
-    "documentation": "/v1/docs/connect-pay",
-    "documenttree": "/v1/docs/connect-pay",
-    "documenttreeV2": "/v2/docs/connect-pay",
-    "sandbox": "/v2/sandboxrun/connect-pay",
-    "accessConfig": "/v1/fileAccess/connect-pay",
-    "assets": "/v1/assets/connect-pay",
+    "documentation": "/v1/docs/ConnectPay",
+    "documenttree": "/v1/docs/ConnectPay",
+    "documenttreeV2": "/v2/docs/ConnectPay",
+    "sandbox": "/v2/sandboxrun/ConnectPay",
+    "accessConfig": "/v1/fileAccess/ConnectPay",
+    "assets": "/v1/assets/ConnectPay",
     "feature": [
       {
         "name": "plugins",
