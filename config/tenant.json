@@ -36,6 +36,7 @@
     "logoURL": "",
     "description": "Developer Studio Support pages",
     "longDescription": "Developer Studio Support pages",
+    "apiSpecification": "/v1/apis/ConnectPay",
     "layout": "/v1/layouts/ConnectPay",
     "documentation": "/v1/docs/ConnectPay",
     "documenttree": "/v1/docs/ConnectPay",
