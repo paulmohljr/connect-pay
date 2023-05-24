@@ -20,6 +20,17 @@
       ]
     }
   ],
+  
+   "apiVersions": [
+      {
+        "version": "1.0.0",
+        "versionType": "major",
+        "releaseNotesPath": "docs/release-notes/2022/march.md",
+        "apiSpecFileNames": ["openapi"]
+      }
+  ],
+  
+  
   "product": {
     "featured": true,
     "logoURL": "",
