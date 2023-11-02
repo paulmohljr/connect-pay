@@ -7,7 +7,7 @@ info:
   description: |
     ### Fiserv ConnectPayAPI solution exposes a set of services to facilitate ACH account vaulting, authorization and settlement. 
     ConnectPayAPI follows an enroll first and pay later model. Consumer needs to first enroll himself into the system by providing demographic and ACH payment information. The payment information is tokenized and ACH transactions can be sent in by merchants using the ConnectPay token.
-    Authorization, Risking, Settlement are all inhouse functionalities to TeleCheck.
+    Authorization, Risking, Settlement are all in house functionalities to TeleCheck.
 
     ConnectPayAPI solution enforces a full payload encryption. Details of encryption and decryption can be found at [Encryption/Decryption Methodology](https://escmconfluence.1dc.com/pages/viewpage.action?pageId=498239026).
 
