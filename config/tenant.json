@@ -72,6 +72,12 @@
         "template": "feature.md",
         "assignees": "aanoopfiserv"
       }
+    },
+    "Getting Started": {
+      "label": "GettingStarted,SupportPages",
+      "template": "docs/getting-started.md",
+      "assignees": "aanoopfiserv"
+    }
     }
   ]
 }
