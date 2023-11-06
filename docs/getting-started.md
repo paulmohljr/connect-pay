@@ -18,6 +18,6 @@ while we know you have various ways to integrate, we are here to assist you in i
 
 ### Useful Artifacts to help you Integrate
 [//]: <> (Need to link below to the actual files)
-- [Implementation*Guide][/documentation/implementationguide.md]
-- [SDK][/assets/connect-pay_spec.zip]
-- [Postman Collection][/assets/connect-pay_postman.zip]
+- [Implementation*Guide](../documentation/implementationguide.md)
+- [SDK](../assets/connect-pay_spec.zip)
+- [Postman Collection](../assets/connect-pay_postman.zip)
