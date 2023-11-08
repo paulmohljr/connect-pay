@@ -146,7 +146,6 @@ return cipher.doFinal(bytes);
 ## IOS
 ## Android
 ## Other? 
-###Is my edit on this documentation
 ### Useful Artifacts to help you Integrate
 [//]: <> (Need to link below to the actual files)
 - [Implementation*Guide](../documentation/implementationguide.md)
