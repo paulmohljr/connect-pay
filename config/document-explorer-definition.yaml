@@ -36,7 +36,7 @@
     link: documentation/implementationguide.md
   - sections:
   - title: SDK Implementation Guide
-    link: documentation/connectpaysdk.md
+    link: documentation/connectpaysdklanding.md  
 - sections:
   - title: Release notes
     sections:
