@@ -33,10 +33,10 @@
     link: docs/getting-started.md
 - sections:
   - title: API Implementation Guide
-    link: documentation/implementationguide.md
+    link: ./documentation/implementationguide.md
   - sections:
   - title: SDK Implementation Guide
-    link: documentation/connectpaysdklanding.md  
+    link: ./documentation/connectpaysdklanding.md  
 - sections:
   - title: Release notes
     sections:
