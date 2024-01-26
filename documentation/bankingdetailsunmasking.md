@@ -1,10 +1,10 @@
-# Banking Details unmasking is dependent on TUMMSS (Telecheck Umified Merchant Setup System) Add-on. If configured, only the merchant can request for unmasking banking details.
+# Banking Details unmasking is dependent on TUMMSS (Telecheck Unified Merchant Setup System) Add-on. If configured, only the merchant can request for unmasking banking details
 
 |Field Name| Groups | Masking Format |
 |---------|-------------|!-------------------------|
 |first Name|getPersonalDetails|Display only first letter (ex. A**** ) |
 |last Name| getPersonalDetails|Display only first letter (ex. L**** ) |
-|Gender| getPersonalDetails| Full Masked (Ex. * )|
+|Gender| getPersonalDetails|Full Masked (Ex. * )|
 |DOB| getPersonalDetails|(ex. 1978**02|
 |Phone Number [i] | getPersonalDetails|******2342|
 |Phone Type [i] | getPersonalDetails|| No Masking|
