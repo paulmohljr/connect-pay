@@ -41,7 +41,7 @@
   - title: Application Status Codes
     link: ./documentation/statuscodes.md
   - title: Masking Details Codes
-    link: ./documentation/maskingdetails.md  
+    link: ./documentation/maskingdetails.md 
 - sections:
   - title: Release notes
     sections:
