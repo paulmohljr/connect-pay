@@ -31,9 +31,6 @@
 - sections:
   - title: Getting Started
     link: docs/getting-started.md
-- sections:
-  - title: Getting Started
-    link: docs/getting-started.md
   - title: API Implementation Guide
     link: ./documentation/implementationguide.md
   - title: SDK Implementation Guide
