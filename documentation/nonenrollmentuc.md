@@ -9,5 +9,5 @@ C. PassnecessarydatatotheSDK(includingfdCustomerId)
 D. SDKpresentsthescreenstoconsumertocaptureconsumerinformation E. SDKcompletesupdateprocessanddisplaysresponsetoconsumer.
 
 
-
 <center><img src="https://raw.githubusercontent.com/Fiserv/connect-pay/develop/assets/images/Non-Enrollment Architecture.png" alt="Non Enrollment Architecture" class="center"></center>
+

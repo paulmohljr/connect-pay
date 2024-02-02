@@ -23,3 +23,4 @@ M. Merchant server does a server-to-server GetData call to retrieve fdAccountId 
 N. MerchantserverstoresthefdCustomerId,fdAccountId(optional)againsttheexternalIdin their system for future use.
 
 <center><img src="https://raw.githubusercontent.com/Fiserv/connect-pay/develop/assets/images/Online Bank Login Enrollment Architecture.png" alt="Bank Login Architecture" class="center"></center>
+
