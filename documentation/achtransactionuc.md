@@ -37,4 +37,4 @@ Merchant server stores the fdCustomerId, fdAccountId (optional) against the exte
 ## Buypass
 <INSERT LINK>
 
-![Non Enrollment Architecture](https://raw.githubusercontent.com/Fiserv/connect-pay/develop/assets/images/ACH Transaction Arch.png)
+<center><img src="https://raw.githubusercontent.com/Fiserv/connect-pay/develop/assets/images/ACH Transaction Arch.png" alt="Non Enrollment Architecture" class="center"></center>
