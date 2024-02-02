@@ -14,4 +14,4 @@ G. Merchant server does a server to server GetData call to retrieve fdAccountId 
 H. Merchantserverstores/updatesthefdAccountIdagainsttheexternalId,forthepayment instrument in question, in their system for future use.
 Note: If Account Validation call is invoked multiple times for the same consumer and payment number, the consumer will receive a successful response with the same fdAccountId for the ConnectPay payment number, every time.
 
-![Non Enrollment Architecture](https://raw.githubusercontent.com/Fiserv/connect-pay/develop/assets/images/Account Validation Architecture.png)
+<center><img src="https://raw.githubusercontent.com/Fiserv/connect-pay/develop/assets/images/Account Validation Architecture.png" alt="Non Enrollment Architecture" class="center"></center>
