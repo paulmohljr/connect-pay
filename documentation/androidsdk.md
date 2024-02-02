@@ -95,14 +95,16 @@ CPSDK (
     ApplicationContext, 
     DEBUG_LOGGING
 )
-```
+
 |Parameter|Usage|
+|---------|-----|
 |API_KEY|Merchant’s API Key|
 |ENVIRONMENT|Environment end Point for the CP-SDK|
 |ApplicationContext|Application context|
 |VERBOSE_DEBUG_LOGGING|Enable Debug logging(It should be set to false for production release)|
-Sample
+
 ```java
+Sample
 val cpsdk = CPSDK ( 
                   webConfiguration.apiKey,
                   Environment.SANDBOX 

@@ -11,7 +11,7 @@ description:
 link: ../docs/?path=documentation/androidsdk.md
 -->
 <!-- type: card
-title: <div style="text-align:center;width:100%;height:25%"><img src="https://raw.githubusercontent.com/Fiserv/connect-pay/develop/assets/images/ios.png" alt="Web SDK Documentation" title="Web SDK Documentation" style="width:auto; height:60px"> </div> <h3 style="text-align:center"> WebSDK Documentation</h3>
+title: <div style="text-align:center;width:100%;height:25%"><img src="https://raw.githubusercontent.com/Fiserv/connect-pay/develop/assets/images/WebOS.png" alt="Web SDK Documentation" title="Web SDK Documentation" style="width:auto; height:60px"> </div> <h3 style="text-align:center"> WebSDK Documentation</h3>
 description:
 link: ../docs/?path=documentation/websdk.md
 -->
