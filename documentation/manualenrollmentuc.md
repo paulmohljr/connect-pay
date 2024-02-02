@@ -12,5 +12,5 @@ F. NONCE passed back to merchant server
 G. Merchant server does a server-to-server GetData call to retrieve fdAccountId generated after consumer data vaulting. Merchant additionally receives the current consumer status as a part of this call.
 Merchant server stores the fdCustomerId, fdAccountId (optional) against the externalId in their system for future use.
 
-[Architecture Overview](https://raw.githubusercontent.com/Fiserv/connect-pay/develop/assets/images/Manual Enrollment Arch.png)
+<center><img src="https://raw.githubusercontent.com/Fiserv/connect-pay/develop/assets/images/Manual Enrollment Arch.png" alt="Manual Enrollment Architecture" class="center"></center>
 
