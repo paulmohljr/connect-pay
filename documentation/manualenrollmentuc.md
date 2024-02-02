@@ -13,3 +13,4 @@ G. Merchant server does a server-to-server GetData call to retrieve fdAccountId 
 Merchant server stores the fdCustomerId, fdAccountId (optional) against the externalId in their system for future use.
 
 <center><img src="https://raw.githubusercontent.com/Fiserv/connect-pay/develop/assets/images/Manual Enrollment Arch.png" alt="Manual Enrollment Architecture" class="center"></center>
+

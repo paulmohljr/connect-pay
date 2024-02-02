@@ -35,6 +35,8 @@
     link: ./documentation/implementationguide.md
   - title: SDK Implementation Guide
     link: ./documentation/connectpaysdklanding.md
+  - title: Common Use Cases
+    link: ./documentation/Commonusecaseslanding.md
   - title: Application Status Codes
     link: ./documentation/statuscodes.md
   - title: Masking Details Codes
