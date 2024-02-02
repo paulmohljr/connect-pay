@@ -1,20 +1,17 @@
 # Implementation Guide
-This guide will go over evertyhing the user must know in order to use and implement ConnectPay's API. We will use the "Create Session Token" and "Add Consumer Profile" APIs as an example. At the bottom will be a more general flow of the API.
-
-# Information on Integration
+This guide will go over everything the user must know in order to implement ConnectPay's API.
 
 ## Pre-requisites
+Below are the prerequisites before using ConnectPay's API
 
 ### Connectivity
-The ConnectPay services are accessed through the public Internet. ConnectPay accepts communication only via the HTTPS channel. Custom HTTP headers are also used carry additional information in each request.
-
+The ConnectPay services are accessed through the public Internet. ConnectPay accepts communication only via the HTTPS channel. Custom HTTP headers are also used to carry additional information in each request.
 |Environment                |Host                                     |Base Path  |
 |---------------------------|-----------------------------------------|-----------|
 |Certification API End Point|https://cat.api.firstdata.com/gateway/v2 |/connectpay|
 |Production API End Point   |https://prod.api.firstdata.com/gateway/v2|/connectpay|
 
 ### Header Description
-
 The header of each API call will contain several parameters. It is important that each parameter contain the specified values for a successful API call. Any changes to the values will be noted throughout the guide.
 
 #### HTTP Headers
@@ -37,23 +34,27 @@ The header of each API call will contain several parameters. It is important tha
 "Client-Token" : "IXwY1BYpvWpoGzete43AdLzXSdj4"
 ```
 
-#### How to generate HNAC Signature
+### How to generate HMAC Signature
 
-##### Description
-The HMAC signature is used in all calls made to our API and is necessary to receive a successful response from the system.
+#### Description
+The HMAC signature is used in all calls made through our API and is a necessary step to receive a successful response from the system.
 
-##### High Level Flow
-- Get and save the current time in the format of UTC Timestamp, to the millisecond
-- Take the API key and append a colon along with the current time
-- Save this as the current raw signature (key:time)
-- Get and save the payload, which is the actual body content passed as a POST request
-- Encrypt the request payload using SHA256 and save it
-- Take this encrypted payload, and then encrypt it using Base64.
-- Take the raw signature from step 3, append a colon and the Base64 encrypted payload to it, and save it
-- Take the raw signature and encrypt it using HMAC SHA256 against the API Secret.
-- Finally take this encrypted raw signature and append it to "HMAC" followed by a space in order to create the authorization header
+#### High Level Flow
+1. Get the apikey or the merchant's ConnectPay FirstAPI key
+2. Get and save the current UTC timestamp, to the millisecond
+3. Concatenate the two paramters to output apikey:timestamp
+4. Get the request payload or the actual content passed as a post request
+5. Create a hash of the payload using SHA256
+6. Encode the hash using Base64 to create base64ofPayloadDigest
+7. Concatenate apikey:timestamp with base64ofPayloadDigest to create apikey:timestamp:base64ofPayloadDigest
+8. Get the apiSecret or the merchant's ConnectPay FirstAPI secret
+9. Create the HMAC value using HMAC SHA256, apikey:timestamp:base64ofPayloadDigest, and the apiSecret as the secret for the HMAC SHA256 calculation
+10. Encode the new HMAC value using Base64 to create the signature
+11. Append the signature to HMAC followed by a space to create "HMAC Signature"
+12. The "Authorization" header = HMAC signature
 
-##### Sample Code (Java)
+#### Sample Code
+Below is sample code on how to create the "Authorization" header:
 ```java
 import java.security.MessageDigest;
 import javax.crypto.Mac;
@@ -76,55 +77,16 @@ public class HmacUtil {
 }
 ```
 
-## How to Utilize API (Example: Add Consumer Profile)
-This section will guide the developer on how to implement one of ConnectPay's APIs. We will use the "Add Consumer Profile" API for this example as well as the "Create Session Token" API as it is a mandatory substep to use most of ConnectPay's API.
+### Encryption & Decryption Methodologies 
+Most of the ConnectPay APIs need to be encrypted prior to making a request. The methodologies are discussed below with example code on the actual methods in Java. We will use these methods later in order to generate and encrypt the payloads.
 
-## Step 1: Create Session Token
-The Create Session Token API call is used to create a session token and to retrieve the RSA public encryption key generated for this session. This API is secured as it requires the Authorization header that can only be derived using the API Secret stored in the Merchant’s server. Below is more information on the API specification as well as example request and response payloads. <p>
-
-[![](/assets/images/button.png '')](https://qa-developer.fiserv.com/product/ConnectPay/api/?type=post&path=/security/createsessiontoken&branch=develop&version=1.0.0)
-
-
-Example Request Payload:
-```json
-{
-  "security": {
-    "publicKeyRequired": true
-  }
-}
-```
-
-Use the payload above to create the Authorization Header.
-
-Example Response Payload:
-```json
-{
-    "transactionStatus": "APPROVED",
-    "transactionStatusCode": 0,
-    "referenceTransactionID": "bedceb8b-2445-b1d5-4c1e-c09446099023",
-    "transactionStatusDescription": "OK",
-    "security": {
-        "tokenID": "0HMxmsoYJRfAiGdxEsjcso3K8uY6",
-        "issuedOn": "1583174178590",
-        "expiresInSeconds": "599",
-        "publicKey": "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEArAhyMQmqTL798rKAixN9jtnp4SFF5PVpqc/HKNprSSoaANsnpJLSTRLFMCuQIa2dcgFZM+nSPvSCGowD65/tMWBHTWfeXiSV1xWmhPdEQRocmUaRp3HoEO3RU1n5os9jQLMGEcyxopgtTvUydJSrjLWNGcC9UC50HIEBEOBqycRvqlI/oRO1oBIx8UPAe/dGKTO8Bx8f6J4Lyi5ilW0gFFYSni/Krg/fMrxu6luyGmBOr2H9zy6fv+8dLQd0LEoOAaZ/2RLfcTPnheyV7eUOvOS4DGISiQBRpXyu9Zlo1B3GbiXX8NkfCo2ByDq+6gELji7Tr+gT+zuj+5H12eQIDAQAB",
-        "algorithm": "RSA/None/PKCS1Padding",
-        "status": "ACTIVE"
-    }
-}
-```
-
-## Step 2: Utilize Encryption & Decrption Methods on Payloads
-Most of the ConnectPay APIs need to be encrypted prior to making a request. The methodologies are discussed below with example code in Java on the actual methods.
-
-### Implement Encryption & Decryption Methodologies 
 <details>
 <summary>1. AES Key Generation</summary>
 <br>
-The AES Key generated must be 256-bit in order for the Fiserv systems to decrypt the request payload.
+The AES Key generated must be size 256-bit in order for the Fiserv systems to decrypt the request payload.
 
-### Key Generator (Example Code - Java)
-The AES Key will be used to encrypt the actual request payload. Below is sample code on how to generate the Merchant's AES Key:
+### Key Generator
+The AES Key will be used to encrypt the actual request payload. Below is sample code on how to generate the merchant's AES Key:
 ```java
 private static final char[] HEX_ARRAY = "0123456789abcdef".toCharArray(); 
 
@@ -153,7 +115,7 @@ public static String bytesToHex(byte[] bytes) {
 The IV generated must be size 96-bit in order for the Fiserv systems to decrypt the request payload.
 
 ### Key Generator (Example Code - Java)
-The IV will be used to encrypt the actual request payload. Below is sample code on how to generate the Merchant's IV:
+The IV will be used to encrypt the actual request payload. Below is sample code on how to generate the merchant's IV:
 ```java
 private static final char[] HEX_ARRAY = "0123456789abcdef".toCharArray(); 
 
@@ -179,7 +141,7 @@ public static String bytesToHex(byte[] bytes) {
 <details>
 <summary>3. AES Encryption</summary>
 <br>
-The Merchant must implement methods for AES encryption in order to encrypt the payload prior to making a call.
+The merchant must implement methods for AES encryption in order to encrypt the payload prior to making a call.
 
 ### AES Specification
 | Type | Value            | 
@@ -187,90 +149,70 @@ The Merchant must implement methods for AES encryption in order to encrypt the p
 |ALGO  |AES               | 
 |CIPHER| AES/GCM/NoPadding|
 
-### AES Encryption (Example Code - Java)
+### AES Encryption
 AES Encryption will be used to encrypt the actual payload using the AES Key and IV generated before. Below is sample code on how to encrypt using AES:
-
-#### How to generate HNAC Signature
-
-##### Description
-The HMAC signature is used in all calls made to our API and is necessary to receive a successful response from the system.
-
-##### High Level Flow
-- Get and save the current time in the format, UTC Timestamp, to the millisecond
-- Take the API Key and append a colon along with the current time
-- Save this as the current raw signature (key:time)
-- Get and save the payload which is the actual body content passed as a POST request
-- Encrypt the request payload using SHA256 and save it
-- Take this encrypted payload, and then encrypt it using Base64.
-- Take the raw signature from step 3, append a colon and the Base64 encrypted payload to it and save it
-- Take the raw signature and encrypt it using HMAC SHA256 against the API Secret.
-- Finally take this encrypted raw signature and append to "HMAC" followed by a space in order to create the Authorization header
-
-##### Sample Code
 ```java
-import java.security.MessageDigest;
-import javax.crypto.Mac;
-import javax.crypto.spec.SecretKeySpec;
-import org.apache.commons.codec.binary.Base64;
-public class HmacUtil {
-    private static final String CT_CLN = ":";
-    private static final String MD_ALG = "SHA-256";
-    private static final String HMAC_ALG = "HmacSHA256";
-    public static String generateHmac(String apiKey,
-    String apiSecret,String epochTimestamp, String payload) throws Exception {
-        byte[] hash = MessageDigest.getInstance(MD_ALG).digest(payload.getBytes());
-        String encPyld = Base64.encodeBase64String(hash);
-        String messageToSign = apiKey + CT_CLN + epochTimestamp + CT_CLN + encPyld;
-        Mac hmac = Mac.getInstance(HMAC_ALG);
-        SecretKeySpec key = new SecretKeySpec(apiSecret.getBytes(), HMAC_ALG);
-        hmac.init(key);
-        return Base64.encodeBase64String(hmac.doFinal(messageToSign.getBytes()));
+public class AesUtil {
+    private static final String ALGO = "AES";
+    private Cipher cipher = null;
+    private SecretKey secretKey = null;
+    private String initializationVector = null;
+    private String correlationId = null;
+
+    public static final int GCM_TAG_LENGTH_BIT = 128;
+    private static final int IV_LENGTH_BYTE = 12;
+
+    /**
+    * Initialize cipher with IV and secret key
+    */
+    public void init(String encKey, String initializationVector, String correlationId) throws Exception {
+        try {
+            cipher = Cipher.getInstance(PartnerAlgo.AES_GCM_NoPadding.getValue());
+        } catch (NoSuchAlgorithmException | NoSuchPaddingException e) {
+            LOG.error("Exception in AesUtil.init {}", e);
+            throw e;
+        }
+        this.secretKey = generateKey(encKey);
+        this.initializationVector = initializationVector;
+        this.correlationId = correlationId;
     }
-}
-```
 
-## How to Utilize API (Example: Add Consumer Profile)
+    /**
+    * encryption with secret key, IV and salt (IV value)
+    */
+    public String encrypt(String clearText, String correlationId) throws Exception {
+        if (this.correlationId == null)
+            this.correlationId = correlationId;
+        try {
+            byte[] encrypted = doFinal(Cipher.ENCRYPT_MODE, secretKey, initializationVector,
+                clearText.getBytes("UTF-8"));
+            byte[] IV_BYTES = hex(initializationVector);
+            byte[] cipherTextWithIv = ByteBuffer.allocate(IV_BYTES.length + encrypted.length).put(IV_BYTES)
+                .put(encrypted).array();
+            return base64(cipherTextWithIv);
+        } catch (UnsupportedEncodingException e) {
+            LOG.error("Exception in AesUtil.encrypt {}", e);
+            throw e;
+        } catch (Exception e) {
+            LOG.error("Exception in AesUtil.encrypt {}", e);
+            throw e;
+        }
+    }
 
-## Step 1: Create Session Token
-summary of API and reason why used first
+    private SecretKey generateKey(String encKey) {
+        try {
+            SecretKey key = new SecretKeySpec(hex(encKey), ALGO);
+            return key;
+        } catch (NumberFormatException | DecoderException e) {
+            LOG.error("Exception in AesUtil.generateKey {}", e);
+            return null;
+        }
+    }
 
-<details>
-<summary>Create Session Token</summary>
-<br>
-The Create Session Token API call is used to create a session token and to retrieve the RSA public encryption key generated for this session. This API is secured as it requires the Authorization header that can only be derived using the API Secret stored in the Merchant’s server. <p>
-
-[![](button.png '')](https://qa-developer.fiserv.com/product/ConnectPay/api/?type=post&path=/security/createsessiontoken&branch=develop&version=1.0.0)
-</details>
-
-## Step 2: Utilize Encryption & Decrption Methods on Payloads
-(ENDC MD Page link)
-Implement Encryption & Decryption Methodologies: layout
-1. AES Key Generation
-2. IV Generation
-3. AES Encryption
-4. RSA Encryption
-5. AES Decryption
-
-## Step 3: Create & Request Payload
-summary of API and reason why used first
-
-<details>
-<summary>Add Consumer Profile</summary>
-<br>
-The Create Consumer Profile call is mandatory for any new user enrollment. This is used to create an fdCustomerID for a provided external id (and other user information) by the merchant. The returned fdCustomerID should be used right from the enrollment use case. This API is secured, as it requires the Authorization header that can only be derived using the API Secret stored in the Merchant’s web server. <p>
-
-[![](button.png '')](https://qa-developer.fiserv.com/product/ConnectPay/api/?type=post&path=/consumerprofile/add&branch=develop&version=1.0.0)
-</details>
-
-### Create Session Token
-Use the "Create Session Token" API from Step 1 above in order to get the TokenID for the Client-Token header as well as the RSA Public Key in order to encrypt the request payload for the "Add Consumer Profile" API.
-
-Example Request Payload:
-```json
-{
-  "security": {
-    "publicKeyRequired": true
-  }
+    private byte[] doFinal(int encryptMode, SecretKey key, String iv, byte[] bytes) throws Exception {
+        cipher.init(encryptMode, key, new GCMParameterSpec(GCM_TAG_LENGTH_BIT, hex(iv)));
+        return cipher.doFinal(bytes);
+    }
 }
 ```
 </details>
@@ -278,7 +220,7 @@ Example Request Payload:
 <details>
 <summary>4. RSA Encryption</summary>
 <br>
-The Merchant must implement the RSA Encryption in order to encrypt the AES key and IV using the RSA "publicKey" generated from the "Create Session Token" API.
+The merchant must implement RSA Encryption in order to encrypt the AES key and IV using the RSA "publicKey" generated from the "Create Session Token" API.
 
 ### RSA Specification
 | Type | Value                               | 
@@ -286,8 +228,8 @@ The Merchant must implement the RSA Encryption in order to encrypt the AES key a
 |ALGO  |RSA                                  | 
 |CIPHER|RSA/None/OAEPwithSHA512AndMGF1Padding|
 
-### RSA Encryption (Example Code - Java)
-RSA will be used to encrypt Components X and Y which are the AES Key and IV using the RSA Public Key obtained from the Create Session Token API respectively. Below is sample code on how to encrypt using RSA:
+### RSA Encryption
+RSA will be used to encrypt Components X and Y which are the AES Key and IV respectively. These are encrypted using the RSA public key obtained from the Create Session Token API. Below is sample code on how to encrypt using RSA:
 ```java
 private static final String ALGORITHM = "RSA";  
 public static String encrypt(byte[] publicKey, String inputData, String rsaAlgoType) throws Exception { 
@@ -308,8 +250,8 @@ public static String encrypt(byte[] publicKey, String inputData, String rsaAlgoT
 } 
 ```
 
-### RSA Decryption (Example Code - Java)
-Below is sample code on how to decrypt using RSA however, the Merchant may not need decryption methods for RSA since the Fiserv backend will decrypt the request payload in order to process the request. The Merchant may still want to decrypt the request payload based on a variety of different factors. Below is a sample code on how to decrypt using RSA:
+### RSA Decryption
+Below is sample code on how to decrypt using RSA however, the Merchant may not need decryption methods for RSA since the Fiserv backend will decrypt the request payload in order to process the request. The merchant may still want to decrypt the request payload based on a variety of different factors. Below is a sample code on how to decrypt using RSA:
 ```java
 private static final String ALGORITHM = "RSA";  
 public static String decrypt(byte[] privateKey, String inputData,String rsaAlgoType) throws Exception { 
@@ -327,7 +269,7 @@ public static String decrypt(byte[] privateKey, String inputData,String rsaAlgoT
 <details>
 <summary>5. AES Decryption</summary>
 <br>
-The Merchant must implement the AES decryption method in order to decrypt the response payload after making a call.
+The merchant must implement the AES decryption method in order to decrypt the response payload after making a call.
 
 ### AES Specification
 | Type | Value            | 
@@ -335,9 +277,8 @@ The Merchant must implement the AES decryption method in order to decrypt the re
 |ALGO  |AES               | 
 |CIPHER| AES/GCM/NoPadding|
 
-
 ### AES Decryption
-The AES decryption method will be used to decode the response payload using the AES Key and IV once the process is complete. Below is sample code on how to decrypt using RSA:
+The AES decryption method will be used to decode the response payload using the AES key and IV once the process is complete. Below is sample code on how to decrypt using RSA:
 
 ```java
 public class AesUtil {
@@ -365,7 +306,64 @@ public class AesUtil {
         this.correlationId = correlationId;
     }
 
-Use the payload above to create the Authorization Header.
+    /**
+    * Decryption with secret key, IV and salt (IV value)
+    */
+    public String decrypt(String ciphertext) throws Exception {
+        try {
+            ByteBuffer buffer = ByteBuffer.wrap(base64(ciphertext));
+            byte[] iv = new byte[IV_LENGTH_BYTE];
+            buffer.get(iv);
+            byte[] extractedCipherText = new byte[buffer.remaining()];
+            buffer.get(extractedCipherText);
+            byte[] decrypted = doFinal(Cipher.DECRYPT_MODE, secretKey, initializationVector, extractedCipherText);
+            return new String(decrypted, "UTF-8");
+        } catch (UnsupportedEncodingException e) {
+            LOG.error("Exception in AesUtil.decrypt {}", e);
+            throw e;
+        } catch (Exception e) {
+            LOG.error("Exception in AesUtil.decrypt {}", e);
+            throw e;
+        }
+    }
+
+    private SecretKey generateKey(String encKey) {
+        try {
+            SecretKey key = new SecretKeySpec(hex(encKey), ALGO);
+            return key;
+        } catch (NumberFormatException | DecoderException e) {
+            LOG.error("Exception in AesUtil.generateKey {}", e);
+            return null;
+        }
+    }
+
+    private byte[] doFinal(int encryptMode, SecretKey key, String iv, byte[] bytes) throws Exception {
+        cipher.init(encryptMode, key, new GCMParameterSpec(GCM_TAG_LENGTH_BIT, hex(iv)));
+        return cipher.doFinal(bytes);
+    }
+}
+```
+</details>
+
+## How to Utilize API
+This section will guide the developer on how to implement one of ConnectPay's APIs. We will use the "Add Consumer Profile" API for this example as well as the "Create Session Token" API as it is a mandatory substep to use most of ConnectPay's API.
+
+## Step 1: Create Session Token
+The Create Session Token API call is used to create a session token and to retrieve the RSA public key. This API is secured as it requires the Authorization header that can only be derived using the API Secret stored in the Merchant’s server. Below is more information on the API specification as well as example request and response payloads. <p>
+
+[![](/assets/images/button.png '')](https://qa-developer.fiserv.com/product/ConnectPay/api/?type=post&path=/security/createsessiontoken&branch=develop&version=1.0.0)
+
+
+Example Request Payload:
+
+Use the payload below to create the Authorization Header.
+```json
+{
+  "security": {
+    "publicKeyRequired": true
+  }
+}
+```
 
 Example Response Payload:
 ```json
@@ -384,26 +382,12 @@ Example Response Payload:
     }
 }
 ```
-Save the PublicKey as well as the tokenID as stated above
 
-### Add Consumer Profile
-Create the actual payload
+## Step 2: Create & Request Payload
+At this step, all prerequisites have been complete in order to make our first call. First, the request payload must be created. The entire payload must be encrypted using different encryption methods. It must also be decrypted in order to decode the response payload into something that is readable. We will use the "Add Consumer Profile" as the example API. 
 
-Example Request Payload
-```json
-{
-    "customer": {
-        "externalID": "ConnectPay20230810003"
-    }
-}
-```
-</details>
+> Note: We will need to use the "tokenID" for the "Client-Token" header as well as the RSA "publicKey" in order to encrypt a portion of the payload before making the API call. Save these two pieces of information from the "Create Session Token" API used earlier in order to complete the call.
 
-## Step 3: Create & Request Payload
-At this step, we will create the request payload. The entire payload must be encrypted using different encryption methods as shown in step 2. It must also be decrypted in order to decode the response payload into something that is readable. Again, we will use the "Add Consumer Profile" as the example API. At the bottom of this guide exists the "API Flow" section which will show the general steps from consumer enrollment to processing an ACH transaction. There, you can find links to the API specifications for more information on any ConnectPay API.
-
-### Create Session Token
-In step 1, we used the "Create Session Token" API. We will need to use the "tokenID" for the "Client-Token" header as well as the RSA "publicKey" in order to encrypt a portion of the payload before making the API call. Save these two pieces of information in order to complete the call.
 
 ### Add Consumer Profile
 The Create Consumer Profile call is mandatory for any new user enrollment. This is used to create an fdCustomerID for a provided external id (and other user information) by the merchant. <p>
@@ -411,9 +395,7 @@ The Create Consumer Profile call is mandatory for any new user enrollment. This 
 [![](/assets/images/button.png '')](https://qa-developer.fiserv.com/product/ConnectPay/api/?type=post&path=/consumerprofile/add&branch=develop&version=1.0.0)
 
 #### Create Request Payload
-First and foremost, we need to create the request payload prior to encryption. An example payload is shown below for the "Add Consumer Profile".
-
-Example Request Payload
+First and foremost, we need to create the request payload prior to encryption. An example payload is shown below:
 ```json
 {
     "customer": {
@@ -426,39 +408,20 @@ Example Request Payload
 We need to next create the HMAC Authorization header using the payload above. The Authorization header and HMAC methodology is discussed earlier in the prerequisite section.
 
 #### Encrypt the AES key and IV
-From step 2, we implemented the methodology to create the AES key and IV. We will use the publicKey generated from the "Create Session Token" API in order to encrypt AES Key as "componentX" and the IV as "componentY". An example of the encrypted input is shown below.
-Example Output:
+From step 2, we implemented the methodology to create the AES key and IV. We will use the publicKey generated from the "Create Session Token" API in order to encrypt the generated AES Key as "componentX" and the IV as "componentY". An example of the encrypted input is shown below:
 ```json
 "componentX": "gp2G93yK461uDV19dlQRBPvHoYDx8o5KYRT6JMvlCsWZt6AkBHUBHd31dApbSuseR369LxBcoXf7FaYNW5pSoAz/VL0Uze8to4QRLSQBdZxE7AIbldsYCyswYPunDM054H714AsLieuutMgTOJUqUbkyD2FnlBzbsgRw52i6SbeG3ioof/zWHzWsUVv1uM+M56APK48cLAVbozGjF6/rlHlMiDeU+1XjjQEAKFZTo01awfEKgI4JkqBlV7jTYiumMpMk6MolFUm/SgNFylkbvhqcnZCRTl0jpKXhEI/fHx+YYWthSP/m4IoIpewTH3Wf7M66NV7s2fLJRJq6ghfN3Q==",
 "componentY": "GYzzvhEPSurUxKBw5dVybLCMz+uPy40K6YFT1BzoqSovj24f/RemJB4VM+v+pqxmdcJKaJThPPztcRFN8rvQaE8kMbDd4hTq7yI9O7QA5FFZwYuD+C+ZmBnfBd8S81YGvbRi16bOHV/AzkaLVWGbIoPke65r4aVzo5RgT3yTPPC12JqBIQ/hS1S+vFQHBKigTWzKDCp52B250kA0XwLSr0eI/cBB0wLpKvoWjuiQJojTj49xHKG8cRBoqJlSsA70Zo+vKRHe7xL7vir+Wv9Rh5t4PILEDA3ya8+iitMsAr0wi3jWYcvdOCR7Bous+nnRjfJ5XleJAXe5dhG+l15CHg==",
 ```
 
 #### Encrypt The Request Payload
-Using the AES key and IV we will then encrypt the request payload using the AES encryption method. An example of the encrypted input is shown below.
+Using the AES key and IV we will then encrypt the request payload using the AES encryption method. An example of the encrypted input is shown below:
 ```json
 "componentDelta": "7MTtHhDXZ0NTNuG4/amThFCcwOpYDd8c4JHJ6vVsyIAV3XI6iMaCaDVQAGs2BEiRePSeYaknOLTGwdQXN2T58vbnmJyDUZFssFbzSux9AKpjxPUymwcuEIHISTKEqcqOeN3leVo="
 ```
 
 #### Finalize the Request Payload
-Using the information from before, we can then create the JSON that will be used in the request call. An example of the input is shown below.
-
-Create the HMAC Authorization using the payload above and use the TokenID saved from earlier as the Content-Token header.
-
-Generate the AES and IV Key and encrypt the actual payload above to create ComponentDelta.
-Example Output:
-```json
-    "componentDelta": "7MTtHhDXZ0NTNuG4/amThFCcwOpYDd8c4JHJ6vVsyIAV3XI6iMaCaDVQAGs2BEiRePSeYaknOLTGwdQXN2T58vbnmJyDUZFssFbzSux9AKpjxPUymwcuEIHISTKEqcqOeN3leVo="
-```
-
-Encrypt the AES Key and IV in order to recieve ComponentX and ComponentY respectively:
-Example Output:
-```json
-    "componentX": "gp2G93yK461uDV19dlQRBPvHoYDx8o5KYRT6JMvlCsWZt6AkBHUBHd31dApbSuseR369LxBcoXf7FaYNW5pSoAz/VL0Uze8to4QRLSQBdZxE7AIbldsYCyswYPunDM054H714AsLieuutMgTOJUqUbkyD2FnlBzbsgRw52i6SbeG3ioof/zWHzWsUVv1uM+M56APK48cLAVbozGjF6/rlHlMiDeU+1XjjQEAKFZTo01awfEKgI4JkqBlV7jTYiumMpMk6MolFUm/SgNFylkbvhqcnZCRTl0jpKXhEI/fHx+YYWthSP/m4IoIpewTH3Wf7M66NV7s2fLJRJq6ghfN3Q==",
-    "componentY": "GYzzvhEPSurUxKBw5dVybLCMz+uPy40K6YFT1BzoqSovj24f/RemJB4VM+v+pqxmdcJKaJThPPztcRFN8rvQaE8kMbDd4hTq7yI9O7QA5FFZwYuD+C+ZmBnfBd8S81YGvbRi16bOHV/AzkaLVWGbIoPke65r4aVzo5RgT3yTPPC12JqBIQ/hS1S+vFQHBKigTWzKDCp52B250kA0XwLSr0eI/cBB0wLpKvoWjuiQJojTj49xHKG8cRBoqJlSsA70Zo+vKRHe7xL7vir+Wv9Rh5t4PILEDA3ya8+iitMsAr0wi3jWYcvdOCR7Bous+nnRjfJ5XleJAXe5dhG+l15CHg==",
-```
-
-Create a JSON Payload using the data from above:
-Example Payload:
+Using the newly encrypted data, we can then create the JSON that will be used in the request call. An example of the input is shown below:
 ```json
 {
     "componentX": "gp2G93yK461uDV19dlQRBPvHoYDx8o5KYRT6JMvlCsWZt6AkBHUBHd31dApbSuseR369LxBcoXf7FaYNW5pSoAz/VL0Uze8to4QRLSQBdZxE7AIbldsYCyswYPunDM054H714AsLieuutMgTOJUqUbkyD2FnlBzbsgRw52i6SbeG3ioof/zWHzWsUVv1uM+M56APK48cLAVbozGjF6/rlHlMiDeU+1XjjQEAKFZTo01awfEKgI4JkqBlV7jTYiumMpMk6MolFUm/SgNFylkbvhqcnZCRTl0jpKXhEI/fHx+YYWthSP/m4IoIpewTH3Wf7M66NV7s2fLJRJq6ghfN3Q==",
@@ -467,25 +430,16 @@ Example Payload:
 }
 ```
 
-
 #### Make The Request
-Using the correct endpoint, headers, and encrypted payload, we can then make the call. The ConnectPay backend will decrypt the payload and process the request. It will then return the response encrypted with the AES key and IV. An example of the output is shown below.
-
-Make the call and the API will return with ComponentDelta.
-
-Example Response Payload
+Using the correct endpoint, headers, and encrypted payload, we can then make the call. The ConnectPay backend will decrypt the payload and process the request. It will then return the response encrypted with the AES key and IV provided by componentX and componentY. An example of the output is shown below:
 ```json
 {
     "componentDelta": "G7ih1R80u92DZIMgDQH9Pt3yt8+cWeSeAwV5hcXuPV4DZMhv6/RNNxq4x0Zq1ICvYkho6+SQ/CEQkXmnMiUgCHIcMVEAZKZMYggJi0f8dQq1U0FhUOCQjJhlp+6+Z5CnlJUa1IpTgtuzsGLHu0nA7ysAShQ0HXKp5FnILkMUSJvYRnyAr9/i09ezn+z7PW5r2dppLTBzPHZpIAti2G0eyeJDFEpgSNme8IsUZjtgG0AqN11FKggEHGlfJFWmgSZl0T0K417TKc4mezLW30Ov4KQ8CSvXrlUWuNKdls2ehGJ/0vdJxM6BPdhdTsAoyJJub+6rCVFpZ0oSg8eYfqr7hrVwMFFJdR6K45UenSp+FCYlHM+U1hzpY+fZxdo9UqhBYU2fRXzNT1t7/nKA/e6sH8dSSxgvn78nuRcsH5mYp8Cpr7bF5vXHYFu6yxkrcgyrnpHPbrnPvDJPgtg4c6Y5vBkf64+0URhMzA1XIAMsJUZCo2jDAagHfzbzEf6Ll9ggRIflpdwFE3IVqBVShNM="
 }
 ```
 
-
 #### Decrypt the Response Payload
-Decrypt ComponentDelta with the AES Key and IV generated earlier in order to decode the response payload into a readable form. An example of the decrypted output is shown below.
-
-
-Example Decrypted Response Payload
+Decrypt ComponentDelta with the AES Key and IV generated earlier in order to decode the response payload into a readable form. An example of the decrypted output is shown below:
 ```json
 {
     "transactionStatus": "APPROVED",
@@ -500,39 +454,21 @@ Example Decrypted Response Payload
 }
 ```
 
-
 #### Verify Success of the Response Payload
-Verify that the transaction was successful. As shown above, the transaction was approved and we can then move onto using another API in order to complete the consumer's enrollment.
+Verify that the transaction was successful. As shown above, the transaction was approved and we can then move to using another ConnectPay API in order to complete consumer enrollment.
 
-Congratulations, you have successfully used ConnectPay's API. The steps above apply to all ConnectPay API's except for the "Create Session Token" API and the "Get Public Key Service" API. These APIs do not need to encrypt the Request Payload's prior to making the call. The following section will go over the general flow of ConnectPay APIs in order to make a successful ACH transaction.
+Congratulations, you have successfully used ConnectPay's API. The steps above apply to all ConnectPay API's except for the "Create Session Token" API and the "Get Public Key Service" API. These APIs do not need the request payload to be encrypted prior to making a call. Please repeat steps 1 and 2 for the API below to complete an ACH transaction.
 
-## API Flow to process ACH transactions
-This is the general flow in order to use ConnectPay's API from enrolling a consumer to processing an ACH payment transaction.
+## Results {.tabset}
 
-### Step 1: Create Consumer Profile
-The merchant must create a consumer profile before enrolling any consumers.
-<details>
-<summary>Step 1: Add Consumer Profile</summary>
-<br>
-The Create Consumer Profile call is mandatory for any new user enrollment. This is used to create an fdCustomerID for a provided external id (and other user information) by the merchant. The returned fdCustomerID should be used right from the enrollment use case. This API is secured, as it requires the Authorization header that can only be derived using the API Secret stored in the Merchant’s web server. <p>
-
-[![](/assets/images/button.png '')](https://qa-developer.fiserv.com/product/ConnectPay/api/?type=post&path=/consumerprofile/add&branch=develop&version=1.0.0)
-[![](button.png '')](https://qa-developer.fiserv.com/product/ConnectPay/api/?type=post&path=/consumerprofile/add&branch=develop&version=1.0.0)
-
-</details>
-
-
-### Step 2 Option 1: Online Bank Login
+### Step 3 Option 1: Online Bank Login
 The online bank login is used when the end-user/consumer would like to login using their banking credentials in order to link their bank account to a payment method.
 <details>
 <summary>Step a: Establish Online Bank Login</summary>
 <br>
 Use this as the first step in online bank login process. The output from this service needs to be passed to online bank login processor to initiate the bank login IFRAME.<p>
 
-
 [![](/assets/images/button.png ''))](https://qa-developer.fiserv.com/product/ConnectPay/api/?type=post&path=/onlinebanklogin/establish&branch=develop&version=1.0.0)
-[![](button.png '')](https://qa-developer.fiserv.com/product/ConnectPay/api/?type=post&path=/onlinebanklogin/establish&branch=develop&version=1.0.0)
-
 </details>
 
 <details>
@@ -540,10 +476,7 @@ Use this as the first step in online bank login process. The output from this se
 <br>
 Use this method to after consumer has completed bank selection process, to pull all consumer information available on bank records to be displayed on consumer’s screen Consumer can view and edit the enrollment form prepopulated with the data from above step. Bank information is the only set of fields which should be not editable. <p>
 
-
 [![](/assets/images/button.png ''))](https://qa-developer.fiserv.com/product/ConnectPay/api/?type=post&path=/onlinebanklogin/validate&branch=develop&version=1.0.0)
-[![](button.png '')](https://qa-developer.fiserv.com/product/ConnectPay/api/?type=post&path=/onlinebanklogin/validate&branch=develop&version=1.0.0)
-
 </details>
 <details>
 <summary>Step c: Consumer Enrollment</summary>
@@ -551,10 +484,10 @@ Use this method to after consumer has completed bank selection process, to pull 
 The Consumer Enrollment call is for any new consumer enrollment purpose. This is used to perform a ConnectPay enrollment process for a provided consumer details payload. This API is secured, as it requires the Authorization header that can only be derived using the API Secret stored in the Merchant’s web server. <p>
 
 [![](/assets/images/button.png ''))](https://qa-developer.fiserv.com/product/ConnectPay/api/?type=post&path=/consumerprofile/enrollment&branch=develop&version=1.0.0)
-[![](button.png '')](https://qa-developer.fiserv.com/product/ConnectPay/api/?type=post&path=/consumerprofile/enrollment&branch=develop&version=1.0.0)
+</details>
 
 
-### Step 2 Option 2: Manual Enrollment
+### Step 3 Option 2: Manual Enrollment
 The manual enrollment is used when the end-user/consumer does not want to login with their bank credentials and would rather deposit smaller amounts using information such as the bank routing and account number.
 <details>
 <summary>Step a: Consumer Enrollment</summary>
@@ -562,7 +495,6 @@ The manual enrollment is used when the end-user/consumer does not want to login 
 The Consumer Enrollment call is for any new consumer enrollment purpose. This is used to perform a ConnectPay enrollment process for a provided consumer details payload. This API is secured, as it requires the Authorization header that can only be derived using the API Secret stored in the Merchant’s web server. <p>
 
 [![](/assets/images/button.png ''))](https://qa-developer.fiserv.com/product/ConnectPay/api/?type=post&path=/consumerprofile/enrollment&branch=develop&version=1.0.0)
-[![](button.png '')](https://qa-developer.fiserv.com/product/ConnectPay/api/?type=post&path=/consumerprofile/enrollment&branch=develop&version=1.0.0)
 </details>
 
 <details>
@@ -571,22 +503,19 @@ The Consumer Enrollment call is for any new consumer enrollment purpose. This is
 Use this method to complete micro deposit validation to authenticate your bank account after a manual enrollment.ConnectPayAPI Direct Integration Guide. Kindly note it might take a few days for the micro deposits to appear on your bank account. Once bank account is successfully authenticated, the ACH payment option gets activated for transaction. For MAS to ConnectPayAPI Server call, MAS needs to pass the fdAccountID in payload request. <p>
 
 [![](/assets/images/button.png '')]()
-[![](button.png '')]()
 </details>
 
+## {-}
 
-### Step 3: ACH Transactions
 
+### Step 4: ACH Transactions
 These APIs are for the merchant to implement depending on the use case of the end-user/consumer. These API's are exclusively used for some form of processing ACH transactions.
 <details>
 <summary>Purchase</summary>
 <br>
 Merchants who want to process ACH Transactions through FirstAPI must make server-to-server calls and pass necessary encrypted payload as required for that particular case. Use this to initiate purchase/sale transaction request where final amount is known. <p>
 
-
 [![](/assets/images/button.png '')](https://qa-developer.fiserv.com/product/ConnectPay/api/?type=post&path=/transaction/purchase&branch=develop&version=1.0.0)
-[![](button.png '')](https://qa-developer.fiserv.com/product/ConnectPay/api/?type=post&path=/transaction/purchase&branch=develop&version=1.0.0)
-
 </details>
 
 <details>
@@ -594,26 +523,16 @@ Merchants who want to process ACH Transactions through FirstAPI must make server
 <br>
 Merchants who want to process ACH Transactions through FirstAPI must make server-to-server calls and pass necessary encrypted payload as required for that particular case. Use this to initiate purchase/sale transaction request where final amount is known. <p>
 
-
 [![](/assets/images/button.png '')](https://qa-developer.fiserv.com/product/ConnectPay/api/?type=post&path=/transaction/authorize&branch=develop&version=1.0.0)
-[![](button.png '')](https://qa-developer.fiserv.com/product/ConnectPay/api/?type=post&path=/transaction/authorize&branch=develop&version=1.0.0)
 </details>
 
+
+### ACH Transaction Processed
+You have successfully completed an ACH transaction. For information on other ConnectPay APIs, please look below for the API specification:
 
 ### Other APIs:
-
-These are the other APIs that the user may want to implement depending on the specific use case. 
-<details>
-<summary>Create Session Token</summary>
-<br>
-The Create Session Token API call is used to create a session token and to retrieve the RSA public encryption key generated for this session.
-This API is secured as it requires the Authorization header that can only be derived using the API Secret stored in the Merchant’s server.
-Below are the details of the API end point. <p>
-
-[![](/assets/images/button.png '')](https://qa-developer.fiserv.com/product/ConnectPay/api/?type=post&path=/security/createsessiontoken&branch=develop&version=1.0.0)
-</details>
-
 
 ### Useful Artifacts to help you Integrate
 [//]: <> (Need to link below to the actual files)
 - [Implementation Guide](../documentation/implementationguide.md)
+- [SDK](../assets/connect-pay_spec.zip)
