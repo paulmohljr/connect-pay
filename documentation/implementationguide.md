@@ -4,6 +4,7 @@ This guide will go over everything the user must know in order to implement Conn
 ## Pre-requisites
 Below are the prerequisites before using ConnectPay's API:
 
+
 ### Connectivity
 The ConnectPay services are accessed through the public Internet. ConnectPay accepts communication only via the HTTPS channel. Custom HTTP headers are also used to carry additional information in each request.
 |Environment                |Host                                     |Base Path  |
@@ -458,11 +459,12 @@ Decrypt ComponentDelta with the AES Key and IV generated earlier in order to dec
 Verify that the transaction was successful. As shown above, the transaction was approved and we can then move to using another ConnectPay API in order to complete consumer enrollment.
 
 Congratulations, you have successfully used ConnectPay's API. The steps above apply to all ConnectPay API's except for the "Create Session Token" API and the "Get Public Key Service" API. These APIs do not need the request payload to be encrypted prior to making a call. Please repeat steps 1 and 2 for the API below to complete an ACH transaction.
-
 <!--
 type: tab
 titles: Online Bank Login, Manual Enrollment
 -->
+### Step 3 Option 1: Online Bank Login
+
 
 The online bank login is used when the end-user/consumer would like to login using their banking credentials in order to link their bank account to a payment method.
 <details>
@@ -492,6 +494,9 @@ The Consumer Enrollment call is for any new consumer enrollment purpose. This is
 type: tab
 -->
 
+### Step 3 Option 2: Manual Enrollment
+
+
 The manual enrollment is used when the end-user/consumer does not want to login with their bank credentials and would rather deposit smaller amounts using information such as the bank routing and account number.
 <details>
 <summary>Step a: Consumer Enrollment</summary>
@@ -509,6 +514,7 @@ Use this method to complete micro deposit validation to authenticate your bank a
 [![](/assets/images/button.png '')]()
 </details>
 
+<!-- type: tab-end -->
 <!-- type: tab-end -->
 
 ### Step 4: ACH Transactions
