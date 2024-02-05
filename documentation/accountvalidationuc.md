@@ -6,15 +6,22 @@ The consumer will be provided with a screen to provide their ConnectPayPaymentNu
 Sequence of activities for completing Account Validation scenario:
 
 ## Implementation Steps: Bank Login Process
+### Create Session Token 
+<p>
+[Create Session Token](https://qa-developer.fiserv.com/product/ConnectPay/api/?type=post&path=/security/createsessiontoken&branch=develop&version=1.0.0 'Create Session Token')
+</p>
 
-### CreateSessionToken
-
-### Initialize and Launch ConnectPay SDK <LINK>
+### Initialize and Launch ConnectPay SDK 
 You will want to go to the specific mobile operating section and look to initialize the App
+<p>
 [WebSDK](https://qa-developer.fiserv.com/product/ConnectPay/docs/?path=documentation/websdk.md&branch=develop 'Web SDK Instructions')
+</p>
+<p>
 [iOS]([(https://qa-developer.fiserv.com/product/ConnectPay/docs/?path=documentation/iossdk.md&branch=develop)'iOS SDK Instructions')
+</p>
+<p>
 [Android]((https://qa-developer.fiserv.com/product/ConnectPay/docs/?path=documentation/androidsdk.md&branch=develop)'Android SDK Instructions')
-
+</p>
 ### Further Steps
 <ol>
   <li>Pass necessary data to the SDK (including fdCustomerId)</li>
@@ -28,5 +35,5 @@ You will want to go to the specific mobile operating section and look to initial
 <p>Image on the flow of the activity</p>
 
 ### Issues with Integration
-[Fiserv Implementation Support Team](mailto:DL-GBL-VASDelivery@fiserv.com?subject=Issue with Implementation: Account Validation Issues)
+[Fiserv Implementation Support Team](mailto:DL-GBL-VASDelivery@fiserv.com)
 <center><img src="https://raw.githubusercontent.com/Fiserv/connect-pay/develop/assets/images/Account Validation Architecture.png" alt="Non Enrollment Architecture" class="center"></center>

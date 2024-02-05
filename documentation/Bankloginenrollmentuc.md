@@ -11,14 +11,26 @@ Sequence of activities for completing bank login enrollment:
 ## Implementation Steps: Bank Login Process
 
 ### Create Consumer Profile (If fdCustomerId not already present for the user) 
+<p>
 [Create Consumer Profile](https://qa-developer.fiserv.com/product/ConnectPay/docs/?path=./documentation/implementationguide.md&branch=develop 'Create Consumer Profile')
+</p>
+
 ### Create Session Token 
+<p>
 [Create Session Token](https://qa-developer.fiserv.com/product/ConnectPay/api/?type=post&path=/security/createsessiontoken&branch=develop&version=1.0.0 'Create Session Token')
-### Initialize and Launch ConnectPay SDK <LINK>
+</p>
+
+### Initialize and Launch ConnectPay SDK 
 You will want to go to the specific mobile operating section and look to initialize the App
+<p>
 [WebSDK](https://qa-developer.fiserv.com/product/ConnectPay/docs/?path=documentation/websdk.md&branch=develop 'Web SDK Instructions')
+</p>
+<p>
 [iOS]([(https://qa-developer.fiserv.com/product/ConnectPay/docs/?path=documentation/iossdk.md&branch=develop)'iOS SDK Instructions')
+</p>
+<p>
 [Android]((https://qa-developer.fiserv.com/product/ConnectPay/docs/?path=documentation/androidsdk.md&branch=develop)'Android SDK Instructions')
+</p>
 
 #### Pass necessary data to the SDK 
 After Initialization, Continue to follow the steps to pass through the SDK. Continue to follow the necessary data depending on your SDK. 
@@ -37,7 +49,7 @@ After Initialization, Continue to follow the steps to pass through the SDK. Cont
 </ol>
 
 ### Issues with Integration
-[Fiserv Implementation Support Team](mailto:DL-GBL-VASDelivery@fiserv.com?subject=Issue with Implementation: Bank Login Enrollment Issue)
+[Fiserv Implementation Support Team](mailto:DL-GBL-VASDelivery@fiserv.com)
 <p>Image on the flow of the activity</p>
 <center><img src="https://raw.githubusercontent.com/Fiserv/connect-pay/develop/assets/images/Online Bank Login Enrollment Architecture.png" alt="Bank Login Architecture" class="center"></center>
 
