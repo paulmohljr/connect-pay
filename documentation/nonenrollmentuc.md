@@ -20,12 +20,14 @@ You will want to go to the specific mobile operating section and look to initial
 <p>
 [Android]((https://qa-developer.fiserv.com/product/ConnectPay/docs/?path=documentation/androidsdk.md&branch=develop)'Android SDK Instructions')
 </p>
+
 ### Further Steps
 <ol>
   <li>Pass necessary data to the SDK(including fdCustomerId)</li>
   <li>SDK presents the screens to consumer to capture consumer information</li>
   <li>SDK completes update process and displays response to consumer</li>
 </ol>
+
 ### Issues with Integration
 [Fiserv Implementation Support Team](mailto:DL-GBL-VASDelivery@fiserv.com)
 <p>Image on the flow of the activity</p>
