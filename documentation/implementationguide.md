@@ -459,7 +459,11 @@ Verify that the transaction was successful. As shown above, the transaction was 
 
 Congratulations, you have successfully used ConnectPay's API. The steps above apply to all ConnectPay API's except for the "Create Session Token" API and the "Get Public Key Service" API. These APIs do not need the request payload to be encrypted prior to making a call. Please repeat steps 1 and 2 for the API below to complete an ACH transaction.
 
-### Step 3 Option 1: Online Bank Login
+<!--
+type: tab
+titles: Online Bank Login, Manual Enrollment
+-->
+
 The online bank login is used when the end-user/consumer would like to login using their banking credentials in order to link their bank account to a payment method.
 <details>
 <summary>Step a: Establish Online Bank Login</summary>
@@ -484,8 +488,10 @@ The Consumer Enrollment call is for any new consumer enrollment purpose. This is
 [![](/assets/images/button.png ''))](https://qa-developer.fiserv.com/product/ConnectPay/api/?type=post&path=/consumerprofile/enrollment&branch=develop&version=1.0.0)
 </details>
 
+<!--
+type: tab
+-->
 
-### Step 3 Option 2: Manual Enrollment
 The manual enrollment is used when the end-user/consumer does not want to login with their bank credentials and would rather deposit smaller amounts using information such as the bank routing and account number.
 <details>
 <summary>Step a: Consumer Enrollment</summary>
@@ -503,6 +509,7 @@ Use this method to complete micro deposit validation to authenticate your bank a
 [![](/assets/images/button.png '')]()
 </details>
 
+<!-- type: tab-end -->
 
 ### Step 4: ACH Transactions
 These APIs are for the merchant to implement depending on the use case of the end-user/consumer. These API's are exclusively used for some form of processing ACH transactions.
