@@ -1,8 +1,12 @@
 # Non-enrollment Architecture
 ## Explanation of Feature
-This section would cover business use cases like MicroDepositValidation, ConsumerUpdates (other than ConnectPayPaymentNumber updates) and ACH account closure.
-For uCom merchants, skip the details in this section and refer to Sec
-Sequence of activities for completing Non Enrollment scenario:
+<p>
+This section would cover business use cases like Micro Deposit Validation,Consumer Updates (other than ConnectPayPaymentNumber updates) and ACH account closure.
+</p>
+
+<!-- theme: danger 
+>For uCom merchants, you will continue to Create Session Token as well as Initialize and launch ConnectPay SDK. However, you will want to follow the additional uCom steps section instead of additional steps:
+-->
 
 ### Create Session Token 
 <p>
@@ -18,12 +22,19 @@ You will want to go to the specific mobile operating section and look to initial
 [iOS](https://qa-developer.fiserv.com/product/ConnectPay/docs/?path=documentation/iossdk.md&branch=develop)
 </p>
 <p>
-[Android]((https://qa-developer.fiserv.com/product/ConnectPay/docs/?path=documentation/androidsdk.md&branch=develop)
+[Android](https://qa-developer.fiserv.com/product/ConnectPay/docs/?path=documentation/androidsdk.md&branch=develop)
 </p>
 
 ### Additional Steps
 <ol>
   <li>Pass necessary data to the SDK(including fdCustomerId)</li>
+  <li>SDK presents the screens to consumer to capture consumer information</li>
+  <li>SDK completes update process and displays response to consumer</li>
+</ol>
+
+### Additional uCOM Steps
+<ol>
+  <li>Pass necessary data to the SDK(including uCom provided fdCustomerId)</li>
   <li>SDK presents the screens to consumer to capture consumer information</li>
   <li>SDK completes update process and displays response to consumer</li>
 </ol>
