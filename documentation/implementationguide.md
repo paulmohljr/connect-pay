@@ -4,7 +4,6 @@ This guide will go over everything the user must know in order to implement Conn
 ## Pre-requisites
 Below are the prerequisites before using ConnectPay's API:
 
-
 ### Connectivity
 The ConnectPay services are accessed through the public Internet. ConnectPay accepts communication only via the HTTPS channel. Custom HTTP headers are also used to carry additional information in each request.
 |Environment                |Host                                     |Base Path  |
@@ -396,11 +395,11 @@ The Create Consumer Profile call is mandatory for any new user enrollment. This 
 [![](/assets/images/button.png '')](https://qa-developer.fiserv.com/product/ConnectPay/api/?type=post&path=/consumerprofile/add&branch=develop&version=1.0.0)
 
 #### Create Request Payload
-First and foremost, we need to create the request payload prior to encryption. An example payload is shown below:
+First and foremost, we need to create the request payload prior to encryption. The "externalID" can be whatever the developer would like. It is a unique identifier for each consumer and the should be incremented with each unique consumer. An example payload is shown below:
 ```json
 {
     "customer": {
-        "externalID": "ConnectPay20230810003"
+        "externalID": "Merchant01Customer00000000"
     }
 }
 ```
@@ -411,23 +410,23 @@ We need to next create the HMAC Authorization header using the payload above. Th
 #### Encrypt the AES key and IV
 From step 2, we implemented the methodology to create the AES key and IV. We will use the publicKey generated from the "Create Session Token" API in order to encrypt the generated AES Key as "componentX" and the IV as "componentY". An example of the encrypted input is shown below:
 ```json
-"componentX": "gp2G93yK461uDV19dlQRBPvHoYDx8o5KYRT6JMvlCsWZt6AkBHUBHd31dApbSuseR369LxBcoXf7FaYNW5pSoAz/VL0Uze8to4QRLSQBdZxE7AIbldsYCyswYPunDM054H714AsLieuutMgTOJUqUbkyD2FnlBzbsgRw52i6SbeG3ioof/zWHzWsUVv1uM+M56APK48cLAVbozGjF6/rlHlMiDeU+1XjjQEAKFZTo01awfEKgI4JkqBlV7jTYiumMpMk6MolFUm/SgNFylkbvhqcnZCRTl0jpKXhEI/fHx+YYWthSP/m4IoIpewTH3Wf7M66NV7s2fLJRJq6ghfN3Q==",
-"componentY": "GYzzvhEPSurUxKBw5dVybLCMz+uPy40K6YFT1BzoqSovj24f/RemJB4VM+v+pqxmdcJKaJThPPztcRFN8rvQaE8kMbDd4hTq7yI9O7QA5FFZwYuD+C+ZmBnfBd8S81YGvbRi16bOHV/AzkaLVWGbIoPke65r4aVzo5RgT3yTPPC12JqBIQ/hS1S+vFQHBKigTWzKDCp52B250kA0XwLSr0eI/cBB0wLpKvoWjuiQJojTj49xHKG8cRBoqJlSsA70Zo+vKRHe7xL7vir+Wv9Rh5t4PILEDA3ya8+iitMsAr0wi3jWYcvdOCR7Bous+nnRjfJ5XleJAXe5dhG+l15CHg==",
+    "componentX": "ju5PPi7k4K2jtI0z47qKcHnQGRrIymN+dK+PVlWjKyufoaUHJqjqOAbjsQZ0q3sLciBkEVWm5jGbWQoGf2e9Us+yfYu8ua2hz3wOIRSymHdx8qKuoexQiKhLWnp/GAL0+TIdzb/CvNijuJkOe1XSzEoFdFjYgRNMV8LJM3G/izn48kZm9gexM/iJenJyzwFoqXJc7EcWrC3C0RlkBF5jTgZzTGCvBpxDq4pw3CjFDsGvFy5Gg26B1KRcRDctrFpLV697QAW//hWyS91NYB68S3TIo/B6/LfUjj9bOY3fM+i+5BY2oV7zbLLyvA+CKfLFRBoXtevfBJyndrUDFD0EBA==",
+    "componentY": "CqTTfUbNR66rGRhAKGqnEYJBGona07l2lvV7s7sEG97b0eohkWCqcw/XhCSy2+A6rYxhhuvvQ+orjfmCzssIl4Uz+4gu3GE3lfMGeykjRuhipyV+fjnjOBcw/VDOg3IXffr4Oe/isRYTZ5gp0uht89Rpu9VXfWktKH5uEJiZdNyD9TY+xZ2Ekwc6trDjTSFPbxVNaITJGqMBFsuWXGcHvaqoo6bC7Q9r/pVsUHq5KDdoi0zuW+xBilMxk/hZE8fBifXkUZ+KGGibyHlseh/uH9U32UHgvyVSsiUjI1j44WNulRnvfN7Mi5HozJTiYbX2iGrL5QQLKkQIWQPWV37VgQ=="
 ```
 
 #### Encrypt The Request Payload
 Using the AES key and IV we will then encrypt the request payload using the AES encryption method. An example of the encrypted input is shown below:
 ```json
-"componentDelta": "7MTtHhDXZ0NTNuG4/amThFCcwOpYDd8c4JHJ6vVsyIAV3XI6iMaCaDVQAGs2BEiRePSeYaknOLTGwdQXN2T58vbnmJyDUZFssFbzSux9AKpjxPUymwcuEIHISTKEqcqOeN3leVo="
+"componentDelta": "OEIyAAUL1Py3/oKewtNXswtkYOw+krJP0EFhucFWFXSug0TCV7kqL67Mk5PTzVqNWTAyPl0lK6ac2EBK3kxskC6WpzpJI4qSv7/9JSfQ7zAYUiKAKPobIXpHAJ7BuHSMlMkv/6UTJvdIRsgDaqfAbD5pqG5KDbRzXpzmLIpVJnGyPCkwwm+F36wGbe1ccuvzDHNL77e6XSmm2LpzO/NAGJRjMGXdLQ9XKFvjr/gK0ruO2gdqglomlvy3MG8BSvLCAYkOL1CAB4wF8ovsfpOAAV92KRdqxeMISntCc0/Fxg7fs9JILmn4ZkgiSgha1CsN"
 ```
 
 #### Finalize the Request Payload
 Using the newly encrypted data, we can then create the JSON that will be used in the request call. An example of the input is shown below:
 ```json
 {
-    "componentX": "gp2G93yK461uDV19dlQRBPvHoYDx8o5KYRT6JMvlCsWZt6AkBHUBHd31dApbSuseR369LxBcoXf7FaYNW5pSoAz/VL0Uze8to4QRLSQBdZxE7AIbldsYCyswYPunDM054H714AsLieuutMgTOJUqUbkyD2FnlBzbsgRw52i6SbeG3ioof/zWHzWsUVv1uM+M56APK48cLAVbozGjF6/rlHlMiDeU+1XjjQEAKFZTo01awfEKgI4JkqBlV7jTYiumMpMk6MolFUm/SgNFylkbvhqcnZCRTl0jpKXhEI/fHx+YYWthSP/m4IoIpewTH3Wf7M66NV7s2fLJRJq6ghfN3Q==",
-    "componentY": "GYzzvhEPSurUxKBw5dVybLCMz+uPy40K6YFT1BzoqSovj24f/RemJB4VM+v+pqxmdcJKaJThPPztcRFN8rvQaE8kMbDd4hTq7yI9O7QA5FFZwYuD+C+ZmBnfBd8S81YGvbRi16bOHV/AzkaLVWGbIoPke65r4aVzo5RgT3yTPPC12JqBIQ/hS1S+vFQHBKigTWzKDCp52B250kA0XwLSr0eI/cBB0wLpKvoWjuiQJojTj49xHKG8cRBoqJlSsA70Zo+vKRHe7xL7vir+Wv9Rh5t4PILEDA3ya8+iitMsAr0wi3jWYcvdOCR7Bous+nnRjfJ5XleJAXe5dhG+l15CHg==",
-    "componentDelta": "7MTtHhDXZ0NTNuG4/amThFCcwOpYDd8c4JHJ6vVsyIAV3XI6iMaCaDVQAGs2BEiRePSeYaknOLTGwdQXN2T58vbnmJyDUZFssFbzSux9AKpjxPUymwcuEIHISTKEqcqOeN3leVo="
+    "componentX": "ju5PPi7k4K2jtI0z47qKcHnQGRrIymN+dK+PVlWjKyufoaUHJqjqOAbjsQZ0q3sLciBkEVWm5jGbWQoGf2e9Us+yfYu8ua2hz3wOIRSymHdx8qKuoexQiKhLWnp/GAL0+TIdzb/CvNijuJkOe1XSzEoFdFjYgRNMV8LJM3G/izn48kZm9gexM/iJenJyzwFoqXJc7EcWrC3C0RlkBF5jTgZzTGCvBpxDq4pw3CjFDsGvFy5Gg26B1KRcRDctrFpLV697QAW//hWyS91NYB68S3TIo/B6/LfUjj9bOY3fM+i+5BY2oV7zbLLyvA+CKfLFRBoXtevfBJyndrUDFD0EBA==",
+    "componentY": "CqTTfUbNR66rGRhAKGqnEYJBGona07l2lvV7s7sEG97b0eohkWCqcw/XhCSy2+A6rYxhhuvvQ+orjfmCzssIl4Uz+4gu3GE3lfMGeykjRuhipyV+fjnjOBcw/VDOg3IXffr4Oe/isRYTZ5gp0uht89Rpu9VXfWktKH5uEJiZdNyD9TY+xZ2Ekwc6trDjTSFPbxVNaITJGqMBFsuWXGcHvaqoo6bC7Q9r/pVsUHq5KDdoi0zuW+xBilMxk/hZE8fBifXkUZ+KGGibyHlseh/uH9U32UHgvyVSsiUjI1j44WNulRnvfN7Mi5HozJTiYbX2iGrL5QQLKkQIWQPWV37VgQ==",
+    "componentDelta": "OEIyAAUL1Py3/oKewtNXswtkYOw+krJP0EFhucFWFXSug0TCV7kqL67Mk5PTzVqNWTAyPl0lK6ac2EBK3kxskC6WpzpJI4qSv7/9JSfQ7zAYUiKAKPobIXpHAJ7BuHSMlMkv/6UTJvdIRsgDaqfAbD5pqG5KDbRzXpzmLIpVJnGyPCkwwm+F36wGbe1ccuvzDHNL77e6XSmm2LpzO/NAGJRjMGXdLQ9XKFvjr/gK0ruO2gdqglomlvy3MG8BSvLCAYkOL1CAB4wF8ovsfpOAAV92KRdqxeMISntCc0/Fxg7fs9JILmn4ZkgiSgha1CsN"
 }
 ```
 
@@ -435,7 +434,7 @@ Using the newly encrypted data, we can then create the JSON that will be used in
 Using the correct endpoint, headers, and encrypted payload, we can then make the call. The ConnectPay backend will decrypt the payload and process the request. It will then return the response encrypted with the AES key and IV provided by componentX and componentY. An example of the output is shown below:
 ```json
 {
-    "componentDelta": "G7ih1R80u92DZIMgDQH9Pt3yt8+cWeSeAwV5hcXuPV4DZMhv6/RNNxq4x0Zq1ICvYkho6+SQ/CEQkXmnMiUgCHIcMVEAZKZMYggJi0f8dQq1U0FhUOCQjJhlp+6+Z5CnlJUa1IpTgtuzsGLHu0nA7ysAShQ0HXKp5FnILkMUSJvYRnyAr9/i09ezn+z7PW5r2dppLTBzPHZpIAti2G0eyeJDFEpgSNme8IsUZjtgG0AqN11FKggEHGlfJFWmgSZl0T0K417TKc4mezLW30Ov4KQ8CSvXrlUWuNKdls2ehGJ/0vdJxM6BPdhdTsAoyJJub+6rCVFpZ0oSg8eYfqr7hrVwMFFJdR6K45UenSp+FCYlHM+U1hzpY+fZxdo9UqhBYU2fRXzNT1t7/nKA/e6sH8dSSxgvn78nuRcsH5mYp8Cpr7bF5vXHYFu6yxkrcgyrnpHPbrnPvDJPgtg4c6Y5vBkf64+0URhMzA1XIAMsJUZCo2jDAagHfzbzEf6Ll9ggRIflpdwFE3IVqBVShNM="
+"componentDelta": "cRD5xVaJab13iRQ7l6No6ot9YPTFT3bi/qapHYGgsNmxQ8nT2mtIz7uLLHz5kdp5JEmDjiP1dXMNPg8jP5rIZQf/5dtMfFLq7YL7FQY/boTsd7BoJg7reDeeAk6l9+76gaSAZMIRJGYS4fhy1bgClx2jIeWo4fLlfildeHnghCU1ElR8XhFi3oyd8hU+YEpDENP5IJJMVxjnYChuFX8paVy/SAYFMESBXSTIgPi6Y/kJc/bswlxaa9Yei4GnD+Ny1laVs4HqJp32JJ+NHJIYdZr5117AY0JJxJ9oudnkK6J8oPnnXhLCBGxNCRDJG3AVLRxDnQcds/cSiwAVREHr4nn848IEsUb27wJR7SiDxVaELxme9CNZ1dB0tPYQ1wux3ymWtnUgLfVRFsHH3EeucbHv8uIc8dxcwxZReROzVS8="
 }
 ```
 
@@ -444,13 +443,12 @@ Decrypt ComponentDelta with the AES Key and IV generated earlier in order to dec
 ```json
 {
     "transactionStatus": "APPROVED",
-    "transactionStatusCode": 10,
-    "referenceTransactionID": "0021-8d1b02f2-fe0d-1b41-5876-7f807c1a438a",
-    "transactionStatusDescription": "Previously Created",
-    "responseVerbiage": "Previously Created",
+    "transactionStatusCode": 0,
+    "referenceTransactionID": "5cdd1d99-5367-ed98-56fd-3f52ab008ac8",
+    "transactionStatusDescription": "Created",
     "customer": {
-        "fdCustomerID": "CP5vsho3170593468563400128768J3F7x",
-        "externalID": "ConnectPay20230810003"
+        "fdCustomerID": "CP1GWQ15714280477520000262L7Wymj",
+        "externalID": "Merchant01Consumer65746635"
     }
 }
 ```
@@ -459,6 +457,10 @@ Decrypt ComponentDelta with the AES Key and IV generated earlier in order to dec
 Verify that the transaction was successful. As shown above, the transaction was approved and we can then move to using another ConnectPay API in order to complete consumer enrollment.
 
 Congratulations, you have successfully used ConnectPay's API. The steps above apply to all ConnectPay API's except for the "Create Session Token" API and the "Get Public Key Service" API. These APIs do not need the request payload to be encrypted prior to making a call. Please repeat steps 1 and 2 for the API below to complete an ACH transaction.
+
+### Step 3: Consumer Enrollment
+There are two ways to enroll customers. The steps for either enrolling consumers through online bank login or manual enrollment are listed below. It is also possible to have both types of enrollment methods as part of the merchant application. 
+
 <!--
 type: tab
 titles: Online Bank Login, Manual Enrollment
@@ -515,7 +517,6 @@ Use this method to complete micro deposit validation to authenticate your bank a
 </details>
 
 <!-- type: tab-end -->
-<!-- type: tab-end -->
 
 ### Step 4: ACH Transactions
 These APIs are for the merchant to implement depending on the use case of the end-user/consumer. These API's are exclusively used for some form of processing ACH transactions.
@@ -543,5 +544,4 @@ You have successfully completed an ACH transaction. For information on other Con
 
 ### Useful Artifacts to help you Integrate
 [//]: <> (Need to link below to the actual files)
-- [Implementation Guide](../documentation/implementationguide.md)
-- [SDK](../assets/connect-pay_spec.zip)
+- [SDK](https://qa-developer.fiserv.com/product/ConnectPay/docs/?path=./documentation/connectpaysdklanding.md&branch=develop)
