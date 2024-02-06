@@ -1,6 +1,7 @@
 # Bank Login Enrollment Architecture
 ## Explanation of Feature
-This is the preferred method of consumer enrollment into ConnectPay.For uCom merchants, skip the details in this section and refer to Sec#3.8.1
+This is the preferred method of consumer enrollment into ConnectPay.
+For uCom merchants, skip the details in this section and refer UCOM DETAILS<TO BE ADDED>
 <p>
 The consumer is presented with an option to login into his/her bank account using their bank username and password. Once the consumer logs in, authorizes the bank account he/she wants to use for this enrollment, and submits, ConnectPay fetches the consumer demographic and/or bank information from the bank using a secure backend connection and populates all the details on the consumers enrollment screen. The consumer will then verify all the details and edit them as he/she sees fit (except for bank account details) and submits the enrollment.
 </p>
@@ -8,32 +9,32 @@ The consumer is presented with an option to login into his/her bank account usin
 This method of enrollment is preferred because it is easier for a consumer to remember the bank username and password as opposed to routing and account number to be keyed in (manual enrollment process). Additionally this method of enrollment is, in most cases, instantly activated and the consumer is ready to transact once their enrollment is successful.
 Sequence of activities for completing bank login enrollment:
 </p>
-## Implementation Steps: Bank Login Process
 
+## Implementation Steps: Bank Login Process
 ### Create Consumer Profile (If fdCustomerId not already present for the user) 
 <p>
-[Create Consumer Profile](https://qa-developer.fiserv.com/product/ConnectPay/docs/?path=./documentation/implementationguide.md&branch=develop 'Create Consumer Profile')
+[Create Consumer Profile](https://qa-developer.fiserv.com/product/ConnectPay/docs/?path=./documentation/implementationguide.md&branch=develop)
 </p>
 
 ### Create Session Token 
 <p>
-[Create Session Token](https://qa-developer.fiserv.com/product/ConnectPay/api/?type=post&path=/security/createsessiontoken&branch=develop&version=1.0.0 'Create Session Token')
+[Create Session Token](https://qa-developer.fiserv.com/product/ConnectPay/api/?type=post&path=/security/createsessiontoken&branch=develop&version=1.0.0)
 </p>
 
 ### Initialize and Launch ConnectPay SDK 
 You will want to go to the specific mobile operating section and look to initialize the App
 <p>
-[WebSDK](https://qa-developer.fiserv.com/product/ConnectPay/docs/?path=documentation/websdk.md&branch=develop 'Web SDK Instructions')
+[WebSDK](https://qa-developer.fiserv.com/product/ConnectPay/docs/?path=documentation/websdk.md&branch=develop)
 </p>
 <p>
-[iOS]([(https://qa-developer.fiserv.com/product/ConnectPay/docs/?path=documentation/iossdk.md&branch=develop)'iOS SDK Instructions')
+[iOS]([(https://qa-developer.fiserv.com/product/ConnectPay/docs/?path=documentation/iossdk.md&branch=develop)
 </p>
 <p>
-[Android]((https://qa-developer.fiserv.com/product/ConnectPay/docs/?path=documentation/androidsdk.md&branch=develop)'Android SDK Instructions')
+[Android]((https://qa-developer.fiserv.com/product/ConnectPay/docs/?path=documentation/androidsdk.md&branch=develop)
 </p>
 
 #### Pass necessary data to the SDK 
-After Initialization, Continue to follow the steps to pass through the SDK. Continue to follow the necessary data depending on your SDK. 
+After Initialization, Continue to follow the steps to pass through the SDK. Continue to follow the necessary data depending on your SDK.
 
 <p>Following are the steps to take to complete bank login</p>
 <ol>
