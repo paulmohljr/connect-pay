@@ -4,7 +4,9 @@ Utilize this guide for your SDK Integration with Apple iOS
 ## General Setup
 Drag and drop the provided Universal Binary (.framework file) into your project structure (you can drop this framework anywhere into your Xcode Project. Ideally, you would drop it into your "Frameworks" directory where your other frameworks exist.)
 
-*Note: During your drag and drop, Xcode will prompt you to configure whether the binary should live within your project structure as a copy or simply have a reference to the binary outside of your project structure. We want to ensure you have a deep copy of the binary in your project and not just a reference.*
+<!-- theme: danger
+Note: During your drag and drop, Xcode will prompt you to configure whether the binary should live within your project structure as a copy or simply have a reference to the binary outside of your project structure. We want to ensure you have a deep copy of the binary in your project and not just a reference.
+-->
 ## General Setup Part 2
 Ensure that the PaymentSDK Universal binary is linked and embedded, navigate to your target settings and ensure that the binary appears under the "Embedded Binaries" and "Linked Frameworks and Libraries" section. (If you don't see the PaymentSDK Universal library listed there, you can use the "+" button to manually embed and link the binary for your target).
 
@@ -26,7 +28,11 @@ configId:<CONFIG_ID> andPostUrl:<POST_URL>];
 ```
 ## Use Case Integration
 Integrate into a specific use case of the ConnectPay SDK.
-*Note:Define any extraParam/default parameters to be passed into the Use Case as shown below: (It is mandatory to pass all the required fields in extra params for Streamlined enrollment flow.)*
+
+<!-- theme: danger
+Note:Define any extraParam/default parameters to be passed into the Use Case as shown below: (It is mandatory to pass all the required fields in extra params for Streamlined enrollment flow.)
+-->
+
 ```json
 ManualEnrollmentConfiguration *extraParams = [[ManualEnrollmentConfiguration alloc] init]; extraParams.routingNumber = <ROUTING_NUMBER>;
 extraParams.accountNumber = <BANK_ACCOUNT_NUMBER>; extraParams.accountType = <ACCOUNT_TYPE>;
@@ -85,7 +91,9 @@ To call the Bank Login Enrollment use case with PayWithMyBank or AllData, use th
 ManualEnrollment *manualEnrollment = [cpSdk manualEnrollmentWithCpSdkConfiguration:configuration andManualEnrollmentConfiguration:manualEnrollmentConfiguration];
 [manualEnrollment startWithCompletionHandler:<PASS_YOUR_BLOCK_HERE>];
 ```
-*Note: To call the Enrollment use case with both the options (to let customer choose either manual or bank login), use the below code sample:*
+<!-- theme: danger 
+Note: To call the Enrollment use case with both the options (to let customer choose either manual or bank login), use the below code sample:
+-->
 ```java
 ManualEnrollment *manualEnrollment = [cpSdk manualEnrollmentWithCpSdkConfiguration:configuration andManualEnrollmentConfiguration:manualEnrollmentConfiguration];
 [manualEnrollment startWithCompletionHandler:<PASS_YOUR_BLOCK_HERE>];

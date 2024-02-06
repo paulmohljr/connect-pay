@@ -1,12 +1,13 @@
 # ACH Transaction Architecture
-Depending on merchant setup, ACH Transactions can be sent to ConnectPay using:
-<ol>
-<li>[uCOM]((https://qa-developer.fiserv.com/product/)</li>
-<li>[Buypass]((https://qa-developer.fiserv.com/product/)</li>
-<li>ConnecPayPayment through FirstAPI (Continue Below)</li>
-</ol>
+Depending on merchant setup, ACH Transactions can be sent to ConnectPay using Universal Commerce (uCom), Buypass or through ConnectPayPayment through FirstAPI. 
 
-*Note: For uCOM and Buypass, you will need to refer to the respective Implementation guide links above for setup*
+<!-- theme: danger
+*Note: Below is information on ConnectPayPayment through FirstAPI. For uCOM and Buypass, you will need to refer to the respective Implementation guide links below for setup*
+-->
+<ol>
+<li>[uCOM](https://developer.fiserv.com/product/ConnectedCommerce/docs/?path=docs/documentation/Standard_Implementation_Guide.md&branch=main))</li>
+<li>[Buypass]((https://qa-developer.fiserv.com/product/)</li>
+</ol>
 
 ## Explanation of Feature
 All payments are server-to-server communication between the merchant server and FirstAPI. Transactions can be initiated using fdAccountId or, connectPayPaymentNumber

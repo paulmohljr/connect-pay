@@ -1,11 +1,18 @@
 # Manual Enrollment Architecture
 ## Explanation of Feature
+<p>
 The consumer has an option to manually key in all information required for ConnectPay enrollment into the enrollment screen.
+</p>
+<p>
 Usually after a manual enrollment, two micro deposits are made to the consumer’s bank account. The consumer waits for 1-3 business days for these micro deposits to appear in their bank account, following which he/she needs to validate their account by answering micro deposit amount questions via the Micro Deposit Validation process.
+</p>
+<p>
 The consumer is in a pending validation status and will not be able to transact until the validation is completed.
+</p>
 
 ## Implementation Steps: Manual Enrollment
 ### Create Session Token 
+
 <p>
 [Create Session Token](https://qa-developer.fiserv.com/product/ConnectPay/api/?type=post&path=/security/createsessiontoken&branch=develop&version=1.0.0)
 </p>
@@ -31,6 +38,10 @@ You will want to go to the specific mobile operating section and look to initial
   <li>Merchant server does a server-to-server GetData call to retrieve fdAccountId generated after consumer data vaulting. Merchant additionally receives the current consumer status as a part of this call</li>
   <li>Merchant server stores the fdCustomerId, fdAccountId (optional) against the externalId in their system for future use</li>
 </ol>
+
+<!-- theme: danger 
+Note: Merchant server stores the fdCustomerId, fdAccountId (optional) against the externalID in their system for future use.
+-->
 
 ### Issues with Integration
 [Fiserv Implementation Support Team](mailto:DL-GBL-VASDelivery@fiserv.com)
