@@ -11,32 +11,41 @@ The consumer is in a pending validation status and will not be able to transact 
 </p>
 
 ## Implementation Steps: Manual Enrollment
-### Create Session Token 
-
+### Create Consumer Profile (If fdCustomerId not already present for the user) 
 <p>
+
+[Create Consumer Profile](https://qa-developer.fiserv.com/product/ConnectPay/docs/?path=./documentation/implementationguide.md&branch=develop)
+</p>
+
+### Create Session Token 
+<p>
+
 [Create Session Token](https://qa-developer.fiserv.com/product/ConnectPay/api/?type=post&path=/security/createsessiontoken&branch=develop&version=1.0.0)
 </p>
 
 ### Initialize and Launch ConnectPay SDK 
 You will want to go to the specific mobile operating section and look to initialize the App
 <p>
+
 [WebSDK](https://qa-developer.fiserv.com/product/ConnectPay/docs/?path=documentation/websdk.md&branch=develop)
 </p>
 <p>
+
 [iOS](https://qa-developer.fiserv.com/product/ConnectPay/docs/?path=documentation/iossdk.md&branch=develop)
 </p>
 <p>
-[Android]((https://qa-developer.fiserv.com/product/ConnectPay/docs/?path=documentation/androidsdk.md&branch=develop)
+
+[Android](https://qa-developer.fiserv.com/product/ConnectPay/docs/?path=documentation/androidsdk.md&branch=develop)
 </p>
 
 ### Additional Steps
 <ol>
-  <li>Pass necessary data to the SDK(including fdCustomerId)</li>
+  <li>Pass necessary data to the SDK(including `fdCustomerId`)</li>
   <li>SDK presents the screens to consumer to capture consumer information</li>
-  <li>SDK completes enrollment process and returns NONCE tomerchantApp</li>
+  <li>SDK completes enrollment process and returns NONCE to merchantApp</li>
   <li>NONCE passed back to merchant server</li>
-  <li>Merchant server does a server-to-server GetData call to retrieve fdAccountId generated after consumer data vaulting. Merchant additionally receives the current consumer status as a part of this call</li>
-  <li>Merchant server stores the fdCustomerId, fdAccountId (optional) against the externalId in their system for future use</li>
+  <li>Merchant server does a server-to-server GetData call to retrieve `fdAccountId` generated after consumer data vaulting. Merchant additionally receives the current consumer status as a part of this call</li>
+  <li>Merchant server stores the `fdCustomerId`, `fdAccountId` (optional) against the externalId in their system for future use</li>
 </ol>
 
 <!-- theme: danger 
