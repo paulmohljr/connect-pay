@@ -241,12 +241,14 @@ cpsdk.pwmbEnrollment(
 <!-- theme: danger 
 Note: To call the Enrollment use case with both the options (to let customer choose either manual or bank login), use the below code sample:
 -->
+
 ```java
 cpsdk.bothEnrollment( 
         cpConfiguration,
         gson.fromJson(extraParams, EnrollmentRequest::class.java), 
         configurationCallback as ConfigurationCallback<BothEnrollment>
 ```
+
 #### Streamlined Enrollment
 To call the Streamlined Enrollment Use Case with AllData, use the below code sample:
 ```java
