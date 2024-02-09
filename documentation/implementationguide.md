@@ -454,6 +454,10 @@ titles: Online Bank Login, Manual Enrollment
 ### Step 3 Option 1: Online Bank Login
 
 
+<span style="font-size: 1.25em; color: var(--bs-heading-color)">
+Option 1: Online Bank Login
+</span>
+
 The online bank login is used when the end-user/consumer would like to login using their banking credentials in order to link their bank account to a payment method.
 <details>
 <summary>Step a: Establish Online Bank Login</summary>
@@ -482,8 +486,9 @@ The Consumer Enrollment call is for any new consumer enrollment purpose. This is
 type: tab
 -->
 
-### Step 3 Option 2: Manual Enrollment
-
+<span style="font-size: 1.25em; color: var(--bs-heading-color)">
+Option 2: Manual Enrollment
+</span>
 
 The manual enrollment is used when the end-user/consumer does not want to login with their bank credentials and would rather deposit smaller amounts using information such as the bank routing and account number.
 <details>
@@ -526,8 +531,11 @@ Merchants who want to process ACH Transactions through FirstAPI must make server
 
 >You have successfully completed an ACH transaction. For information on other ConnectPay APIs, please look below for the API specification:
 
-### Other APIs: 
+
+### Other APIs:
+For more information on the other APIs within ConnectPay please visit the API Explorer on the navigation bar on the left.
 
 ### Useful Artifacts to help you Integrate
 [//]: <> (Need to link below to the actual files)
 - [SDK](https://qa-developer.fiserv.com/product/ConnectPay/docs/?path=./documentation/connectpaysdklanding.md&branch=develop)
+
