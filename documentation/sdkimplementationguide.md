@@ -537,12 +537,11 @@ The Create Session Token API call is used to create a session token and to retri
 
 ## Header Description
 |Headers|Description|
-|---------|-----|
+|-------|-----------|
 |Content-Type|application/json|
 |Api-Key|Merchant’s ConnectPay FirstAPI key|
 |Timestamp|Request initiation timestamp, expecting Epoch time. The value has to generate out of UTC timestamp and it is in milliseconds. Sample value format is 1499961987232|
-|Authorization|HMAC for Authenticating Merchant with ConnectPay on FirstAPI, and Authorizing to process business functionality
-Value for this header should be the word HMAC, followed by a space, followed by values for computed HMAC. Example : HMAC G9FqRSvZGMuJbjgLovkdlYz9ppBGh0++/5d/BIwoUuE= |
+|Authorization|HMAC for Authenticating Merchant with ConnectPay on FirstAPI, and Authorizing to process business functionality Value for this header should be the word HMAC, followed by a space, followed by values for computed HMAC. Example : HMAC G9FqRSvZGMuJbjgLovkdlYz9ppBGh0++/5d/BIwoUuE= |
 
 ### Request Body
 <p>
@@ -606,10 +605,8 @@ Sample request body for MicroDepositValidation, ConsumerUpdates and ACH account 
 Try it below to also see acceptable error and acceptance codes: 
 [![](/assets/images/button.png '')](https://qa-developer.fiserv.com/product/ConnectPay/api/?type=post&path=/security/createsessiontoken&branch=develop&version=1.0.0)
 
-
-
 ## Create Consumer Profile
-
+<br>
 <p>
 The Create Consumer Profile call is mandatory for any new user enrollment using the ConnectPay SDK. This is used to create an fdCustomerId for a provided external id (and other user information) by the merchant. The returned fdCustomerId should be used right from the enrollment use case.</p>
 <p>
@@ -877,6 +874,30 @@ Sample request body before payload encryption:
     }
 }
 ```
+Data Element|Description|Requires Encryption|Required?|Rules|Data Type|Minimum Length|Maximum Length| #occur|
+|------------|-----------|-------------------|---------------|---------|--------------|--------------|-------|
+|fdCustomerID|Consumer’s fdCustomerID associated with this request.|N|O||A,N|1|50|<=1|
+|externalID|This is the user’s unique identifier in the merchant system.|N|O||A,N|1|50|<=1|
+>Anyone is required in request to retrieve the consumer profile
+<br>
+<p>Sample request body after payload encryption and before transmission:
 
+```json
+{
+"componentX":
+"L0WLCiqw0TT0tqaRH3Ksz4wdQFf2YAnIeiCScd+hrAWO2Hlv7lDsNnQpd+ORxkIjOHmwJuC58Q0tsc WnOI2Gh5DJ75wk5xnp/0RWQoB2+pTMGo6On+O+vFxkhVQRKlRgJu0G/RNZV4EFa1iBdDTY6UZL0I WtqDT1zwUiu+2NWAOdPDIbAIsekhJrhRAIFNsHeiYhUxBCsF+gxybJupB0XjGIWhAkPjO7AKPR1fXWU/ ZRifzsdu1/X43DSTz4d4/bYAD6iAaSBJUewSVwUG9OodeU84LYgdba4vRNa2G3BpzfomdvK6H1C8pj HjnVjUGP2F3IO6tMDnpAFZfrxvytlg==",
+"componentY": "K5BTgBGzhIux2ZnodU4MWRUVhUFbU4P376TLTHZa02nU2jVb2pAWK3gMfpEHsE7WeoLlNrzAJwR 1FJ679z4Oo/yWp7k39zamQNlMHvm6EYBBbxIemexBHIIqqNRFdHhq6S3pA6L/9ItyscEl5/zZIKxcx44hv CCPZOZUhnOTSc4ehPnYJhdJQFgIDhY5UPRRZntM8hP2hOPZTVz5D4re17bSYVOEEK7bmpGIWpf9p ERUj4MlUpyRpafNd2mQsZpXPvW3XZfHDbslO7o3LourFHRSqAfBHOfx+pwH+YcMwglnay/Ay2SYWyZ hKkD+UcHSkyBdk/AMdcKt1K9uCIPm/Q==",
+"componentDelta": "KKRKg/jPcb+r/3TZmhLP/KxrMEajXKvBYQd5jeGFm2OzznUvNHuyEhWyJc4RlXFRoLhwcj9eEuSOz0a bTAeU+Xw8hSMJ6kYhHokJ3ev8tgQ="
+}
+```
+<br>
+Data Element|Description|Requires Encryption|Required?|Rules|Data Type|Minimum Length|Maximum Length| #occur|
+|------------|-----------|-------------------|---------------|---------|--------------|--------------|-------|
+|componentX|Secret for AES encryption, encrypted using public key from create session|Y|R||A,N|32|32|<=1|
+|componentY|IV for Data Encryption and Decryption|Y|R|A,N|16|16|<=1|
+|componentDelta|Encrypted Payload|Y|R||A,N|1||<=1|
+<p>
+
+<!--LEFT OFF ON PAGE 59 on guide-->
 
 [![](/assets/images/button.png '')](https://qa-developer.fiserv.com/product/ConnectPay/api/?type=post&path=/consumerprofile/enrollment&branch=develop&version=1.0.0)
