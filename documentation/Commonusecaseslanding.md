@@ -1,7 +1,7 @@
 # Welcome to the ConnectPay Common Use Cases Area
  <!-- type: row -->
  <!-- type: card
-title: <div style="text-align:center;width:100%;height:25%"><img src="https://raw.githubusercontent.com/Fiserv/connect-pay/develop/assets/images/ACH.png" alt="ACH Transaction" title="ACH Transaction" style="width:auto; height:60px"> </div> <h3 style="text-align:center">ACH Transaction</h3>
+title: <div style="text-align:center;width:100%;height:25%"><img src="https://raw.githubusercontent.com/Fiserv/connect-pay/develop/assets/images/ACH .png" alt="ACH Transaction" title="ACH Transaction" style="width:auto; height:60px"> </div> <h3 style="text-align:center">ACH Transaction</h3>
 description:
 link: ../docs/?path=documentation/achtransactionuc.md
 -->
@@ -11,7 +11,7 @@ description:
 link: ../docs/?path=documentation/Bankloginenrollmentuc.md
 -->
  <!-- type: card
-title: <div style="text-align:center;width:100%;height:25%"><img src="https://raw.githubusercontent.com/Fiserv/connect-pay/develop/assets/images/manualenrollment.png" alt="Manual Enrollment" title="Manual Enrollment" style="width:auto; height:60px"> </div> <h3 style="text-align:center"> Manual Enrollment</h3>
+title: <div style="text-align:center;width:100%;height:25%"><img src="https://raw.githubusercontent.com/Fiserv/connect-pay/develop/assets/images/Manualenrollment.png" alt="Manual Enrollment" title="Manual Enrollment" style="width:auto; height:60px"> </div> <h3 style="text-align:center"> Manual Enrollment</h3>
 description:
 link: ../docs/?path=documentation/manualenrollmentuc.md
 -->
