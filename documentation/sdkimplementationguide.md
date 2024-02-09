@@ -1,9 +1,7 @@
 # SDK Implementation Guide
 <p>Follow the appropriate steps to complete. Based on the overall architecture diagram, the Merchant server is required to integrate with the below ConnectPay services exposed through First API (Fiserv's API gateway).</p>
 
-## Security Section
-
-### Overview 
+## Overview 
 <p>ConnectPayAPI uses full payload encryption (not selective field, or field level encryption)</p>
 <p>This is done with the intent to stop **Man In The Middle (MITM)** attacks.</p>
 <p>Full payload encryption is achieved by encrypting the payload using Symmetric (AES) encryption with dynamically generated encryption key and Asymmetric (RSA) encryption for encrypting the Symmetric Keys.</p>
@@ -32,7 +30,7 @@ Server to server authentication is established using HMAC, however, that doesn�
 
 >Note: If you need to migrate from old to new encryption standards, please follow this link: <INSERT LINK FOR old new Markdown file> 
 
-
+## Headers Information 
 ### Sample Header
 ```
 "Content-Type" : "application/json"
@@ -41,10 +39,13 @@ Server to server authentication is established using HMAC, however, that doesn�
 "Authorization" : "HMAC W5X9NAlPgSNsfQX55fXbXrk3arzL6KxcCTA6SrnxL+U="
 "Client-Token" : "IXwY1BYpvWpoGzete43AdLzXSdj4"
 ```
-### HMAC Signature
+
+## Security Section 
+
+## HMAC Signature
 This is needed in the headers to make a successful call. 
 
-#### HMAC Generation High Level Flow
+### HMAC Generation High Level Flow
 <p>The HMAC signature is used in all calls made through our API and is a necessary step to receive a successful response from the system.</p>
 1. Get the apikey or the merchant's ConnectPay FirstAPI key
 2. Get and save the current UTC timestamp, to the millisecond
@@ -98,7 +99,6 @@ public class HmacUtil {
     <li>MAS / App / SDK complete processing the response </li>
     <li>MAS / App / SDK should destroy the AES Key and IV generated for this functional call</li>
 </ol>
-
 
 ### AES Generator
 Most of the ConnectPay APIs need to be encrypted prior to making a request. The methodologies are discussed below with example code on the actual methods in Java. We will use these methods later in order to generate and encrypt the payloads.
@@ -169,7 +169,7 @@ The merchant must implement methods for AES encryption in order to encrypt the p
 |ALGO  |AES               | 
 |CIPHER| AES/GCM/NoPadding|
 
-#### AES Encryption
+### AES Encryption
 AES Encryption will be used to encrypt the actual payload using the AES Key and IV generated before. Below is sample code on how to encrypt using AES:
 ```java
 public class AesUtil {
@@ -248,7 +248,7 @@ The merchant must implement RSA Encryption in order to encrypt the AES key and I
 |ALGO  |RSA                                  | 
 |CIPHER|RSA/None/OAEPwithSHA512AndMGF1Padding|
 
-#### RSA Encryption
+### RSA Encryption
 RSA will be used to encrypt Components X and Y which are the AES Key and IV respectively. These are encrypted using the RSA public key obtained from the Create Session Token API. Below is sample code on how to encrypt using RSA:
 ```java
 private static final String ALGORITHM = "RSA";  
@@ -270,7 +270,7 @@ public static String encrypt(byte[] publicKey, String inputData, String rsaAlgoT
 } 
 ```
 
-#### RSA Decryption
+### RSA Decryption
 Below is sample code on how to decrypt using RSA however, the Merchant may not need decryption methods for RSA since the Fiserv backend will decrypt the request payload in order to process the request. The merchant may still want to decrypt the request payload based on a variety of different factors. Below is a sample code on how to decrypt using RSA:
 ```java
 private static final String ALGORITHM = "RSA";  
@@ -297,7 +297,7 @@ The merchant must implement the AES decryption method in order to decrypt the re
 |ALGO  |AES               | 
 |CIPHER| AES/GCM/NoPadding|
 
-#### AES Decryption
+### AES Decryption
 The AES decryption method will be used to decode the response payload using the AES key and IV once the process is complete. Below is sample code on how to decrypt using RSA:
 
 ```java
@@ -814,39 +814,6 @@ Data Element|Description|Requires Encryption|Required?|Rules|Data Type|Minimum L
 Merchants who will be using Fiserv’s Universal Commerce (uCom) gateway should use “Create Customer Profile API” from their uCom implementation guide 
 [uCom Implementation Guide](https://developer.fiserv.com/product/ConnectedCommerce/api/?type=post&path=/v1/customers&branch=main&version=1.0.0)
 -->
-### Headers Information 
 
 
-4.0 CONNECTPAY API INTEGRATION.
-4.1 Encryption / Decryption Methodology (Done)
-4.1.1 ConnectPayAPI Encryption Model (get from matthew)
-4.1.2 Migration from OLD to NEW encryption standard (need to build)
-4.1.3 ConnectPayAPI Encryption Model – Sequence of activities (Done)
-4.1.4 AES Encryption/Decryption Specification (Done)
-4.1.5 AES Key and IV Generation (Done)
-4.1.6 AES Encryption(Done)
- 4.1.7 AES Decryption (Done)
- 4.1.8 RSA Encryption/Decryption Specification (Done)
-4.1.9 RSA Encryption (Done)
- 4.1.10 RSA Decryption (Done)
- 4.1.11 HMAC Generation(Done)
-4.2 Sample JSON Response for SDK (Done))
-4.3 Response Data Elements Specification for SDK (Done)
-4.4 Decrypted Component Delta JSON format for SDK (Done)
-4.5 Response Data Elements Specification for SDK (Should come from API Explorer. Need to link) 
-4.6 Consumer Management
-4.6.1 Create Session Token (DONE)
-4.6.2 Create Consumer Profile (DONE)
-4.6.3 Get CP Profile
-4.6.4 Delete CP Profile
-4.6.5 Get Data
-4.6.6 Get Consumer Account Details
-4.6.7 Get Consumer Account List 
-4.6.8 Get Public Key 
-4.7 Payment Management
-4.7.1 ConnectPay ACH Purchase Transaction 
-4.7.2 ConnectPay ACH Authorize Transaction 
-4.7.3 ConnectPay ACH Capture Transaction 
-4.7.4 ConnectPay ACH Refund Transaction
-4.7.5 ConnectPay ACH Void Transaction
-4.7.6 ConnectPay ACH Collection Fee Notification Transaction 
+
