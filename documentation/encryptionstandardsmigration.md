@@ -9,8 +9,8 @@ Existing merchants while migrating from old encryption to new encryption methodo
 <p>
 Supported value for the “compatibilityMode”header can be: 
 <br>
-**ACP5_RNP1** - for old/existing RSA/AES encryption standard 
-**AGN_RNO5M1** - for new RSA/AES encryption standard
+<tab>**ACP5_RNP1** - for old/existing RSA/AES encryption standard 
+<tab>**AGN_RNO5M1** - for new RSA/AES encryption standard
 </p>
 <p>
 If “compatibilityMode”is not specified in http request header or partner APIGEE APP, ConnectPayAPI will check the corresponding ConnectPayAPI Partner Configuration.
