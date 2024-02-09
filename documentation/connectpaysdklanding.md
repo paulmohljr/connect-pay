@@ -3,7 +3,7 @@
 
 <!-- type: row -->
 <!-- type: card
-title: <div style="text-align:center;width:100%;height:25%"><img src="https://raw.githubusercontent.com/Fiserv/connect-pay/develop/assets/images/paybybanksdk.png" alt="SDK Implementation Guide" title="SDK Implementation Guide" style="width:auto; height:60px"> </div> <h3 style="text-align:center"> IOS SDK Documentation</h3>
+title: <div style="text-align:center;width:100%;height:25%"><img src="https://raw.githubusercontent.com/Fiserv/connect-pay/develop/assets/images/paybybanksdk.png" alt="SDK Implementation Guide" title="SDK Implementation Guide" style="width:auto; height:60px"> </div> <h3 style="text-align:center"> Implementation Guide</h3>
 description:
 link: ../docs/?path=documentation/sdkimplementationguide.md
 -->
