@@ -1,20 +1,20 @@
 # Implementation Guide
 This guide will go over everything the user must know in order to implement ConnectPay's API.
-
 ## Pre-requisites
 Below are the prerequisites before using ConnectPay's API:
 
-### Connectivity
+## Connectivity
+
 The ConnectPay services are accessed through the public Internet. ConnectPay accepts communication only via the HTTPS channel. Custom HTTP headers are also used to carry additional information in each request.
 |Environment                |Host                                     |Base Path  |
 |---------------------------|-----------------------------------------|-----------|
 |Certification API End Point|https://cat.api.firstdata.com/gateway/v2 |/connectpay|
 |Production API End Point   |https://prod.api.firstdata.com/gateway/v2|/connectpay|
 
-### Header Description
+## Header Description
 The header of each API call will contain several parameters. It is important that each parameter contain the specified values for a successful API call. Any changes to the values will be noted throughout the guide.
 
-#### HTTP Headers
+### HTTP Headers
 |Header Name  |Required   |Description|
 |-------------|-----------|-----------|
 |Api-Key      |Yes        |This is the partner API key. Refer to the Apigee portal for more details. This is the API key is used to identify the partner and to use the ConnectPay API.|
@@ -25,7 +25,7 @@ The header of each API call will contain several parameters. It is important tha
 |corelationID |Conditional (For merchants who opt for long lived public key)|For MAS to ConnectPayAPI server calls, MAS need to provide reference transaction id in the service request header for transaction tracking. If MAS fails to provide transaction id, then ConnectPayAPI will generate separate correlationID for each flow and each end-to-end transaction will have separate transaction id for each request in the transaction. Considering that one business scenario consists of multiple api calls, the reference transaction id of the first call should be populated in the subsequent calls.|
 |isSecureCall |Conditional (For merchants who opt for long lived public key)|For MAS to ConnectPayAPI server calls, MAS need to provide the header with value ‘Y’. For SDK/App to ConnectPayAPI calls, the header is not required. If present, it should have value ‘N’ Any values other than Y/N will be treated as configuration error, and MAS will receive BAD REQUEST.|
 
-#### Sample Header
+### Sample Header
 ```
 "Content-Type" : "application/json"
 "Api-Key" : "YMgw8VSrYMG6WTIUnoUUGv7hF9Aqh3EO"
@@ -33,13 +33,12 @@ The header of each API call will contain several parameters. It is important tha
 "Authorization" : "HMAC W5X9NAlPgSNsfQX55fXbXrk3arzL6KxcCTA6SrnxL+U="
 "Client-Token" : "IXwY1BYpvWpoGzete43AdLzXSdj4"
 ```
+## How to generate HMAC Signature
 
-### How to generate HMAC Signature
-
-#### Description
+### Description
 The HMAC signature is used in all calls made through our API and is a necessary step to receive a successful response from the system.
 
-#### High Level Flow
+### High Level Flow
 1. Get the apikey or the merchant's ConnectPay FirstAPI key
 2. Get and save the current UTC timestamp, to the millisecond
 3. Concatenate the two paramters to output apikey:timestamp
@@ -53,7 +52,6 @@ The HMAC signature is used in all calls made through our API and is a necessary 
 11. Append the signature to HMAC followed by a space to create "HMAC Signature"
 12. The "Authorization" header = HMAC signature
 
-#### Sample Code
 Below is sample code on how to create the "Authorization" header:
 ```java
 import java.security.MessageDigest;
@@ -76,8 +74,7 @@ public class HmacUtil {
     }
 }
 ```
-
-### Encryption & Decryption Methodologies 
+## Encryption & Decryption Methodologies 
 Most of the ConnectPay APIs need to be encrypted prior to making a request. The methodologies are discussed below with example code on the actual methods in Java. We will use these methods later in order to generate and encrypt the payloads.
 
 <details>
@@ -337,7 +334,8 @@ public static String decrypt(byte[] privateKey, String inputData,String rsaAlgoT
 ## How to Utilize API
 This section will guide the developer on how to implement one of ConnectPay's APIs. We will use the "Add Consumer Profile" API for this example as well as the "Create Session Token" API as it is a mandatory substep to use most of ConnectPay's API.
 
-## Step 1: Create Session Token
+###  Step 1: Create Session Token
+<p>
 The Create Session Token API call is used to create a session token and to retrieve the RSA public key. This API is secured as it requires the Authorization header that can only be derived using the API Secret stored in the Merchant’s server. Below is more information on the API specification as well as example request and response payloads. <p>
 
 [![](/assets/images/button.png '')](https://qa-developer.fiserv.com/product/ConnectPay/api/?type=post&path=/security/createsessiontoken&branch=develop&version=1.0.0)
@@ -371,14 +369,13 @@ Example Response Payload:
     }
 }
 ```
-
-## Step 2: Create & Request Payload
+### Step 2: Create & Request Payload
 At this step, all prerequisites have been complete in order to make our first call. First, the request payload must be created. The entire payload must be encrypted using different encryption methods. It must also be decrypted in order to decode the response payload into something that is readable. We will use the "Add Consumer Profile" as the example API. 
 
 > Note: We will need to use the "tokenID" for the "Client-Token" header as well as the RSA "publicKey" in order to encrypt a portion of the payload before making the API call. Save these two pieces of information from the "Create Session Token" API used earlier in order to complete the call.
 
 
-### Add Consumer Profile
+#### Add Consumer Profile
 The Create Consumer Profile call is mandatory for any new user enrollment. This is used to create an fdCustomerID for a provided external id (and other user information) by the merchant. <p>
 
 [![](/assets/images/button.png '')](https://qa-developer.fiserv.com/product/ConnectPay/api/?type=post&path=/consumerprofile/add&branch=develop&version=1.0.0)
@@ -393,11 +390,10 @@ First and foremost, we need to create the request payload prior to encryption. T
 }
 ```
 
-#### Create HMAC header
-We need to next create the HMAC Authorization header using the payload above. The Authorization header and HMAC methodology is discussed earlier in the prerequisite section.
+>Note: We need to next create the HMAC Authorization header using the payload above. The Authorization header and HMAC methodology is discussed earlier in the prerequisite section.
 
 #### Encrypt the AES key and IV
-From step 2, we implemented the methodology to create the AES key and IV. We will use the publicKey generated from the "Create Session Token" API in order to encrypt the generated AES Key as "componentX" and the IV as "componentY". An example of the encrypted input is shown below:
+From above prerequisites section, we implemented the methodology to create the AES key and IV. We will use the publicKey generated from the "Create Session Token" API in order to encrypt the generated AES Key as "componentX" and the IV as "componentY". An example of the encrypted input is shown below:
 ```json
     "componentX": "ju5PPi7k4K2jtI0z47qKcHnQGRrIymN+dK+PVlWjKyufoaUHJqjqOAbjsQZ0q3sLciBkEVWm5jGbWQoGf2e9Us+yfYu8ua2hz3wOIRSymHdx8qKuoexQiKhLWnp/GAL0+TIdzb/CvNijuJkOe1XSzEoFdFjYgRNMV8LJM3G/izn48kZm9gexM/iJenJyzwFoqXJc7EcWrC3C0RlkBF5jTgZzTGCvBpxDq4pw3CjFDsGvFy5Gg26B1KRcRDctrFpLV697QAW//hWyS91NYB68S3TIo/B6/LfUjj9bOY3fM+i+5BY2oV7zbLLyvA+CKfLFRBoXtevfBJyndrUDFD0EBA==",
     "componentY": "CqTTfUbNR66rGRhAKGqnEYJBGona07l2lvV7s7sEG97b0eohkWCqcw/XhCSy2+A6rYxhhuvvQ+orjfmCzssIl4Uz+4gu3GE3lfMGeykjRuhipyV+fjnjOBcw/VDOg3IXffr4Oe/isRYTZ5gp0uht89Rpu9VXfWktKH5uEJiZdNyD9TY+xZ2Ekwc6trDjTSFPbxVNaITJGqMBFsuWXGcHvaqoo6bC7Q9r/pVsUHq5KDdoi0zuW+xBilMxk/hZE8fBifXkUZ+KGGibyHlseh/uH9U32UHgvyVSsiUjI1j44WNulRnvfN7Mi5HozJTiYbX2iGrL5QQLKkQIWQPWV37VgQ=="
@@ -455,6 +451,9 @@ type: tab
 titles: Online Bank Login, Manual Enrollment
 -->
 
+### Step 3 Option 1: Online Bank Login
+
+
 <span style="font-size: 1.25em; color: var(--bs-heading-color)">
 Option 1: Online Bank Login
 </span>
@@ -510,6 +509,7 @@ Use this method to complete micro deposit validation to authenticate your bank a
 
 <!-- type: tab-end -->
 
+
 ### Step 4: ACH Transactions
 These APIs are for the merchant to implement depending on the use case of the end-user/consumer. These API's are exclusively used for some form of processing ACH transactions.
 <details>
@@ -529,8 +529,13 @@ Merchants who want to process ACH Transactions through FirstAPI must make server
 </details>
 
 
-### ACH Transaction Processed
-You have successfully completed an ACH transaction. For information on other ConnectPay APIs, please look below for the API specification:
+>You have successfully completed an ACH transaction. For information on other ConnectPay APIs, please look below for the API specification:
+
 
 ### Other APIs:
 For more information on the other APIs within ConnectPay please visit the API Explorer on the navigation bar on the left.
+
+### Useful Artifacts to help you Integrate
+[//]: <> (Need to link below to the actual files)
+- [SDK](https://qa-developer.fiserv.com/product/ConnectPay/docs/?path=./documentation/connectpaysdklanding.md&branch=develop)
+

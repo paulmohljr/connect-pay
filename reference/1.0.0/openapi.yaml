@@ -322,7 +322,7 @@ paths:
                 $ref: '#/components/examples/ACHPurchaseRequestPayloadSample'
       responses:
         '200':
-          $ref: '#/components/responses/200-ACHPurchaseResponsePayloadSamples'
+          $ref: '#/components/responses/200-TransactionResponsePayloadSamples'
         '401':
           $ref: '#/components/responses/401-AuthenticationErrorPayloadSample'
   '/transaction/authorize':
@@ -353,9 +353,128 @@ paths:
                 $ref: '#/components/examples/ACHAuthorizeRequestPayloadSample'
       responses:
         '200':
-          $ref: '#/components/responses/200-ACHAuthorizeResponsePayloadSamples'
+          $ref: '#/components/responses/200-TransactionResponsePayloadSamples'
         '401':
           $ref: '#/components/responses/401-AuthenticationErrorPayloadSample'
+  '/transaction/capture':
+    post:
+      x-proxy-name: Capture
+      x-group-name: Transactions
+      tags:
+        - Transactions
+      summary: |
+                   Use this to submit the final transaction amount after the Authorize request is approved.
+      description: |
+                   Use subscriberId, transactionId and merchantTransactionId from Authorize call in the Capture request.
+                  
+                   The transaction can also be sent in using ConnectPayPaymentNumber instead of fdAccountID.
+                     
+      parameters:
+        - $ref: '#/components/parameters/contentTypeParam'
+        - $ref: '#/components/parameters/apiKeyParam'
+        - $ref: '#/components/parameters/timestampParam'
+        - $ref: '#/components/parameters/authorizationParam'
+        - $ref: '#/components/parameters/clientTokenParam'
+      requestBody:
+        content:
+          application/json:
+            schema:
+                 $ref: '#/components/schemas/ACHCaptureRequest'
+            examples:
+              RequestPayloadSample: 
+                $ref: '#/components/examples/ACHCaptureRequestPayloadSample'
+      responses:
+        '200':
+          $ref: '#/components/responses/200-TransactionResponsePayloadSamples'
+        '401': 
+          $ref: '#/components/responses/401-AuthenticationErrorPayloadSample'           
+  '/transaction/refund':
+    post:
+      x-proxy-name: Refund
+      x-group-name: Transactions
+      tags:
+        - Transactions
+      summary: |
+                   Use this to initiate a refund request from a previously approved purchase/authorized transaction.
+      description: |
+                   Use this to initiate a refund request from a previously approved purchase/authorized transaction. Please note that the refund will be processed on the original account used for the transaction. Use subscriberId, transactionId and merchantTransactionId from the Purchase/Capture call in the Refund request. The transaction can also be sent in using connectPayPaymentNumber instead of fdAccountID.                    
+      parameters:
+        - $ref: '#/components/parameters/contentTypeParam'
+        - $ref: '#/components/parameters/apiKeyParam'
+        - $ref: '#/components/parameters/timestampParam'
+        - $ref: '#/components/parameters/authorizationParam'
+        - $ref: '#/components/parameters/clientTokenParam'
+      requestBody:
+        content:
+          application/json:
+            schema:
+                 $ref: '#/components/schemas/ACHRefundRequest'
+            examples:
+              RequestPayloadSample: 
+                $ref: '#/components/examples/ACHRefundRequestPayloadSample'
+      responses:
+        '200':
+          $ref: '#/components/responses/200-TransactionResponsePayloadSamples'
+        '401': 
+          $ref: '#/components/responses/401-AuthenticationErrorPayloadSample' 
+  '/transaction/void':
+    post:
+      x-proxy-name: Void
+      x-group-name: Transactions
+      tags:
+        - Transactions
+      summary: |
+                   Use this to initiate a void request from a previously approved purchase/authorized transaction.
+      description: |
+                   Use this to initiate a void request from a previously approved purchase/authorized transaction.  Please note that the void will be processed on the original account used for the transaction. Use SubscriberId, TransactionId and MerchantTransactionId from the Purchase/Capture call in the Void request. The transaction can also be sent in using connectPayPaymentNumber instead of fdAccountID.                    
+      parameters:
+        - $ref: '#/components/parameters/contentTypeParam'
+        - $ref: '#/components/parameters/apiKeyParam'
+        - $ref: '#/components/parameters/timestampParam'
+        - $ref: '#/components/parameters/authorizationParam'
+        - $ref: '#/components/parameters/clientTokenParam'
+      requestBody:
+        content:
+          application/json:
+            schema:
+                 $ref: '#/components/schemas/ACHVoidRequest'
+            examples:
+              RequestPayloadSample: 
+                $ref: '#/components/examples/ACHVoidRequestPayloadSample'
+      responses:
+        '200':
+          $ref: '#/components/responses/200-TransactionResponsePayloadSamples'
+        '401': 
+          $ref: '#/components/responses/401-AuthenticationErrorPayloadSample' 
+  '/transaction/collectionfee':
+    post:
+      x-proxy-name: Collection Fee Notification
+      x-group-name: Transactions
+      tags:
+        - Transactions
+      summary: |
+                   Point of sale transaction use cases to display applicable state collection fee and cost to the consumer prior to transacting.
+      description: |
+                   Per Reg E requirements, this service is required for in-person, point of sale transaction use cases to display applicable state collection fee and cost to the consumer prior to transacting.  For other payment uses cases (i.e. online transactions) this service is not needed, rather a link to our collection fee and cost table is displayed in the checkout page.  Please refer to the Legal and Compliance section in the ConnectPay Merchant Guide.                    
+      parameters:
+        - $ref: '#/components/parameters/contentTypeParam'
+        - $ref: '#/components/parameters/apiKeyParam'
+        - $ref: '#/components/parameters/timestampParam'
+        - $ref: '#/components/parameters/authorizationParam'
+        - $ref: '#/components/parameters/clientTokenParam'
+      requestBody:
+        content:
+          application/json:
+            schema:
+                 $ref: '#/components/schemas/ACHCollectionFeeRequest'
+            examples:
+              RequestPayloadSample: 
+                $ref: '#/components/examples/ACHCollectionFeeRequestPayloadSample'
+      responses:
+        '200':
+          $ref: '#/components/responses/200-TransactionResponsePayloadSamples'
+        '401': 
+          $ref: '#/components/responses/401-AuthenticationErrorPayloadSample' 
 components:
   parameters:
     apiKeyParam:
@@ -995,18 +1114,12 @@ components:
           properties:
             subscriberID:
               type: string
-              minimum: 1
-              maximum: 10
-              nullable: false
               description: Transaction Subscriber ID
         customer:
           type: object
           properties:
             fdCustomerID:
               type: string
-              minimum: 1
-              maximum: 50
-              nullable: false
               description: Consumers fdCustomerID associated with this request.
         account:
           type: array
@@ -1015,14 +1128,9 @@ components:
             properties:
               type:
                 type: string
-                minimum: 3
-                maximum: 3
-                nullable: false
                 description: Type of account.
               fdAccountID:
                 type: string
-                minimum: 1
-                maximum: 50
                 description: Consumers fdAccountID associated with this request .Either fdAccountID or connectPaymentNumber is needed.
               userIdentificationDetails:
                 type: object
@@ -1031,46 +1139,27 @@ components:
                 properties:
                   amount:
                     type: number
-                    nullable: false
                     description: Processed Amount in cents. 1299 = $12.99.
                   currencyCode:
                     type: string
-                    minimum: 3
-                    maximum: 3
-                    nullable: false
                     description: USD - Only supports US Dollars.
                   merchantTransactionId:
                     type: string
-                    minimum: 1
-                    maximum: 100
-                    nullable: false
                     description: Merchant's unique transaction ID. Required to process secondary transactions like void and refund. For Authorize/Capture transactions, merchant_transaction_id submitted during Capture transactions will be required to process void and refund requests.
                   recurringPayment:
                     type: string
-                    minimum: 1
-                    maximum: 1
-                    nullable: true
                     description: S or Null = Single/non-recurring Payment (one time sale) R = Recurring Payment. Required when submitting recurring/bill payment transactions.
                   creditDebitIndicator:
                     type: string
-                    minimum: 1
-                    maximum: 1
-                    nullable: true
                     description: D=Debit is used for all purchase/sale use cases. If no value is sent we will default it to D to Debit.
               userSysDetails:
                 type: object
                 properties:
                   organizationId:
                     type: string
-                    minimum: 0
-                    maximum: 128
-                    nullable: true
                     description: Organization ID used for device fingerprinting services.
                   sessionId:
                     type: string
-                    minimum: 1
-                    maximum: 128
-                    nullable: true
                     description: Session ID used for device fingerprinting services.
     ACHAuthorizeRequest:
       type: object
@@ -1080,18 +1169,12 @@ components:
           properties:
             subscriberID:
               type: string
-              minimum: 1
-              maximum: 10
-              nullable: false
               description: Transaction Subscriber ID
         customer:
           type: object
           properties:
             fdCustomerID:
               type: string
-              minimum: 1
-              maximum: 50
-              nullable: false
               description: Consumers fdCustomerID associated with this request.
         account:
           type: array
@@ -1100,14 +1183,9 @@ components:
             properties:
               type:
                 type: string
-                minimum: 3
-                maximum: 3
-                nullable: false
                 description: Type of account.
               fdAccountID:
                 type: string
-                minimum: 1
-                maximum: 50
                 description: Consumers fdAccountID associated with this request .Either fdAccountID or connectPaymentNumber is needed.
               userIdentificationDetails:
                 type: object
@@ -1120,61 +1198,230 @@ components:
                     description: Processed Amount in cents. 1299 = $12.99.
                   currencyCode:
                     type: string
-                    minimum: 3
-                    maximum: 3
-                    nullable: false
                     description: USD - Only supports US Dollars.
                   pinData:
                     type: string
-                    minimum: 1
-                    maximum: 32
-                    nullable: true
                     description: This is the encrypted pin block for validating the transaction.
                   merchantTransactionId:
                     type: string
-                    minimum: 1
-                    maximum: 100
-                    nullable: false
                     description: Merchant's unique transaction ID. Required to process secondary transactions like void and refund. For Authorize/Capture transactions, merchant_transaction_id submitted during Capture transactions will be required to process void and refund requests.
                   recurringPayment:
                     type: string
-                    minimum: 1
-                    maximum: 1
-                    nullable: true
                     description: S or Null = Single/non-recurring Payment (one time sale) R = Recurring Payment. Required when submitting recurring/bill payment transactions.
                   creditDebitIndicator:
                     type: string
-                    minimum: 1
-                    maximum: 1
-                    nullable: true
                     description: D=Debit is used for all purchase/sale use cases. If no value is sent we will default it to D to Debit.
                   splitShipmentFlag:
                     type: string
-                    minimum: 1
-                    maximum: 1
-                    nullable: true
                     description: Optional field denoting that this is a Split Shipment Original Authorization. The Authorization life will be counted from the time of this transaction and the Authorization Range will be based on the Amount of this transaction.
                   productCode:
                     type: string
-                    minimum: 1
-                    maximum: 6
-                    nullable: true
                     description: Product code identifies the highest ticket item in the purchase and is used in the risk analysis of the transaction. Value should be unsigned numeric.
               userSysDetails:
                 type: object
                 properties:
                   organizationId:
                     type: string
-                    minimum: 0
-                    maximum: 128
-                    nullable: true
                     description: Organization ID used for device fingerprinting services.
                   sessionId:
                     type: string
-                    minimum: 1
-                    maximum: 128
-                    nullable: true
                     description: Session ID used for device fingerprinting services.
+    ACHCaptureRequest:
+      type: object
+      properties:
+        partner:
+          type: object
+          properties:
+            subscriberID:
+              type: string
+              description: Transaction Subscriber ID
+        customer:
+          type: object
+          properties:
+            fdCustomerID:
+              type: string
+              description: Consumers fdCustomerID associated with this request.
+        account:
+          type: array
+          items:
+            type: object
+            properties:
+              type:
+                type: string
+                description: Type of account.
+              userIdentificationDetails:
+                type: object
+                properties:
+                  connectPayPaymentNumber:
+                    type: string
+                    description: ConnectPay Payment number.
+              transactionDetails:
+                type: object
+                properties:
+                  transactionId:
+                    type: string
+                    description: Unique ID for each Transaction which could be used to trace a transaction..
+                  amount:
+                    type: number
+                    nullable: false
+                    description: Processed Amount in cents. 1299 = $12.99.                    
+                  currencyCode:
+                    type: string
+                    description: USD - Only supports US Dollars.
+                  merchantTransactionId:
+                    type: string
+                    description: Merchant's unique transaction ID. Required to process secondary transactions like void and refund. For Authorize/Capture transactions, merchant_transaction_id submitted during Capture transactions will be required to process void and refund requests.
+                  splitShipmentFlag:
+                    type: string
+                    description: Optional field denoting that this is a Split Shipment Original Authorization. The Authorization life will be counted from the time of this transaction and the Authorization Range will be based on the Amount of this transaction.
+                  splitShipmentId:
+                    type: string
+                    description: This optional field is only required for Split Shipment Capture transaction. The format will be x/y where numerical values 01/99 through 99/99 are accepted.
+                  productCode:
+                    type: string
+                    description: Product code identifies the highest ticket item in the purchase and is used in the risk analysis of the transaction. Value should be unsigned numeric.
+    ACHRefundRequest:
+      type: object
+      properties:
+        partner:
+          type: object
+          properties:
+            subscriberID:
+              type: string
+              description: Transaction Subscriber ID
+        customer:
+          type: object
+          properties:
+            fdCustomerID:
+              type: string
+              description: Consumers fdCustomerID associated with this request.
+        account:
+          type: array
+          items:
+            type: object
+            properties:
+              type:
+                type: string
+                description: Type of account.
+              userIdentificationDetails:
+                type: object
+                properties:
+                  connectPayPaymentNumber: 
+                    type: string
+                    description: ConnectPay Payment Number.
+              transactionDetails:
+                type: object
+                properties:
+                  transactionId:
+                    type: string
+                    description: Unique ID for each Transaction which could be used to trace a transaction..
+                  amount:
+                    type: number
+                    description: Processed Amount in cents. 1299 = $12.99.
+                  currencyCode:
+                    type: string
+                    description: USD - Only supports US Dollars.
+                  merchantTransactionId:
+                    type: string
+                    description: Merchant's unique transaction ID. Required to process secondary transactions like void and refund. For Authorize/Capture transactions, merchant_transaction_id submitted during Capture transactions will be required to process void and refund requests.
+                  recurringPayment:
+                    type: string
+                    description: S or Null = Single/non-recurring Payment (one time sale) R = Recurring Payment. Required when submitting recurring/bill payment transactions.
+              userSysDetails:
+                type: object
+                properties:
+                  organizationId:
+                    type: string
+                    description: Organization ID used for device fingerprinting services.
+                  sessionId:
+                    type: string
+                    description: Session ID used for device fingerprinting services.
+    ACHVoidRequest:
+      type: object
+      properties:
+        partner:
+          type: object
+          properties:
+            subscriberID:
+              type: string
+              description: Transaction Subscriber ID
+        customer:
+          type: object
+          properties:
+            fdCustomerID:
+              type: string
+              description: Consumers fdCustomerID associated with this request.
+        account:
+          type: array
+          items:
+            type: object
+            properties:
+              type:
+                type: string
+                description: Type of account.
+              userIdentificationDetails:
+                type: object
+                properties:
+                  connectPayPaymentNumber: 
+                    type: string
+                    description: ConnectPay Payment Number.
+              transactionDetails:
+                type: object
+                properties:
+                  transactionId:
+                    type: string
+                    description: Unique ID for each Transaction which could be used to trace a transaction..
+                  amount:
+                    type: number
+                    description: Processed Amount in cents. 1299 = $12.99.
+                  currencyCode:
+                    type: string
+                    description: USD - Only supports US Dollars.
+                  merchantTransactionId:
+                    type: string
+                    description: Merchant's unique transaction ID. Required to process secondary transactions like void and refund. For Authorize/Capture transactions, merchant_transaction_id submitted during Capture transactions will be required to process void and refund requests.
+              userSysDetails:
+                type: object
+                properties:
+                  organizationId:
+                    type: string
+                    description: Organization ID used for device fingerprinting services.
+                  sessionId:
+                    type: string
+                    description: Session ID used for device fingerprinting services.
+    ACHCollectionFeeRequest:
+      type: object
+      properties:
+        partner:
+          type: object
+          properties:
+            subscriberID:
+              type: string
+              description: Transaction Subscriber ID
+        account:
+          type: array
+          items:
+            type: object
+            properties:
+              type:
+                type: string
+                description: Type of account.
+              transactionDetails:
+                type: object
+                properties:
+                  gpsState: 
+                    type: string
+                    description: ""
+              userSysDetails:
+                type: object
+                properties:
+                  organizationId:
+                    type: string
+                    description: Organization ID used for device fingerprinting services.
+                  sessionId:
+                    type: string
+                    description: Session ID used for device fingerprinting services.
+
   examples:
     CreateSessionTokenRequestPayloadSample:
       value:
@@ -1354,7 +1601,75 @@ components:
             userSysDetails:
               organizationId: s0b500qh
               sessionId: 3ca6ee0408028f118f102ed0b64779353789ebe3
-
+    ACHCaptureRequestPayloadSample:
+      value:
+        partner:
+          subscriberID : "36005712"
+        customer:
+          fdCustomerID : "CP1GWQ15714334637260000266MNpu7Q"
+        account:
+          - type: "ACH"
+            userIdentificationDetails: {
+              connectPayPaymentNumber: "2000000008000586"
+            }
+            transactionDetails:
+              transactionId: "1400320000000007761093"
+              amount: 1050
+              currencyCode: "USD"
+              merchantTransactionId : "17021542392"
+              splitShipmentFlag: "Y"
+              splitShipmentId: "01/99"
+              productCode: 770100
+    ACHRefundRequestPayloadSample:
+      value:
+        partner:
+          subscriberID : "36005712"
+        customer:
+          fdCustomerID : "CP1GWQ15714334637260000266MNpu7Q"
+        account:
+          - type: "ACH"
+            userIdentificationDetails: {
+              connectPayPaymentNumber: "2000000008000586"
+            }
+            transactionDetails:
+              transactionId: "1400320000000007761093"
+              amount: 1050
+              currencyCode: "USD"
+              merchantTransactionId : "17021542392"
+              recurringPayment: "Y"
+            userSysDetails:
+              organizationId: s0b500qh
+              sessionId: 3ca6ee0408028f118f102ed0b64779353789ebe3
+    ACHVoidRequestPayloadSample:
+      value:
+        partner:
+          subscriberID : "36005712"
+        customer:
+          fdCustomerID : "CP1GWQ15714334637260000266MNpu7Q"
+        account:
+          - type: "ACH"
+            userIdentificationDetails: {
+              connectPayPaymentNumber: "2000000008000586"
+            }
+            transactionDetails:
+              transactionId: "1400320000000007761093"
+              amount: 1050
+              currencyCode: "USD"
+              merchantTransactionId : "17021542392"
+            userSysDetails:
+              organizationId: s0b500qh
+              sessionId: 3ca6ee0408028f118f102ed0b64779353789ebe3              
+    ACHCollectionFeeRequestPayloadSample:
+      value:
+        partner:
+          subscriberID : "36005712"
+        account:
+          - type: "ACH"
+            transactionDetails:
+              gpsState: "WA"
+              userSysDetails:
+                organizationId: s0b500qh
+                sessionId: 3ca6ee0408028f118f102ed0b64779353789ebe3              
   responses:
     200-CreateSessionTokenResponsePayloadSamples:
       description: |
@@ -1852,32 +2167,13 @@ components:
                   errorCode: "2310"
                   errorField: fdAccountID
                   errorReason: Account detail not found
-    200-ACHPurchaseResponsePayloadSamples:
+    200-TransactionResponsePayloadSamples:
       description: Successful ACH Purchase response.
       content:
         application/json:
           schema:
             oneOf:
               - $ref: '#/components/schemas/CPAPIGenericResponse'
-          examples:
-            ResponsePayloadSample-Approved:
-              value:
-                transactionStatus: APPROVED
-                transactionStatusCode: 0
-                referenceTransactionID: 186ad875-1695-3254-68a4-b578034b94e7
-                transactionStatusDescription: Approved
-                teleCheckDetails:
-                  transactionId: "1400320000000007761092"
-                  tckResponseCode: 07
-                  approvalCode: 1707
-                  achTransactionStatus: 1
-                  dateTime: "2019-10-18T20:40:29.993Z"
-    200-ACHAuthorizeResponsePayloadSamples:
-      description: Successful ACH Authorize response.
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/CPAPIGenericResponse'
           examples:
             ResponsePayloadSample-Approved:
               value:
