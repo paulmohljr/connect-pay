@@ -898,6 +898,6 @@ Data Element|Description|Requires Encryption|Required?|Rules|Data Type|Minimum L
 |componentDelta|Encrypted Payload|Y|R||A,N|1||<=1|
 <p>
 
-**LEFT OFF ON PAGE 59 on guide**
+<!--LEFT OFF ON PAGE 59 on guide-->
 
 [![](/assets/images/button.png '')](https://qa-developer.fiserv.com/product/ConnectPay/api/?type=post&path=/consumerprofile/enrollment&branch=develop&version=1.0.0)
