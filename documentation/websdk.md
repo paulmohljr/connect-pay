@@ -1,7 +1,8 @@
 # WebSDK Integration
 ## Download SDK
+<!-- theme: danger Note: Ensure you are adding this code under your <head> tag -->
 Download javascript file
-*Note: Ensure you are adding this code under your <head> tag*
+
 ```javascript
 <head>
 <!-- Based on Environment, comment and uncomment below codes-->
@@ -118,7 +119,9 @@ const bankOnly = CP.BankOnly(sdkConfiguration, extraParams, returnCallBack);
 bankOnly.start('sdk-container');
 ```
 #### Special Enrollment - Choice
-*Note: To call the Enrollment use case with both the options (to let customer choose either manual or bank login), use the below code sample:*
+<!-- theme:danger 
+*Note: To call the Enrollment use case with both the options (to let customer choose either manual or bank login), use the below code sample:
+-->
 ```js
 const enrollment = CP.EnrollmentOption(sdkConfiguration, extraParams, returnCallBack);
 //Start the SDK UI with mount id where UI can be rendered
