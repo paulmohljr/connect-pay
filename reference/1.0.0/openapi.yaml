@@ -1961,16 +1961,16 @@ components:
                   errorCode: 5112
                   errorField: UCOMM_GET_PUBLIC_KEY
                   errorReason: Please try again after some time, If issue persist please contact customer support
-            500-Error:
-              value: 
-                transactionStatus: ERROR
-                transactionStatusCode: 500
-                referenceTransactionID: 99be0e16-3855-44b9-83f5654bc3dd
-                transactionStatusDescription: General Error
-                errorDetails: 
-                  errorCode: 5340
-                  errorField: Oauth Token
-                  errorReason: Configuration Error, Please contact customer support
+            # 500-Error:
+            #   value: 
+            #     transactionStatus: ERROR
+            #     transactionStatusCode: 500
+            #     referenceTransactionID: 99be0e16-3855-44b9-83f5654bc3dd
+            #     transactionStatusDescription: General Error
+            #     errorDetails: 
+            #       errorCode: 5340
+            #       errorField: Oauth Token
+            #       errorReason: Configuration Error, Please contact customer support
     401-AuthenticationErrorPayloadSample:
       description: |
         ### HTTP 401 Response.
