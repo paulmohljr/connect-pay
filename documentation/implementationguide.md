@@ -533,9 +533,4 @@ Merchants who want to process ACH Transactions through FirstAPI must make server
 
 
 ### Other APIs:
-For more information on the other APIs within ConnectPay please visit the API Explorer on the navigation bar on the left.
-
-### Useful Artifacts to help you Integrate
-[//]: <> (Need to link below to the actual files)
-- [SDK](https://qa-developer.fiserv.com/product/ConnectPay/docs/?path=./documentation/connectpaysdklanding.md&branch=develop)
-
+For more information on the other APIs within ConnectPay please visit the API Explorer on the navigation bar to the left.
