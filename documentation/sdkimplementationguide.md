@@ -830,9 +830,9 @@ Data Element|Description|Requires Encryption|Required?|Rules|Data Type|Minimum L
 
 ## Get Connectpay Profile
 
-<p>The Get CP Profile method is used to get consumer profile `fdCustomerID` and `externalID` using `fdCustomerID` or `externalID`</p>
+<p>The Get CP Profile method is used to get consumer profile `fdCustomerID` and `externalID` using `fdCustomerID` or `externalID`
 <br>
-<p>Example :</p>
+<p>Example :
 <br>
 Merchant X for some unforseen event loses the `fdCustomerId` for the corresponding `externalID` in their record.
 <br>
@@ -842,10 +842,11 @@ Merchant does not send another create profile because its sure profile exists, j
 <br>
 This API is secured, as it requires the Authorization header that can only be derived using the API Secret stored in the Merchant’s web server. Below are the details of the API end point.
 <br>
+</p>
 
 >Merchants who will be using Fiserv’s Universal Commerce (uCom) gateway should use “Create Customer Profile API” from their uCom implementation guide 
 [uCom Implementation Guide](https://developer.fiserv.com/product/ConnectedCommerce/api/?type=post&path=/v1/customers&branch=main&version=1.0.0)
-
+<br>
 <p>
 |Attribute|Value|
 |---------|-----|
@@ -890,6 +891,7 @@ Data Element|Description|Requires Encryption|Required?|Rules|Data Type|Minimum L
 "componentDelta": "KKRKg/jPcb+r/3TZmhLP/KxrMEajXKvBYQd5jeGFm2OzznUvNHuyEhWyJc4RlXFRoLhwcj9eEuSOz0a bTAeU+Xw8hSMJ6kYhHokJ3ev8tgQ="
 }
 ```
+</p>
 <br>
 Data Element|Description|Requires Encryption|Required?|Rules|Data Type|Minimum Length|Maximum Length| #occur|
 |------------|-----------|-------------------|---------------|---------|--------------|--------------|-------|
