@@ -1717,196 +1717,196 @@ components:
                   errorCode: 1010
                   errorField: publicKeyRequired
                   errorReason: Field did not have a valid format
-            100-Error:
-              value: 
-                transactionStatus: ERROR
-                transactionStatusCode: 100
-                referenceTransactionID: 99be0e16-3855-44b9-83f5654bc3dd
-                transactionStatusDescription: Input is invalid 
-                errorDetails: 
-                  errorCode: 1010
-                  errorField: type
-                  errorReason: Field did not have a valid format
-            100-Error:
-              value: 
-                transactionStatus: ERROR
-                transactionStatusCode: 100
-                referenceTransactionID: 99be0e16-3855-44b9-83f5654bc3dd
-                transactionStatusDescription: Input is invalid
-                errorDetails: 
-                  errorCode: 1020
-                  errorField: publicKeyRequired
-                  errorReason: Field contained a bad value
-            100-Error:
-              value: 
-                transactionStatus: ERROR
-                transactionStatusCode: 100
-                referenceTransactionID: 99be0e16-3855-44b9-83f5654bc3dd
-                transactionStatusDescription: Input is invalid 
-                errorDetails: 
-                  errorCode: 1030
-                  errorField: publicKeyRequired
-                  errorReason: Required field did not have a value
-            100-Error:
-              value: 
-                transactionStatus: ERROR
-                transactionStatusCode: 100
-                referenceTransactionID: 99be0e16-3855-44b9-83f5654bc3dd
-                transactionStatusDescription: Input is invalid 
-                errorDetails: 
-                  errorCode: 1030
-                  errorField: type
-                  errorReason: Required field did not have a value
-            100-Error:
-              value: 
-                transactionStatus: ERROR
-                transactionStatusCode: 100
-                referenceTransactionID: 99be0e16-3855-44b9-83f5654bc3dd
-                transactionStatusDescription: Input is invalid 
-                errorDetails: 
-                  errorCode: 1035
-                  errorField: publicKeyRequired
-                  errorReason: Required field is missing
-            100-Error:
-              value: 
-                transactionStatus: ERROR
-                transactionStatusCode: 100
-                referenceTransactionID: 99be0e16-3855-44b9-83f5654bc3dd
-                transactionStatusDescription: Input is invalid 
-                errorDetails: 
-                  errorCode: 1035
-                  errorField: type
-                  errorReason: Required field is missing
-            100-Error:
-              value: 
-                transactionStatus: ERROR
-                transactionStatusCode: 100
-                referenceTransactionID: 99be0e16-3855-44b9-83f5654bc3dd
-                transactionStatusDescription: Input is invalid
-                errorDetails: 
-                  errorCode: 1040
-                  errorField: customer
-                  errorReason: Required block did not have a value
-            100-Error:
-              value: 
-                transactionStatus: ERROR
-                transactionStatusCode: 100
-                referenceTransactionID: 99be0e16-3855-44b9-83f5654bc3dd
-                transactionStatusDescription: Input is invalid
-                errorDetails: 
-                  errorCode: 1040
-                  errorField: security
-                  errorReason: Required block did not have a value
-            100-Error:
-              value: 
-                transactionStatus: ERROR
-                transactionStatusCode: 100
-                referenceTransactionID: 99be0e16-3855-44b9-83f5654bc3dd
-                transactionStatusDescription: Input is invalid 
-                errorDetails: 
-                  errorCode: 1040
-                  errorField: account
-                  errorReason: Required block did not have a value
-            100-Error:
-              value: 
-                transactionStatus: ERROR
-                transactionStatusCode: 100
-                referenceTransactionID: 99be0e16-3855-44b9-83f5654bc3dd
-                transactionStatusDescription: Input is invalid
-                errorDetails: 
-                  errorCode: 1045
-                  errorField: customer
-                  errorReason: Required block is missing
-            100-Error:
-              value: 
-                transactionStatus: ERROR
-                transactionStatusCode: 100
-                referenceTransactionID: 99be0e16-3855-44b9-83f5654bc3dd
-                transactionStatusDescription: Input is invalid
-                errorDetails: 
-                  errorCode: 1045
-                  errorField: security
-                  errorReason: Required block is missing
-            100-Error:
-              value: 
-                transactionStatus: ERROR
-                transactionStatusCode: 100
-                referenceTransactionID: 99be0e16-3855-44b9-83f5654bc3dd
-                transactionStatusDescription: Input is invalid 
-                errorDetails: 
-                  errorCode: 1045
-                  errorField: account
-                  errorReason: Required block is missing
-            100-Error:
-              value: 
-                transactionStatus: ERROR
-                transactionStatusCode: 100
-                referenceTransactionID: 99be0e16-3855-44b9-83f5654bc3dd
-                transactionStatusDescription: Input is invalid 
-                errorDetails: 
-                  errorCode: 1060
-                  errorField: PartnerID
-                  errorReason: Required Header Field is missing
-            100-Error:
-              value: 
-                transactionStatus: ERROR
-                transactionStatusCode: 100
-                referenceTransactionID: 99be0e16-3855-44b9-83f5654bc3dd
-                transactionStatusDescription: Input is invalid 
-                errorDetails: 
-                  errorCode: 1060
-                  errorField: SubscriberId
-                  errorReason: Required Header Field is missing
-            100-Error:
-              value: 
-                transactionStatus: ERROR
-                transactionStatusCode: 100
-                referenceTransactionID: 99be0e16-3855-44b9-83f5654bc3dd
-                transactionStatusDescription: Input is invalid 
-                errorDetails: 
-                  errorCode: 1060
-                  errorField: fdAccountID
-                  errorReason: Required Header Field is missing
-            100-Error:
-              value: 
-                transactionStatus: ERROR
-                transactionStatusCode: 100
-                referenceTransactionID: 99be0e16-3855-44b9-83f5654bc3dd
-                transactionStatusDescription: Input is invalid 
-                errorDetails: 
-                  errorCode: 1060
-                  errorField: issuedOn
-                  errorReason: Required Header Field is missing
-            100-Error:
-              value: 
-                transactionStatus: ERROR
-                transactionStatusCode: 100
-                referenceTransactionID: 99be0e16-3855-44b9-83f5654bc3dd
-                transactionStatusDescription: Input is invalid 
-                errorDetails: 
-                  errorCode: 1060
-                  errorField: expiresInSeconds
-                  errorReason: Required Header Field is missing
-            100-Error:
-              value: 
-                transactionStatus: ERROR
-                transactionStatusCode: 100
-                referenceTransactionID: 99be0e16-3855-44b9-83f5654bc3dd
-                transactionStatusDescription: Input is invalid 
-                errorDetails: 
-                  errorCode: 1060
-                  errorField: Client-Token
-                  errorReason: Required Header Field is missing
-            100-Error:
-              value: 
-                transactionStatus: ERROR
-                transactionStatusCode: 100
-                referenceTransactionID: 99be0e16-3855-44b9-83f5654bc3dd
-                transactionStatusDescription: Input is invalid 
-                errorDetails: 
-                  errorCode: 1080
-                  errorField: account
-                  errorReason: Block contain values more than that is allowed
+            # 100-Error:
+            #   value: 
+            #     transactionStatus: ERROR
+            #     transactionStatusCode: 100
+            #     referenceTransactionID: 99be0e16-3855-44b9-83f5654bc3dd
+            #     transactionStatusDescription: Input is invalid 
+            #     errorDetails: 
+            #       errorCode: 1010
+            #       errorField: type
+            #       errorReason: Field did not have a valid format
+            # 100-Error:
+            #   value: 
+            #     transactionStatus: ERROR
+            #     transactionStatusCode: 100
+            #     referenceTransactionID: 99be0e16-3855-44b9-83f5654bc3dd
+            #     transactionStatusDescription: Input is invalid
+            #     errorDetails: 
+            #       errorCode: 1020
+            #       errorField: publicKeyRequired
+            #       errorReason: Field contained a bad value
+            # 100-Error:
+            #   value: 
+            #     transactionStatus: ERROR
+            #     transactionStatusCode: 100
+            #     referenceTransactionID: 99be0e16-3855-44b9-83f5654bc3dd
+            #     transactionStatusDescription: Input is invalid 
+            #     errorDetails: 
+            #       errorCode: 1030
+            #       errorField: publicKeyRequired
+            #       errorReason: Required field did not have a value
+            # 100-Error:
+            #   value: 
+            #     transactionStatus: ERROR
+            #     transactionStatusCode: 100
+            #     referenceTransactionID: 99be0e16-3855-44b9-83f5654bc3dd
+            #     transactionStatusDescription: Input is invalid 
+            #     errorDetails: 
+            #       errorCode: 1030
+            #       errorField: type
+            #       errorReason: Required field did not have a value
+            # 100-Error:
+            #   value: 
+            #     transactionStatus: ERROR
+            #     transactionStatusCode: 100
+            #     referenceTransactionID: 99be0e16-3855-44b9-83f5654bc3dd
+            #     transactionStatusDescription: Input is invalid 
+            #     errorDetails: 
+            #       errorCode: 1035
+            #       errorField: publicKeyRequired
+            #       errorReason: Required field is missing
+            # 100-Error:
+            #   value: 
+            #     transactionStatus: ERROR
+            #     transactionStatusCode: 100
+            #     referenceTransactionID: 99be0e16-3855-44b9-83f5654bc3dd
+            #     transactionStatusDescription: Input is invalid 
+            #     errorDetails: 
+            #       errorCode: 1035
+            #       errorField: type
+            #       errorReason: Required field is missing
+            # 100-Error:
+            #   value: 
+            #     transactionStatus: ERROR
+            #     transactionStatusCode: 100
+            #     referenceTransactionID: 99be0e16-3855-44b9-83f5654bc3dd
+            #     transactionStatusDescription: Input is invalid
+            #     errorDetails: 
+            #       errorCode: 1040
+            #       errorField: customer
+            #       errorReason: Required block did not have a value
+            # 100-Error:
+            #   value: 
+            #     transactionStatus: ERROR
+            #     transactionStatusCode: 100
+            #     referenceTransactionID: 99be0e16-3855-44b9-83f5654bc3dd
+            #     transactionStatusDescription: Input is invalid
+            #     errorDetails: 
+            #       errorCode: 1040
+            #       errorField: security
+            #       errorReason: Required block did not have a value
+            # 100-Error:
+            #   value: 
+            #     transactionStatus: ERROR
+            #     transactionStatusCode: 100
+            #     referenceTransactionID: 99be0e16-3855-44b9-83f5654bc3dd
+            #     transactionStatusDescription: Input is invalid 
+            #     errorDetails: 
+            #       errorCode: 1040
+            #       errorField: account
+            #       errorReason: Required block did not have a value
+            # 100-Error:
+            #   value: 
+            #     transactionStatus: ERROR
+            #     transactionStatusCode: 100
+            #     referenceTransactionID: 99be0e16-3855-44b9-83f5654bc3dd
+            #     transactionStatusDescription: Input is invalid
+            #     errorDetails: 
+            #       errorCode: 1045
+            #       errorField: customer
+            #       errorReason: Required block is missing
+            # 100-Error:
+            #   value: 
+            #     transactionStatus: ERROR
+            #     transactionStatusCode: 100
+            #     referenceTransactionID: 99be0e16-3855-44b9-83f5654bc3dd
+            #     transactionStatusDescription: Input is invalid
+            #     errorDetails: 
+            #       errorCode: 1045
+            #       errorField: security
+            #       errorReason: Required block is missing
+            # 100-Error:
+            #   value: 
+            #     transactionStatus: ERROR
+            #     transactionStatusCode: 100
+            #     referenceTransactionID: 99be0e16-3855-44b9-83f5654bc3dd
+            #     transactionStatusDescription: Input is invalid 
+            #     errorDetails: 
+            #       errorCode: 1045
+            #       errorField: account
+            #       errorReason: Required block is missing
+            # 100-Error:
+            #   value: 
+            #     transactionStatus: ERROR
+            #     transactionStatusCode: 100
+            #     referenceTransactionID: 99be0e16-3855-44b9-83f5654bc3dd
+            #     transactionStatusDescription: Input is invalid 
+            #     errorDetails: 
+            #       errorCode: 1060
+            #       errorField: PartnerID
+            #       errorReason: Required Header Field is missing
+            # 100-Error:
+            #   value: 
+            #     transactionStatus: ERROR
+            #     transactionStatusCode: 100
+            #     referenceTransactionID: 99be0e16-3855-44b9-83f5654bc3dd
+            #     transactionStatusDescription: Input is invalid 
+            #     errorDetails: 
+            #       errorCode: 1060
+            #       errorField: SubscriberId
+            #       errorReason: Required Header Field is missing
+            # 100-Error:
+            #   value: 
+            #     transactionStatus: ERROR
+            #     transactionStatusCode: 100
+            #     referenceTransactionID: 99be0e16-3855-44b9-83f5654bc3dd
+            #     transactionStatusDescription: Input is invalid 
+            #     errorDetails: 
+            #       errorCode: 1060
+            #       errorField: fdAccountID
+            #       errorReason: Required Header Field is missing
+            # 100-Error:
+            #   value: 
+            #     transactionStatus: ERROR
+            #     transactionStatusCode: 100
+            #     referenceTransactionID: 99be0e16-3855-44b9-83f5654bc3dd
+            #     transactionStatusDescription: Input is invalid 
+            #     errorDetails: 
+            #       errorCode: 1060
+            #       errorField: issuedOn
+            #       errorReason: Required Header Field is missing
+            # 100-Error:
+            #   value: 
+            #     transactionStatus: ERROR
+            #     transactionStatusCode: 100
+            #     referenceTransactionID: 99be0e16-3855-44b9-83f5654bc3dd
+            #     transactionStatusDescription: Input is invalid 
+            #     errorDetails: 
+            #       errorCode: 1060
+            #       errorField: expiresInSeconds
+            #       errorReason: Required Header Field is missing
+            # 100-Error:
+            #   value: 
+            #     transactionStatus: ERROR
+            #     transactionStatusCode: 100
+            #     referenceTransactionID: 99be0e16-3855-44b9-83f5654bc3dd
+            #     transactionStatusDescription: Input is invalid 
+            #     errorDetails: 
+            #       errorCode: 1060
+            #       errorField: Client-Token
+            #       errorReason: Required Header Field is missing
+            # 100-Error:
+            #   value: 
+            #     transactionStatus: ERROR
+            #     transactionStatusCode: 100
+            #     referenceTransactionID: 99be0e16-3855-44b9-83f5654bc3dd
+            #     transactionStatusDescription: Input is invalid 
+            #     errorDetails: 
+            #       errorCode: 1080
+            #       errorField: account
+            #       errorReason: Block contain values more than that is allowed
     401-CreateSessionTokenResponsePayloadSamples:
       description: |
         ### HTTP 401 Response.
