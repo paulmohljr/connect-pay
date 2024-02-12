@@ -481,7 +481,6 @@ public class AesUtil {
 }
 ```
 
-
 ###  Step 1: Create Session Token
 <p>
 The Create Session Token API call is used to create a session token and to retrieve the RSA public key. This API is secured as it requires the Authorization header that can only be derived using the API Secret stored in the Merchant’s server. Below is more information on the API specification as well as example request and response payloads. </p>
@@ -616,13 +615,17 @@ This API is secured, as it requires the Authorization header that can only be de
 Customer Profile API” from their uCom implementation guide.
 
 [![](/assets/images/button.png '')](https://qa-developer.fiserv.com/product/ConnectPay/api/?type=post&path=/consumerprofile/add&branch=develop&version=1.0.0)
-
 <p>
 |Attribute|Value|
 |---|---|
 |Certification API End Point|https://cat.api.firstdata.com/gateway/v2/connectpay/consumerprofile/add|
 |Production API End Point|https://prod.api.firstdata.com/gateway/v2/connectpay/consumerprofile/add|
 </p>
+<br>
+Link to API Explorer for structure and attribute details 
+ [![](/assets/images/button.png '')](https://qa-developer.fiserv.com/product/ConnectPay/api/?type=post&path=/consumerprofile/add&branch=develop&version=1.0.0)
+</br>
+<!-- Needded 
 <p>
 Headers|Description|
 |---------|-----|
@@ -634,6 +637,7 @@ Value for this header should be the word HMAC, followed by a space, followed by 
 |Client-Token |Session Token received from CreateSessionToken call. Value for this header should be Bearer, followed by a space, followed by values for tokened. Example: Bearer b361Nhsd97hsujuiUSuiua99iq9921kkjsuuahjsa | 
 </p>
 <br>
+
 <p>Request Body: (Sample request body before payload encryption) </p>
 
 ```json
@@ -642,13 +646,14 @@ Value for this header should be the word HMAC, followed by a space, followed by 
 "externalID": "Merchant01Consumer65746635" }
 }
 ```
+
 <p>
 |Data Element|Description|Requires Encryption|Required?|Rules|Data Type|Minimum Length|Maximum Length| #occur|
 |------------|-----------|-------------------|---------------|---------|--------------|--------------|-------|
 |externalID|This is the user’s unique identifier in the merchant system.|N|R||A,N|1|50|<=1|
 </p>
 <p>Sample request body after payload encryption and before transmission</p>
-
+<!-- added to examples>
 ```json
 {
 "componentX":
@@ -657,6 +662,7 @@ Value for this header should be the word HMAC, followed by a space, followed by 
 "componentDelta": "KKRKg/jPcb+r/3TZmhLP/KxrMEajXKvBYQd5jeGFm2OzznUvNHuyEhWyJc4RlXFRoLhwcj9eEuSOz0a bTAeU+Xw8hSMJ6kYhHokJ3ev8tgQ="
 }
 ```
+-->
 <br>
 Data Element|Description|Requires Encryption|Required?|Rules|Data Type|Minimum Length|Maximum Length| #occur|
 |------------|-----------|-------------------|---------------|---------|--------------|--------------|-------|
@@ -830,9 +836,9 @@ Data Element|Description|Requires Encryption|Required?|Rules|Data Type|Minimum L
 
 ## Get Connectpay Profile
 
-<p>The Get CP Profile method is used to get consumer profile `fdCustomerID` and `externalID` using `fdCustomerID` or `externalID`</p>
+<p>The Get CP Profile method is used to get consumer profile `fdCustomerID` and `externalID` using `fdCustomerID` or `externalID`
 <br>
-<p>Example :</p>
+<p>Example :
 <br>
 Merchant X for some unforseen event loses the `fdCustomerId` for the corresponding `externalID` in their record.
 <br>
@@ -842,10 +848,11 @@ Merchant does not send another create profile because its sure profile exists, j
 <br>
 This API is secured, as it requires the Authorization header that can only be derived using the API Secret stored in the Merchant’s web server. Below are the details of the API end point.
 <br>
+</p>
 
->Merchants who will be using Fiserv’s Universal Commerce (uCom) gateway should use “Create Customer Profile API” from their uCom implementation guide 
+>Merchants who will be using Fiserv’s Universal Commerce (uCom) gateway should use “Create Customer Profile API” from their uCom implementation guide. 
 [uCom Implementation Guide](https://developer.fiserv.com/product/ConnectedCommerce/api/?type=post&path=/v1/customers&branch=main&version=1.0.0)
-
+<br>
 <p>
 |Attribute|Value|
 |---------|-----|
@@ -890,6 +897,7 @@ Data Element|Description|Requires Encryption|Required?|Rules|Data Type|Minimum L
 "componentDelta": "KKRKg/jPcb+r/3TZmhLP/KxrMEajXKvBYQd5jeGFm2OzznUvNHuyEhWyJc4RlXFRoLhwcj9eEuSOz0a bTAeU+Xw8hSMJ6kYhHokJ3ev8tgQ="
 }
 ```
+</p>
 <br>
 Data Element|Description|Requires Encryption|Required?|Rules|Data Type|Minimum Length|Maximum Length| #occur|
 |------------|-----------|-------------------|---------------|---------|--------------|--------------|-------|
@@ -1055,11 +1063,10 @@ Response Code List [Response Codes](https://github.com/Fiserv/connect-pay/blob/d
 </p>
 
 
-
 ## Delete ConnectPay Profile
-<p>The Delete ConnectPay Profile method is used to close consumer profile. 
+<p>The Delete ConnectPay Profile method is used to close consumer profile.
 <br>
-After this call is made you cannot re-activate the same profile. 
+After this call is made you cannot re-activate the same profile.
 <br>
 An add profile request will need to be submitted.
 <br>
