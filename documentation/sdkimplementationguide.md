@@ -82,10 +82,10 @@ At this step, all prerequisites have been complete in order to make our first ca
 > Note: We will need to use the `tokenID` for the `Client-Token` header as well as the RSA `publicKey` in order to encrypt a portion of the payload before making the API call. Save these two pieces of information from the "Create Session Token" API used earlier in order to complete the call.
 
 ## Create Consumer Profile
-<p>
+
 The Create Consumer Profile call is mandatory for any new user enrollment using the ConnectPay SDK. This is used to create an `fdCustomerId` for a provided external id (and other user information) by the merchant. The returned fdCustomerId should be used right from the enrollment use case.
 
-This API is secured, as it requires the Authorization header that can only be derived using the API Secret stored in the Merchant’s web server. Below are the details of the API end point.</p>
+This API is secured, as it requires the Authorization header that can only be derived using the API Secret stored in the Merchant’s web server. Below are the details of the API end point.
 
 >Please Note: Merchants who will be using Fiserv’s Universal Commerce (uCom) gateway should use “Create
 Customer Profile API” from their uCom implementation guide.
