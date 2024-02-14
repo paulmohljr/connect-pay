@@ -218,13 +218,13 @@ When the ConnectPayAPI provides a Nonce back to the Merchant during a use case, 
 
 In either of the api calls, merchant have the option to retrieve the banking information in clear/masked. A merchant specific setting enables a merchant to retrieve the banking information either in clear or in mask as per business.
 
-Use Case 1 (Nonce Get Data, Setting ON) – Merchant needs to get the account details (new `fdAccountId`) of the consumer in clear by providing the nonce generated at the time of enrollment. Refer to Section
+Use Case 1 (Nonce Get Data, Setting ON) – Merchant needs to get the account details (new `fdAccountId`) of the consumer in clear by providing the nonce generated at the time of enrollment. See Tab Below
 
-Use Case 2 (Nonce Get Data, Setting OFF) – Merchant needs to get the account details (new `fdAccountId`) of the consumer in masked by providing the nonce generated at the time of enrollment. Refer to Section
+Use Case 2 (Nonce Get Data, Setting OFF) – Merchant needs to get the account details (new `fdAccountId`) of the consumer in masked by providing the nonce generated at the time of enrollment. See Tab Below
 
-Use Case 3 (Consumer Get Data, Setting ON) – Merchant needs to get the consumer information any time after enrollment and the account details of the consumer needs to be in clear. Refer to Section
+Use Case 3 (Consumer Get Data, Setting ON) – Merchant needs to get the consumer information any time after enrollment and the account details of the consumer needs to be in clear. See Tab Below
 
-Use Case 4 (Consumer Get Data, Setting OFF) – Merchant needs to get the consumer information any time after enrollment and the account details of the consumer needs to be in mask. Refer to Section
+Use Case 4 (Consumer Get Data, Setting OFF) – Merchant needs to get the consumer information any time after enrollment and the account details of the consumer needs to be in mask. See Tab Below
 
 |Attribute|Value|
 |---------|-----|
