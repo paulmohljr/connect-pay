@@ -82,6 +82,8 @@ paths:
           $ref: '#/components/responses/400-CPAPI_GET_SESSION_TOKEN'
         '401':
           $ref: '#/components/responses/401-CPAPI_GET_SESSION_TOKEN'
+        '403':
+          $ref: '#/components/responses/403-CPAPI_GET_SESSION_TOKEN'
         '409':
           $ref: '#/components/responses/409-CPAPI_GET_SESSION_TOKEN'
         '500':
@@ -1715,19 +1717,19 @@ components:
                   publicKey: MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAo8jR693ueb0BGPasFMf1V9QP6VpElKu1x/Qpu8M4DhX0o0VimgAd3TY0TPAK6Tl+DkkC0ana1u/NjEVomoZXP15jWEBSFG2DciiMPLtzbvrobwdmWnWQHSX9licUb5jf0fOKe2gx7q0CY095+SkVjytnQGdc315WYMMo/a1EUXzFhy1ZMkj6riZ+wEneQITsN1haKqS6Q6wQMBjHBrsFomaU2qPrnlrpuZjXUP5rt5+CYCGdwLEiCGNGe47tqP48Yk3snn+yVdPWnOfuz5aG3dNdteV5zVhMkVGIdmrJTgAh1auCOxNc44GTGo3rQn9WD5p4Lo8aLGkyHjv3kmvDLQIDAQAB
                   algorithm: RSA/None/OAEPWithSHA512AndMGF1Padding
                   status: ACTIVE
-    # This is the title of the response codes and will use this as part of the path reference to show the response codes
-    200-CPAPI_GET_SESSION_TOKEN: 
-      # This is the description of what will show on the response code page for the respective HTTP response
-      description: | 
-        Success
-      # This defines each field such as what datatype should be passed and etc. Search CPAPIGenericResponse on page to find specific code
-      content: 
-        application/json: 
-          # This is the reference to the type talked about above
-          schema: 
-            $ref: '#components/schemas/CPAPIGenericResponse'
-          # This is where you put the payload examples
-          examples: 
+    ## This is the title of the response codes and will use this as part of the path reference to show the response codes
+    #200-CPAPI_GET_SESSION_TOKEN: 
+      ## This is the description of what will show on the response code page for the respective HTTP response
+      #description: | 
+        #Success
+      ## This defines each field such as what datatype should be passed and etc. Search CPAPIGenericResponse on page to find specific code
+      #content: 
+        #application/json: 
+          ## This is the reference to the type talked about above
+          #schema: 
+            #$ref: '#components/schemas/CPAPIGenericResponse'
+          ## This is where you put the payload examples
+          #examples: 
     201-CPAPI_GET_SESSION_TOKEN:
       description: | 
         The request was successfully fulfilled and resulted in one or multiple new resources being created
@@ -1976,19 +1978,9 @@ components:
     403-CPAPI_GET_SESSION_TOKEN:
       description: | 
         Forbidden
-      content: 
-        application/json: 
-          schema: 
-            $ref: '#components/schemas/CPAPIGenericResponse'
-          examples: 
     409-CPAPI_GET_SESSION_TOKEN:
       description: | 
         Indicates a conflict with the current state of a resource
-      content: 
-        application/json: 
-          schema: 
-            $ref: '#components/schemas/CPAPIGenericResponse'
-          examples: 
     500-CPAPI_GET_SESSION_TOKEN:
       description: | 
         An unexpected server error occured
