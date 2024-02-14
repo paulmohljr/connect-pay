@@ -1,7 +1,9 @@
 # SDK Implementation Guide
+
 Follow the appropriate steps to complete. Based on the overall architecture diagram, the Merchant server is required to integrate with the below ConnectPay services exposed through First API (Fiserv's API gateway).</p>
 
 ## Overview 
+
 ConnectPayAPI uses full payload encryption (not selective field, or field level encryption)
 
 This is done with the intent to stop **Man In The Middle (MITM)** attacks.
@@ -40,6 +42,7 @@ Server to server authentication is established using HMAC, however, that doesn�
 [encryption standards migration](https://github.com/Fiserv/connect-pay/blob/develop/documentation/encryptionstandardsmigration.md)
 
 ## Pre-requisites
+
 Below are the prerequisites before using ConnectPay's API's:
 
 ## Connectivity
@@ -52,6 +55,7 @@ The ConnectPay services are accessed through the public Internet. ConnectPay acc
 |Production API End Point   |https://prod.api.firstdata.com/gateway/v2|/connectpay|
 
 ## Header Description
+
 The header of each API call will contain several parameters. It is important that each parameter contain the specified values for a successful API call. Any changes to the values will be noted throughout the guide. 
 
 Please follow the below link for all information related to headers
@@ -72,6 +76,7 @@ For more examples and details on API please go to below Link:
 [API Explorer](https://qa-developer.fiserv.com/product/ConnectPay/api/?type=post&path=/security/createsessiontoken&branch=develop&version=1.0.0)
 
 ### Step 2: Create & Request Payload
+
 At this step, all prerequisites have been complete in order to make our first call. First, the request payload must be created. The entire payload must be encrypted using different encryption methods. It must also be decrypted in order to decode the response payload into something that is readable. We will use the "Add Consumer Profile" as the example API. 
 
 > Note: We will need to use the `tokenID` for the `Client-Token` header as well as the RSA `publicKey` in order to encrypt a portion of the payload before making the API call. Save these two pieces of information from the "Create Session Token" API used earlier in order to complete the call.
@@ -96,6 +101,7 @@ Link to API Explorer for structure and attribute details
  [API Explorer](https://qa-developer.fiserv.com/product/ConnectPay/api/?type=post&path=/consumerprofile/add&branch=develop&version=1.0.0)
 
 ### Request Body after payload encryption and before transmission
+
 For a sample request body **AFTER** payload encryption and before transmission: 
 ```json
 {
@@ -104,19 +110,23 @@ For a sample request body **AFTER** payload encryption and before transmission:
     "componentDelta": "OEIyAAUL1Py3/oKewtNXswtkYOw+krJP0EFhucFWFXSug0TCV7kqL67Mk5PTzVqNWTAyPl0lK6ac2EBK3kxskC6WpzpJI4qSv7/9JSfQ7zAYUiKAKPobIXpHAJ7BuHSMlMkv/6UTJvdIRsgDaqfAbD5pqG5KDbRzXpzmLIpVJnGyPCkwwm+F36wGbe1ccuvzDHNL77e6XSmm2LpzO/NAGJRjMGXdLQ9XKFvjr/gK0ruO2gdqglomlvy3MG8BSvLCAYkOL1CAB4wF8ovsfpOAAV92KRdqxeMISntCc0/Fxg7fs9JILmn4ZkgiSgha1CsN"
 }
 ```
+
 Response Body may contain either componentDelta or componentFallBack elements.
 <ol>
-    <li>componentDelta: is encrypted ConnectPayAPI response</li>
-    <li>componentFallBack : is unencrypted response and is only triggered in cases of ,Sessiontimeout(responsefromApigee) and Encryption decryptionlogicfailsonConnectPayAPI(inthiscaseencryption/decryption failed so not able to give back encrypted response).</li>
+<li>componentDelta: is encrypted ConnectPayAPI response</li>
+<li>componentFallBack : is unencrypted response and is only triggered in cases of ,Session timeout(response from Apigee) and Encryption decryption logic fails on ConnectPayAPI(in this case encryption/decryption failed so not able to give back encrypted response).</li>
 </ol>
 
 ### Make The Request
+
 Using the correct endpoint, headers, and encrypted payload, we can then make the call. The ConnectPay backend will decrypt the payload and process the request. It will then return the response encrypted with the AES key and IV provided by componentX and componentY. An example of the output is shown below:
+
 ```json
 {
 "componentDelta": "cRD5xVaJab13iRQ7l6No6ot9YPTFT3bi/qapHYGgsNmxQ8nT2mtIz7uLLHz5kdp5JEmDjiP1dXMNPg8jP5rIZQf/5dtMfFLq7YL7FQY/boTsd7BoJg7reDeeAk6l9+76gaSAZMIRJGYS4fhy1bgClx2jIeWo4fLlfildeHnghCU1ElR8XhFi3oyd8hU+YEpDENP5IJJMVxjnYChuFX8paVy/SAYFMESBXSTIgPi6Y/kJc/bswlxaa9Yei4GnD+Ny1laVs4HqJp32JJ+NHJIYdZr5117AY0JJxJ9oudnkK6J8oPnnXhLCBGxNCRDJG3AVLRxDnQcds/cSiwAVREHr4nn848IEsUb27wJR7SiDxVaELxme9CNZ1dB0tPYQ1wux3ymWtnUgLfVRFsHH3EeucbHv8uIc8dxcwxZReROzVS8="
 }
 ```
+
 ## Get Connectpay Profile
 
 The Get CP Profile method is used to get consumer profile `fdCustomerID` and `externalID` using `fdCustomerID` or `externalID`
@@ -145,7 +155,9 @@ Link to API Explorer for structure and attribute details <!-- Need to Update aft
  [API Explorer](https://qa-developer.fiserv.com/product/ConnectPay/api/?type=post&path=/consumerprofile/add&branch=develop&version=1.0.0)
 
 ### Request Body after payload encryption and before transmission
-For a sample request body **AFTER** payload encryption and before transmission: 
+
+For a sample request body **AFTER** payload encryption and before transmission:
+
 ```json
 {
     "componentX": "ju5PPi7k4K2jtI0z47qKcHnQGRrIymN+dK+PVlWjKyufoaUHJqjqOAbjsQZ0q3sLciBkEVWm5jGbWQoGf2e9Us+yfYu8ua2hz3wOIRSymHdx8qKuoexQiKhLWnp/GAL0+TIdzb/CvNijuJkOe1XSzEoFdFjYgRNMV8LJM3G/izn48kZm9gexM/iJenJyzwFoqXJc7EcWrC3C0RlkBF5jTgZzTGCvBpxDq4pw3CjFDsGvFy5Gg26B1KRcRDctrFpLV697QAW//hWyS91NYB68S3TIo/B6/LfUjj9bOY3fM+i+5BY2oV7zbLLyvA+CKfLFRBoXtevfBJyndrUDFD0EBA==",
@@ -153,14 +165,17 @@ For a sample request body **AFTER** payload encryption and before transmission:
     "componentDelta": "OEIyAAUL1Py3/oKewtNXswtkYOw+krJP0EFhucFWFXSug0TCV7kqL67Mk5PTzVqNWTAyPl0lK6ac2EBK3kxskC6WpzpJI4qSv7/9JSfQ7zAYUiKAKPobIXpHAJ7BuHSMlMkv/6UTJvdIRsgDaqfAbD5pqG5KDbRzXpzmLIpVJnGyPCkwwm+F36wGbe1ccuvzDHNL77e6XSmm2LpzO/NAGJRjMGXdLQ9XKFvjr/gK0ruO2gdqglomlvy3MG8BSvLCAYkOL1CAB4wF8ovsfpOAAV92KRdqxeMISntCc0/Fxg7fs9JILmn4ZkgiSgha1CsN"
 }
 ```
+
 Response Body may contain either componentDelta or componentFallBack elements.
 <ol>
-    <li>componentDelta: is encrypted ConnectPayAPI response</li>
-    <li>componentFallBack : is unencrypted response and is only triggered in cases of ,Sessiontimeout(responsefromApigee) and Encryption decryptionlogicfailsonConnectPayAPI(inthiscaseencryption/decryption failed so not able to give back encrypted response).</li>
+<li>componentDelta: is encrypted ConnectPayAPI response</li>
+<li>componentFallBack : is unencrypted response and is only triggered in cases of ,Session timeout(response from Apigee) and Encryption decryption logic fails on ConnectPayAPI(in this case encryption/decryption failed so not able to give back encrypted response).</li>
 </ol>
 
 ### Make The Request
+
 Using the correct endpoint, headers, and encrypted payload, we can then make the call. The ConnectPay backend will decrypt the payload and process the request. It will then return the response encrypted with the AES key and IV provided by componentX and componentY. An example of the output is shown below:
+
 ```json
 {
 "componentDelta": "cRD5xVaJab13iRQ7l6No6ot9YPTFT3bi/qapHYGgsNmxQ8nT2mtIz7uLLHz5kdp5JEmDjiP1dXMNPg8jP5rIZQf/5dtMfFLq7YL7FQY/boTsd7BoJg7reDeeAk6l9+76gaSAZMIRJGYS4fhy1bgClx2jIeWo4fLlfildeHnghCU1ElR8XhFi3oyd8hU+YEpDENP5IJJMVxjnYChuFX8paVy/SAYFMESBXSTIgPi6Y/kJc/bswlxaa9Yei4GnD+Ny1laVs4HqJp32JJ+NHJIYdZr5117AY0JJxJ9oudnkK6J8oPnnXhLCBGxNCRDJG3AVLRxDnQcds/cSiwAVREHr4nn848IEsUb27wJR7SiDxVaELxme9CNZ1dB0tPYQ1wux3ymWtnUgLfVRFsHH3EeucbHv8uIc8dxcwxZReROzVS8="
@@ -174,6 +189,7 @@ Response Code List [Response Codes](https://github.com/Fiserv/connect-pay/blob/d
 </p>
 
 ## Delete ConnectPay Profile
+
 The Delete ConnectPay Profile method is used to close consumer profile.After this call is made you cannot re-activate the same profile.An add profile request will need to be submitted.
 
 This API is secured, as it requires the Authorization header that can only be derived using the API Secret stored in the Merchant’s web server. Below are the details of the API end point.
@@ -192,7 +208,9 @@ Link to API Explorer for structure and attribute details
  [API Explorer](https://qa-developer.fiserv.com/product/ConnectPay/api/?type=post&path=/consumerprofile/add&branch=develop&version=1.0.0)
 
 ### Request Body after payload encryption and before transmission
-For a sample request body **AFTER** payload encryption and before transmission: 
+
+For a sample request body **AFTER** payload encryption and before transmission:
+
 ```json
 {
     "componentX": "ju5PPi7k4K2jtI0z47qKcHnQGRrIymN+dK+PVlWjKyufoaUHJqjqOAbjsQZ0q3sLciBkEVWm5jGbWQoGf2e9Us+yfYu8ua2hz3wOIRSymHdx8qKuoexQiKhLWnp/GAL0+TIdzb/CvNijuJkOe1XSzEoFdFjYgRNMV8LJM3G/izn48kZm9gexM/iJenJyzwFoqXJc7EcWrC3C0RlkBF5jTgZzTGCvBpxDq4pw3CjFDsGvFy5Gg26B1KRcRDctrFpLV697QAW//hWyS91NYB68S3TIo/B6/LfUjj9bOY3fM+i+5BY2oV7zbLLyvA+CKfLFRBoXtevfBJyndrUDFD0EBA==",
@@ -200,20 +218,25 @@ For a sample request body **AFTER** payload encryption and before transmission:
     "componentDelta": "OEIyAAUL1Py3/oKewtNXswtkYOw+krJP0EFhucFWFXSug0TCV7kqL67Mk5PTzVqNWTAyPl0lK6ac2EBK3kxskC6WpzpJI4qSv7/9JSfQ7zAYUiKAKPobIXpHAJ7BuHSMlMkv/6UTJvdIRsgDaqfAbD5pqG5KDbRzXpzmLIpVJnGyPCkwwm+F36wGbe1ccuvzDHNL77e6XSmm2LpzO/NAGJRjMGXdLQ9XKFvjr/gK0ruO2gdqglomlvy3MG8BSvLCAYkOL1CAB4wF8ovsfpOAAV92KRdqxeMISntCc0/Fxg7fs9JILmn4ZkgiSgha1CsN"
 }
 ```
+
 Response Body may contain either componentDelta or componentFallBack elements.
 <ol>
-    <li>componentDelta: is encrypted ConnectPayAPI response</li>
-    <li>componentFallBack : is unencrypted response and is only triggered in cases of ,Sessiontimeout(responsefromApigee) and Encryption decryptionlogicfailsonConnectPayAPI(inthiscaseencryption/decryption failed so not able to give back encrypted response).</li>
+<li>componentDelta: is encrypted ConnectPayAPI response</li>
+<li>componentFallBack : is unencrypted response and is only triggered in cases of ,Session timeout(response from Apigee) and Encryption decryption logic fails on ConnectPayAPI(in this case encryption/decryption failed so not able to give back encrypted response).</li>
 </ol>
 
 ### Make The Request
+
 Using the correct endpoint, headers, and encrypted payload, we can then make the call. The ConnectPay backend will decrypt the payload and process the request. It will then return the response encrypted with the AES key and IV provided by componentX and componentY. An example of the output is shown below:
+
 ```json
 {
 "componentDelta": "cRD5xVaJab13iRQ7l6No6ot9YPTFT3bi/qapHYGgsNmxQ8nT2mtIz7uLLHz5kdp5JEmDjiP1dXMNPg8jP5rIZQf/5dtMfFLq7YL7FQY/boTsd7BoJg7reDeeAk6l9+76gaSAZMIRJGYS4fhy1bgClx2jIeWo4fLlfildeHnghCU1ElR8XhFi3oyd8hU+YEpDENP5IJJMVxjnYChuFX8paVy/SAYFMESBXSTIgPi6Y/kJc/bswlxaa9Yei4GnD+Ny1laVs4HqJp32JJ+NHJIYdZr5117AY0JJxJ9oudnkK6J8oPnnXhLCBGxNCRDJG3AVLRxDnQcds/cSiwAVREHr4nn848IEsUb27wJR7SiDxVaELxme9CNZ1dB0tPYQ1wux3ymWtnUgLfVRFsHH3EeucbHv8uIc8dxcwxZReROzVS8="
 }
 ```
+
 ## Get Data
+
 When the ConnectPayAPI provides a Nonce back to the Merchant during a use case, the Merchant in turn should be able to get the account details (new `fdAccountId`) of the consumer by securely using the provided nonce from their server.In addition, the Merchant or SDK can retrieve the consumer information any time after the enrollment.
 
 In either of the api calls, merchant have the option to retrieve the banking information in clear/masked. A merchant specific setting enables a merchant to retrieve the banking information either in clear or in mask as per business.
@@ -239,14 +262,19 @@ type: tab
 titles: Online Bank Login, Manual Enrollment
 -->
 ### Use Case 1 - NONCE GET DATA, Setting ON 
+
 #### Get Data Request Specification
 
 Sample request body with NONCE before payload encryption:
+
 ```json
 95199DC2AE5700D0E0530AAE8CADC15C3594
 ```
+
 #### Request Body after payload encryption and before transmission
-For a sample request body **AFTER** payload encryption and before transmission: 
+
+For a sample request body **AFTER** payload encryption and before transmission:
+
 ```json
 {
     "componentX": "ju5PPi7k4K2jtI0z47qKcHnQGRrIymN+dK+PVlWjKyufoaUHJqjqOAbjsQZ0q3sLciBkEVWm5jGbWQoGf2e9Us+yfYu8ua2hz3wOIRSymHdx8qKuoexQiKhLWnp/GAL0+TIdzb/CvNijuJkOe1XSzEoFdFjYgRNMV8LJM3G/izn48kZm9gexM/iJenJyzwFoqXJc7EcWrC3C0RlkBF5jTgZzTGCvBpxDq4pw3CjFDsGvFy5Gg26B1KRcRDctrFpLV697QAW//hWyS91NYB68S3TIo/B6/LfUjj9bOY3fM+i+5BY2oV7zbLLyvA+CKfLFRBoXtevfBJyndrUDFD0EBA==",
@@ -254,25 +282,40 @@ For a sample request body **AFTER** payload encryption and before transmission:
     "componentDelta": "OEIyAAUL1Py3/oKewtNXswtkYOw+krJP0EFhucFWFXSug0TCV7kqL67Mk5PTzVqNWTAyPl0lK6ac2EBK3kxskC6WpzpJI4qSv7/9JSfQ7zAYUiKAKPobIXpHAJ7BuHSMlMkv/6UTJvdIRsgDaqfAbD5pqG5KDbRzXpzmLIpVJnGyPCkwwm+F36wGbe1ccuvzDHNL77e6XSmm2LpzO/NAGJRjMGXdLQ9XKFvjr/gK0ruO2gdqglomlvy3MG8BSvLCAYkOL1CAB4wF8ovsfpOAAV92KRdqxeMISntCc0/Fxg7fs9JILmn4ZkgiSgha1CsN"
 }
 ```
+
+<ol>
+<li>componentDelta: is encrypted ConnectPayAPI response</li>
+<li>componentFallBack : is unencrypted response and is only triggered in cases of ,Session timeout(response from Apigee) and Encryption decryption logic fails on ConnectPayAPI(in this case encryption/decryption failed so not able to give back encrypted response).</li>
+</ol>
+
 #### Make The Request
+
 Using the correct endpoint, headers, and encrypted payload, we can then make the call. The ConnectPay backend will decrypt the payload and process the request. It will then return the response encrypted with the AES key and IV provided by componentX and componentY. An example of the output is shown below:
+
 ```json
 {
 "componentDelta": "cRD5xVaJab13iRQ7l6No6ot9YPTFT3bi/qapHYGgsNmxQ8nT2mtIz7uLLHz5kdp5JEmDjiP1dXMNPg8jP5rIZQf/5dtMfFLq7YL7FQY/boTsd7BoJg7reDeeAk6l9+76gaSAZMIRJGYS4fhy1bgClx2jIeWo4fLlfildeHnghCU1ElR8XhFi3oyd8hU+YEpDENP5IJJMVxjnYChuFX8paVy/SAYFMESBXSTIgPi6Y/kJc/bswlxaa9Yei4GnD+Ny1laVs4HqJp32JJ+NHJIYdZr5117AY0JJxJ9oudnkK6J8oPnnXhLCBGxNCRDJG3AVLRxDnQcds/cSiwAVREHr4nn848IEsUb27wJR7SiDxVaELxme9CNZ1dB0tPYQ1wux3ymWtnUgLfVRFsHH3EeucbHv8uIc8dxcwxZReROzVS8="
 }
 ```
+
 <!--
 type: tab
 titles: Online Bank Login, Manual Enrollment
 -->
 ### Use Case 2 - NONCE GET DATA, Setting OFF
+
 #### Get Data Request Specification
+
 Sample request body with NONCE before payload encryption:
+
 ```json
 95199DC2AE5700D0E0530AAE8CADC15C3594
 ```
+
 #### Request Body after payload encryption and before transmission
-For a sample request body **AFTER** payload encryption and before transmission: 
+
+For a sample request body **AFTER** payload encryption and before transmission:
+
 ```json
 {
     "componentX": "ju5PPi7k4K2jtI0z47qKcHnQGRrIymN+dK+PVlWjKyufoaUHJqjqOAbjsQZ0q3sLciBkEVWm5jGbWQoGf2e9Us+yfYu8ua2hz3wOIRSymHdx8qKuoexQiKhLWnp/GAL0+TIdzb/CvNijuJkOe1XSzEoFdFjYgRNMV8LJM3G/izn48kZm9gexM/iJenJyzwFoqXJc7EcWrC3C0RlkBF5jTgZzTGCvBpxDq4pw3CjFDsGvFy5Gg26B1KRcRDctrFpLV697QAW//hWyS91NYB68S3TIo/B6/LfUjj9bOY3fM+i+5BY2oV7zbLLyvA+CKfLFRBoXtevfBJyndrUDFD0EBA==",
@@ -280,22 +323,27 @@ For a sample request body **AFTER** payload encryption and before transmission:
     "componentDelta": "OEIyAAUL1Py3/oKewtNXswtkYOw+krJP0EFhucFWFXSug0TCV7kqL67Mk5PTzVqNWTAyPl0lK6ac2EBK3kxskC6WpzpJI4qSv7/9JSfQ7zAYUiKAKPobIXpHAJ7BuHSMlMkv/6UTJvdIRsgDaqfAbD5pqG5KDbRzXpzmLIpVJnGyPCkwwm+F36wGbe1ccuvzDHNL77e6XSmm2LpzO/NAGJRjMGXdLQ9XKFvjr/gK0ruO2gdqglomlvy3MG8BSvLCAYkOL1CAB4wF8ovsfpOAAV92KRdqxeMISntCc0/Fxg7fs9JILmn4ZkgiSgha1CsN"
 }
 ```
+
 #### Make The Request
+
 Using the correct endpoint, headers, and encrypted payload, we can then make the call. The ConnectPay backend will decrypt the payload and process the request. It will then return the response encrypted with the AES key and IV provided by componentX and componentY. An example of the output is shown below:
+
 ```json
 {
 "componentDelta": "cRD5xVaJab13iRQ7l6No6ot9YPTFT3bi/qapHYGgsNmxQ8nT2mtIz7uLLHz5kdp5JEmDjiP1dXMNPg8jP5rIZQf/5dtMfFLq7YL7FQY/boTsd7BoJg7reDeeAk6l9+76gaSAZMIRJGYS4fhy1bgClx2jIeWo4fLlfildeHnghCU1ElR8XhFi3oyd8hU+YEpDENP5IJJMVxjnYChuFX8paVy/SAYFMESBXSTIgPi6Y/kJc/bswlxaa9Yei4GnD+Ny1laVs4HqJp32JJ+NHJIYdZr5117AY0JJxJ9oudnkK6J8oPnnXhLCBGxNCRDJG3AVLRxDnQcds/cSiwAVREHr4nn848IEsUb27wJR7SiDxVaELxme9CNZ1dB0tPYQ1wux3ymWtnUgLfVRFsHH3EeucbHv8uIc8dxcwxZReROzVS8="
 }
 ```
+
 <!--
 type: tab
 titles: Online Bank Login, Manual Enrollment
 -->
+
 ### Use Case 3 - Consumer GET DATA, SETTING ON
+
 #### Get Data Request Specification
 
 Sample request body before payload encryption:
-
 
 ```json
  {
@@ -316,21 +364,24 @@ Sample request body before payload encryption:
     ]
 }
 ```
+
 Type of Fetch currently supported
 <ol>
-    <li>getAllDetails</li>
-    <li>getPersonalDetails</li>
-    <li>getIdentificationDetails</li>
-    <li>getAddressDetails</li>
-    <li>getCardDetails</li>
-    <li>getBankDetails</li>
-    <li>getSecurityQuestionDetails</li>
-    <li>getOtherDetails</li>
-    <li>getReportingDetails</li>
+<li>getAllDetails</li>
+<li>getPersonalDetails</li>
+<li>getIdentificationDetails</li>
+<li>getAddressDetails</li>
+<li>getCardDetails</li>
+<li>getBankDetails</li>
+<li>getSecurityQuestionDetails</li>
+<li>getOtherDetails</li>
+<li>getReportingDetails</li>
 </ol>
 
 #### Request Body after payload encryption and before transmission
+
 For a sample request body **AFTER** payload encryption and before transmission: 
+
 ```json
 {
     "componentX": "ju5PPi7k4K2jtI0z47qKcHnQGRrIymN+dK+PVlWjKyufoaUHJqjqOAbjsQZ0q3sLciBkEVWm5jGbWQoGf2e9Us+yfYu8ua2hz3wOIRSymHdx8qKuoexQiKhLWnp/GAL0+TIdzb/CvNijuJkOe1XSzEoFdFjYgRNMV8LJM3G/izn48kZm9gexM/iJenJyzwFoqXJc7EcWrC3C0RlkBF5jTgZzTGCvBpxDq4pw3CjFDsGvFy5Gg26B1KRcRDctrFpLV697QAW//hWyS91NYB68S3TIo/B6/LfUjj9bOY3fM+i+5BY2oV7zbLLyvA+CKfLFRBoXtevfBJyndrUDFD0EBA==",
@@ -338,18 +389,29 @@ For a sample request body **AFTER** payload encryption and before transmission:
     "componentDelta": "OEIyAAUL1Py3/oKewtNXswtkYOw+krJP0EFhucFWFXSug0TCV7kqL67Mk5PTzVqNWTAyPl0lK6ac2EBK3kxskC6WpzpJI4qSv7/9JSfQ7zAYUiKAKPobIXpHAJ7BuHSMlMkv/6UTJvdIRsgDaqfAbD5pqG5KDbRzXpzmLIpVJnGyPCkwwm+F36wGbe1ccuvzDHNL77e6XSmm2LpzO/NAGJRjMGXdLQ9XKFvjr/gK0ruO2gdqglomlvy3MG8BSvLCAYkOL1CAB4wF8ovsfpOAAV92KRdqxeMISntCc0/Fxg7fs9JILmn4ZkgiSgha1CsN"
 }
 ```
+
+<ol>
+<li>componentDelta: is encrypted ConnectPayAPI response</li>
+<li>componentFallBack : is unencrypted response and is only triggered in cases of ,Session timeout(response from Apigee) and Encryption decryption logic fails on ConnectPayAPI(in this case encryption/decryption failed so not able to give back encrypted response).</li>
+</ol>
+
 #### Make The Request
+
 Using the correct endpoint, headers, and encrypted payload, we can then make the call. The ConnectPay backend will decrypt the payload and process the request. It will then return the response encrypted with the AES key and IV provided by componentX and componentY. An example of the output is shown below:
+
 ```json
 {
 "componentDelta": "cRD5xVaJab13iRQ7l6No6ot9YPTFT3bi/qapHYGgsNmxQ8nT2mtIz7uLLHz5kdp5JEmDjiP1dXMNPg8jP5rIZQf/5dtMfFLq7YL7FQY/boTsd7BoJg7reDeeAk6l9+76gaSAZMIRJGYS4fhy1bgClx2jIeWo4fLlfildeHnghCU1ElR8XhFi3oyd8hU+YEpDENP5IJJMVxjnYChuFX8paVy/SAYFMESBXSTIgPi6Y/kJc/bswlxaa9Yei4GnD+Ny1laVs4HqJp32JJ+NHJIYdZr5117AY0JJxJ9oudnkK6J8oPnnXhLCBGxNCRDJG3AVLRxDnQcds/cSiwAVREHr4nn848IEsUb27wJR7SiDxVaELxme9CNZ1dB0tPYQ1wux3ymWtnUgLfVRFsHH3EeucbHv8uIc8dxcwxZReROzVS8="
 }
 ```
+
 <!--
 type: tab
 titles: Online Bank Login, Manual Enrollment
 -->
+
 ### Use Case 4 - Consumer GET DATA, SETTING OFF
+
 #### Get Data Request Specification 
 
 Sample request body before payload encryption:
@@ -374,20 +436,22 @@ Sample request body before payload encryption:
     ]
 }
 ```
+
 Type of Fetch currently supported
 <ol>
-    <li>getAllDetails</li>
-    <li>getPersonalDetails</li>
-    <li>getIdentificationDetails</li>
-    <li>getAddressDetails</li>
-    <li>getCardDetails</li>
-    <li>getBankDetails</li>
-    <li>getSecurityQuestionDetails</li>
-    <li>getOtherDetails</li>
-    <li>getReportingDetails</li>
+<li>getAllDetails</li>
+<li>getPersonalDetails</li>
+<li>getIdentificationDetails</li>
+<li>getAddressDetails</li>
+<li>getCardDetails</li>
+<li>getBankDetails</li>
+<li>getSecurityQuestionDetails</li>
+<li>getOtherDetails</li>
+<li>getReportingDetails</li>
 </ol>
 
 #### Request Body after payload encryption and before transmission
+
 For a sample request body **AFTER** payload encryption and before transmission: 
 ```json
 {
@@ -396,14 +460,24 @@ For a sample request body **AFTER** payload encryption and before transmission:
     "componentDelta": "OEIyAAUL1Py3/oKewtNXswtkYOw+krJP0EFhucFWFXSug0TCV7kqL67Mk5PTzVqNWTAyPl0lK6ac2EBK3kxskC6WpzpJI4qSv7/9JSfQ7zAYUiKAKPobIXpHAJ7BuHSMlMkv/6UTJvdIRsgDaqfAbD5pqG5KDbRzXpzmLIpVJnGyPCkwwm+F36wGbe1ccuvzDHNL77e6XSmm2LpzO/NAGJRjMGXdLQ9XKFvjr/gK0ruO2gdqglomlvy3MG8BSvLCAYkOL1CAB4wF8ovsfpOAAV92KRdqxeMISntCc0/Fxg7fs9JILmn4ZkgiSgha1CsN"
 }
 ```
+
+<ol>
+<li>componentDelta: is encrypted ConnectPayAPI response</li>
+<li>componentFallBack : is unencrypted response and is only triggered in cases of ,Session timeout(response from Apigee) and Encryption decryption logic fails on ConnectPayAPI(in this case encryption/decryption failed so not able to give back encrypted response).</li>
+</ol>
+
 #### Make The Request
+
 Using the correct endpoint, headers, and encrypted payload, we can then make the call. The ConnectPay backend will decrypt the payload and process the request. It will then return the response encrypted with the AES key and IV provided by componentX and componentY. An example of the output is shown below:
+
 ```json
 {
 "componentDelta": "cRD5xVaJab13iRQ7l6No6ot9YPTFT3bi/qapHYGgsNmxQ8nT2mtIz7uLLHz5kdp5JEmDjiP1dXMNPg8jP5rIZQf/5dtMfFLq7YL7FQY/boTsd7BoJg7reDeeAk6l9+76gaSAZMIRJGYS4fhy1bgClx2jIeWo4fLlfildeHnghCU1ElR8XhFi3oyd8hU+YEpDENP5IJJMVxjnYChuFX8paVy/SAYFMESBXSTIgPi6Y/kJc/bswlxaa9Yei4GnD+Ny1laVs4HqJp32JJ+NHJIYdZr5117AY0JJxJ9oudnkK6J8oPnnXhLCBGxNCRDJG3AVLRxDnQcds/cSiwAVREHr4nn848IEsUb27wJR7SiDxVaELxme9CNZ1dB0tPYQ1wux3ymWtnUgLfVRFsHH3EeucbHv8uIc8dxcwxZReROzVS8="
 }
 ```
+
 ## Get Consumer Account Details
+
 The Get Consumer Account Details API call is used to retrieve any account specific details required before calling a ConnectPay SDK Use Case.
 
 For example when the end user wants to close the account, this API can be called by the Merchant Server to get the account number (linked to ACH) and can pass (the last 4 digits or masked) to the ConnectPay SDK. This will be shown as a read-only field to the user.
@@ -422,6 +496,7 @@ For more examples and details on API please go to below Link:
 [API Explorer](https://qa-developer.fiserv.com/product/ConnectPay/api/?type=post&path=/account/getaccountdetails&branch=develop&version=1.0.0)
 
 ### Request Body after payload encryption and before transmission
+
 For a sample request body **AFTER** payload encryption and before transmission: 
 ```json
 {
@@ -430,20 +505,25 @@ For a sample request body **AFTER** payload encryption and before transmission:
     "componentDelta": "OEIyAAUL1Py3/oKewtNXswtkYOw+krJP0EFhucFWFXSug0TCV7kqL67Mk5PTzVqNWTAyPl0lK6ac2EBK3kxskC6WpzpJI4qSv7/9JSfQ7zAYUiKAKPobIXpHAJ7BuHSMlMkv/6UTJvdIRsgDaqfAbD5pqG5KDbRzXpzmLIpVJnGyPCkwwm+F36wGbe1ccuvzDHNL77e6XSmm2LpzO/NAGJRjMGXdLQ9XKFvjr/gK0ruO2gdqglomlvy3MG8BSvLCAYkOL1CAB4wF8ovsfpOAAV92KRdqxeMISntCc0/Fxg7fs9JILmn4ZkgiSgha1CsN"
 }
 ```
+
 Response Body may contain either componentDelta or componentFallBack elements.
 <ol>
-    <li>componentDelta: is encrypted ConnectPayAPI response</li>
-    <li>componentFallBack : is unencrypted response and is only triggered in cases of ,Sessiontimeout(responsefromApigee) and Encryption decryptionlogicfailsonConnectPayAPI(inthiscaseencryption/decryption failed so not able to give back encrypted response).</li>
+<li>componentDelta: is encrypted ConnectPayAPI response</li>
+<li>componentFallBack : is unencrypted response and is only triggered in cases of ,Session timeout(response from Apigee) and Encryption decryption logic fails on ConnectPayAPI(in this case encryption/decryption failed so not able to give back encrypted response).</li>
 </ol>
 
 ### Make The Request
+
 Using the correct endpoint, headers, and encrypted payload, we can then make the call. The ConnectPay backend will decrypt the payload and process the request. It will then return the response encrypted with the AES key and IV provided by componentX and componentY. An example of the output is shown below:
+
 ```json
 {
 "componentDelta": "cRD5xVaJab13iRQ7l6No6ot9YPTFT3bi/qapHYGgsNmxQ8nT2mtIz7uLLHz5kdp5JEmDjiP1dXMNPg8jP5rIZQf/5dtMfFLq7YL7FQY/boTsd7BoJg7reDeeAk6l9+76gaSAZMIRJGYS4fhy1bgClx2jIeWo4fLlfildeHnghCU1ElR8XhFi3oyd8hU+YEpDENP5IJJMVxjnYChuFX8paVy/SAYFMESBXSTIgPi6Y/kJc/bswlxaa9Yei4GnD+Ny1laVs4HqJp32JJ+NHJIYdZr5117AY0JJxJ9oudnkK6J8oPnnXhLCBGxNCRDJG3AVLRxDnQcds/cSiwAVREHr4nn848IEsUb27wJR7SiDxVaELxme9CNZ1dB0tPYQ1wux3ymWtnUgLfVRFsHH3EeucbHv8uIc8dxcwxZReROzVS8="
 }
 ```
+
 ## Get Consumer Account List
+
 The Get Consumer Account List API call is used to retrieve all accounts associated with a consumer `fdCustomerId`.
 
 This call can be beneficial in a scenario where you want to present the different payment options that are available and allow consumer to select any one of them for their transaction.
@@ -463,7 +543,9 @@ For more examples and details on API please go to below Link:
 
 
 ### Request Body after payload encryption and before transmission
+
 For a sample request body **AFTER** payload encryption and before transmission: 
+
 ```json
 {
     "componentX": "ju5PPi7k4K2jtI0z47qKcHnQGRrIymN+dK+PVlWjKyufoaUHJqjqOAbjsQZ0q3sLciBkEVWm5jGbWQoGf2e9Us+yfYu8ua2hz3wOIRSymHdx8qKuoexQiKhLWnp/GAL0+TIdzb/CvNijuJkOe1XSzEoFdFjYgRNMV8LJM3G/izn48kZm9gexM/iJenJyzwFoqXJc7EcWrC3C0RlkBF5jTgZzTGCvBpxDq4pw3CjFDsGvFy5Gg26B1KRcRDctrFpLV697QAW//hWyS91NYB68S3TIo/B6/LfUjj9bOY3fM+i+5BY2oV7zbLLyvA+CKfLFRBoXtevfBJyndrUDFD0EBA==",
@@ -471,26 +553,31 @@ For a sample request body **AFTER** payload encryption and before transmission:
     "componentDelta": "OEIyAAUL1Py3/oKewtNXswtkYOw+krJP0EFhucFWFXSug0TCV7kqL67Mk5PTzVqNWTAyPl0lK6ac2EBK3kxskC6WpzpJI4qSv7/9JSfQ7zAYUiKAKPobIXpHAJ7BuHSMlMkv/6UTJvdIRsgDaqfAbD5pqG5KDbRzXpzmLIpVJnGyPCkwwm+F36wGbe1ccuvzDHNL77e6XSmm2LpzO/NAGJRjMGXdLQ9XKFvjr/gK0ruO2gdqglomlvy3MG8BSvLCAYkOL1CAB4wF8ovsfpOAAV92KRdqxeMISntCc0/Fxg7fs9JILmn4ZkgiSgha1CsN"
 }
 ```
+
 Response Body may contain either componentDelta or componentFallBack elements.
 <ol>
-    <li>componentDelta: is encrypted ConnectPayAPI response</li>
-    <li>componentFallBack : is unencrypted response and is only triggered in cases of ,Sessiontimeout(responsefromApigee) and Encryption decryptionlogicfailsonConnectPayAPI(inthiscaseencryption/decryption failed so not able to give back encrypted response).</li>
+<li>componentDelta: is encrypted ConnectPayAPI response</li>
+<li>componentFallBack : is unencrypted response and is only triggered in cases of ,Session timeout(response from Apigee) and Encryption decryption logic fails on ConnectPayAPI(in this case encryption/decryption failed so not able to give back encrypted response).</li>
 </ol>
 
 ### Make The Request
+
 Using the correct endpoint, headers, and encrypted payload, we can then make the call. The ConnectPay backend will decrypt the payload and process the request. It will then return the response encrypted with the AES key and IV provided by componentX and componentY. An example of the output is shown below:
+
 ```json
 {
 "componentDelta": "cRD5xVaJab13iRQ7l6No6ot9YPTFT3bi/qapHYGgsNmxQ8nT2mtIz7uLLHz5kdp5JEmDjiP1dXMNPg8jP5rIZQf/5dtMfFLq7YL7FQY/boTsd7BoJg7reDeeAk6l9+76gaSAZMIRJGYS4fhy1bgClx2jIeWo4fLlfildeHnghCU1ElR8XhFi3oyd8hU+YEpDENP5IJJMVxjnYChuFX8paVy/SAYFMESBXSTIgPi6Y/kJc/bswlxaa9Yei4GnD+Ny1laVs4HqJp32JJ+NHJIYdZr5117AY0JJxJ9oudnkK6J8oPnnXhLCBGxNCRDJG3AVLRxDnQcds/cSiwAVREHr4nn848IEsUb27wJR7SiDxVaELxme9CNZ1dB0tPYQ1wux3ymWtnUgLfVRFsHH3EeucbHv8uIc8dxcwxZReROzVS8="
 }
 ```
+
 ## Get Public Key
+
 The Get Public Key API call is used to create a long lived public key for individual merchant and to retrieve the public encryption key which will be utilized to make calls for each transaction. This information will be vaulted in the merchant system and can be used to initialize the calls to ConnectPay directly from the merchant server without the involvement of SDK.
 
 This API is secured as it requires the Authorization header that can only be derived using the API Secret stored in the Merchant’s web server. Below are the details of the API end point.
 
 |Attribute|Value|
-|---------|-----|
+|---------|-------------------------------------------------------------------------------------------------|
 |Certification API End Point| https://cat.api.firstdata.com/gateway/v2/connectpay/transactions/getpublickey |
 |Production API EndPoint| https://prod.api.firstdata.com/gateway/v2/connectpay/transactions/getpublickey |
 |Http Method| POST|
@@ -499,20 +586,22 @@ For more examples and details on API please go to below Link:
 [API Explorer](https://qa-developer.fiserv.com/product/ConnectPay/api/?type=post&path=/security/getpublickey&branch=develop&version=1.0.0)
 
 ## Payment Management 
+
 This API is yet to be introduced. Please reach out to your sales lead here for more information [INSERT LINK FOR SALES LEAD](LINK)
 
 ## ACH Purchase Transaction
+
 Merchants who want to process ACH Transactions through FirstAPI must make server-to-server calls and pass necessary encrypted payload as required for that particular case.
-<br>
+
 Use this to initiate purchase/sale transaction request where final amount is known.
-<br>
+
 
 > Please Note: Merchants who will be using Fiserv’s Universal Commerce (uCom) gateway, Fiserv Buypass, or Rapid Connect gateway platform should use respective implementation guides for sending Transactions.
 
 |Attribute|Value|
-|---------|-----|
-|Certification API End Point| https://cat.api.firstdata.com/gateway/v2/connectpay/transactions/purchase |
-|Production API EndPoint| https://prod.api.firstdata.com/gateway/v2/connectpay/transactions/purchase |
+|---------|--------------------------------------------------------------------------------------------|
+|Certification API End Point| https://cat.api.firstdata.com/gateway/v2/connectpay/transactions/purchase|
+|Production API EndPoint| https://prod.api.firstdata.com/gateway/v2/connectpay/transactions/purchase|
 |Http Method| POST|
 
 For more examples and details on API please go to below Link: 
@@ -520,7 +609,9 @@ For more examples and details on API please go to below Link:
 
 
 ### Request Body after payload encryption and befor transmission
+
 For a sample request body **AFTER** payload encryption and before transmission: 
+
 ```json
 {
     "componentX": "ju5PPi7k4K2jtI0z47qKcHnQGRrIymN+dK+PVlWjKyufoaUHJqjqOAbjsQZ0q3sLciBkEVWm5jGbWQoGf2e9Us+yfYu8ua2hz3wOIRSymHdx8qKuoexQiKhLWnp/GAL0+TIdzb/CvNijuJkOe1XSzEoFdFjYgRNMV8LJM3G/izn48kZm9gexM/iJenJyzwFoqXJc7EcWrC3C0RlkBF5jTgZzTGCvBpxDq4pw3CjFDsGvFy5Gg26B1KRcRDctrFpLV697QAW//hWyS91NYB68S3TIo/B6/LfUjj9bOY3fM+i+5BY2oV7zbLLyvA+CKfLFRBoXtevfBJyndrUDFD0EBA==",
@@ -528,21 +619,27 @@ For a sample request body **AFTER** payload encryption and before transmission:
     "componentDelta": "OEIyAAUL1Py3/oKewtNXswtkYOw+krJP0EFhucFWFXSug0TCV7kqL67Mk5PTzVqNWTAyPl0lK6ac2EBK3kxskC6WpzpJI4qSv7/9JSfQ7zAYUiKAKPobIXpHAJ7BuHSMlMkv/6UTJvdIRsgDaqfAbD5pqG5KDbRzXpzmLIpVJnGyPCkwwm+F36wGbe1ccuvzDHNL77e6XSmm2LpzO/NAGJRjMGXdLQ9XKFvjr/gK0ruO2gdqglomlvy3MG8BSvLCAYkOL1CAB4wF8ovsfpOAAV92KRdqxeMISntCc0/Fxg7fs9JILmn4ZkgiSgha1CsN"
 }
 ```
+
 Response Body may contain either componentDelta or componentFallBack elements.
 <ol>
-    <li>componentDelta: is encrypted ConnectPayAPI response</li>
-    <li>componentFallBack : is unencrypted response and is only triggered in cases of ,Sessiontimeout(responsefromApigee) and Encryption decryptionlogicfailsonConnectPayAPI(inthiscaseencryption/decryption failed so not able to give back encrypted response).</li>
+<li>componentDelta: is encrypted ConnectPayAPI response</li>
+<li>componentFallBack : is unencrypted response and is only triggered in cases of ,Session timeout(response from Apigee) and Encryption decryption logic fails on ConnectPayAPI(in this case encryption/decryption failed so not able to give back encrypted response).</li>
 </ol>
 
 ### Make The Request
+
 Using the correct endpoint, headers, and encrypted payload, we can then make the call. The ConnectPay backend will decrypt the payload and process the request. It will then return the response encrypted with the AES key and IV provided by componentX and componentY. An example of the output is shown below:
+
 ```json
 {
 "componentDelta": "cRD5xVaJab13iRQ7l6No6ot9YPTFT3bi/qapHYGgsNmxQ8nT2mtIz7uLLHz5kdp5JEmDjiP1dXMNPg8jP5rIZQf/5dtMfFLq7YL7FQY/boTsd7BoJg7reDeeAk6l9+76gaSAZMIRJGYS4fhy1bgClx2jIeWo4fLlfildeHnghCU1ElR8XhFi3oyd8hU+YEpDENP5IJJMVxjnYChuFX8paVy/SAYFMESBXSTIgPi6Y/kJc/bswlxaa9Yei4GnD+Ny1laVs4HqJp32JJ+NHJIYdZr5117AY0JJxJ9oudnkK6J8oPnnXhLCBGxNCRDJG3AVLRxDnQcds/cSiwAVREHr4nn848IEsUb27wJR7SiDxVaELxme9CNZ1dB0tPYQ1wux3ymWtnUgLfVRFsHH3EeucbHv8uIc8dxcwxZReROzVS8="
 }
+
 ```
 ### Component Fallback
+
 JSON sample data without payload encryption (componentFallBack)
+
 ```json
 {
 "componentFallBack": "{\r\n \"transactionStatus\" : \"DECLINED\",\r\n \"transactionStatusCo
@@ -551,6 +648,7 @@ de\" : 420,\r\n \"referenceTransactionID\" : \"APIGEE-a-90f-4946-ff14-
 \"Client-Token\",\r\n \"errorReason\" : \"Session time out\"\r\n } ]\r\n}"
 }
 ```
+
 ## ACH Authorize Transaction
 Merchants who want to process ACH Transactions through FirstAPI must make server-to-server calls and pass the necessary encrypted payload as required for that particular case.
 
@@ -559,16 +657,18 @@ Use this to imitate an authorization request when the final transaction amount i
 > Please Note: Merchants who will be using Fiserv’s Universal Commerce (uCom) gateway, Fiserv Buypass, or Rapid Connect gateway platform should use respective implementation guides for sending Transactions.
 
 |Attribute|Value|
-|---------|-----|
-|Certification API End Point| https://cat.api.firstdata.com/gateway/v2/connectpay/transactions/authorize |
-|Production API EndPoint| https://prod.api.firstdata.com/gateway/v2/connectpay/transactions/authorize |
+|---------|----------------------------------------------------------------------------------------------|
+|Certification API End Point| https://cat.api.firstdata.com/gateway/v2/connectpay/transactions/authorize|
+|Production API EndPoint| https://prod.api.firstdata.com/gateway/v2/connectpay/transactions/authorize|
 |Http Method| POST|
 
 For more examples and details on API please go to below Link: 
 [API Explorer](https://qa-developer.fiserv.com/product/ConnectPay/api/?type=post&path=/transaction/authorize&branch=develop&version=1.0.0)
 
 ### Request Body after payload encryption and befor transmission
+
 For a sample request body **AFTER** payload encryption and before transmission: 
+
 ```json
 {
     "componentX": "ju5PPi7k4K2jtI0z47qKcHnQGRrIymN+dK+PVlWjKyufoaUHJqjqOAbjsQZ0q3sLciBkEVWm5jGbWQoGf2e9Us+yfYu8ua2hz3wOIRSymHdx8qKuoexQiKhLWnp/GAL0+TIdzb/CvNijuJkOe1XSzEoFdFjYgRNMV8LJM3G/izn48kZm9gexM/iJenJyzwFoqXJc7EcWrC3C0RlkBF5jTgZzTGCvBpxDq4pw3CjFDsGvFy5Gg26B1KRcRDctrFpLV697QAW//hWyS91NYB68S3TIo/B6/LfUjj9bOY3fM+i+5BY2oV7zbLLyvA+CKfLFRBoXtevfBJyndrUDFD0EBA==",
@@ -576,21 +676,27 @@ For a sample request body **AFTER** payload encryption and before transmission:
     "componentDelta": "OEIyAAUL1Py3/oKewtNXswtkYOw+krJP0EFhucFWFXSug0TCV7kqL67Mk5PTzVqNWTAyPl0lK6ac2EBK3kxskC6WpzpJI4qSv7/9JSfQ7zAYUiKAKPobIXpHAJ7BuHSMlMkv/6UTJvdIRsgDaqfAbD5pqG5KDbRzXpzmLIpVJnGyPCkwwm+F36wGbe1ccuvzDHNL77e6XSmm2LpzO/NAGJRjMGXdLQ9XKFvjr/gK0ruO2gdqglomlvy3MG8BSvLCAYkOL1CAB4wF8ovsfpOAAV92KRdqxeMISntCc0/Fxg7fs9JILmn4ZkgiSgha1CsN"
 }
 ```
+
 Response Body may contain either componentDelta or componentFallBack elements.
 <ol>
-    <li>componentDelta: is encrypted ConnectPayAPI response</li>
-    <li>componentFallBack : is unencrypted response and is only triggered in cases of ,Sessiontimeout(responsefromApigee) and Encryption decryptionlogicfailsonConnectPayAPI(inthiscaseencryption/decryption failed so not able to give back encrypted response).</li>
+<li>componentDelta: is encrypted ConnectPayAPI response</li>
+<li>componentFallBack : is unencrypted response and is only triggered in cases of ,Session timeout(response from Apigee) and Encryption decryption logic fails on ConnectPayAPI(in this case encryption/decryption failed so not able to give back encrypted response).</li>
 </ol>
 
 ### Make The Request
+
 Using the correct endpoint, headers, and encrypted payload, we can then make the call. The ConnectPay backend will decrypt the payload and process the request. It will then return the response encrypted with the AES key and IV provided by componentX and componentY. An example of the output is shown below:
+
 ```json
 {
 "componentDelta": "cRD5xVaJab13iRQ7l6No6ot9YPTFT3bi/qapHYGgsNmxQ8nT2mtIz7uLLHz5kdp5JEmDjiP1dXMNPg8jP5rIZQf/5dtMfFLq7YL7FQY/boTsd7BoJg7reDeeAk6l9+76gaSAZMIRJGYS4fhy1bgClx2jIeWo4fLlfildeHnghCU1ElR8XhFi3oyd8hU+YEpDENP5IJJMVxjnYChuFX8paVy/SAYFMESBXSTIgPi6Y/kJc/bswlxaa9Yei4GnD+Ny1laVs4HqJp32JJ+NHJIYdZr5117AY0JJxJ9oudnkK6J8oPnnXhLCBGxNCRDJG3AVLRxDnQcds/cSiwAVREHr4nn848IEsUb27wJR7SiDxVaELxme9CNZ1dB0tPYQ1wux3ymWtnUgLfVRFsHH3EeucbHv8uIc8dxcwxZReROzVS8="
 }
 ```
+
 ### Component Fallback
+
 JSON sample data without payload encryption (componentFallBack)
+
 ```json
 {
 "componentFallBack": "{\r\n \"transactionStatus\" : \"DECLINED\",\r\n \"transactionStatusCo
@@ -599,7 +705,9 @@ de\" : 420,\r\n \"referenceTransactionID\" : \"APIGEE-a-90f-4946-ff14-
 \"Client-Token\",\r\n \"errorReason\" : \"Session time out\"\r\n } ]\r\n}"
 }
 ```
+
 ## ACH Capture Transaction
+
 Merchants who want to process ACH Transactions through FirstAPI must make server-to-server calls and pass the necessary encrypted payload as required for that particular case.
 
 Use this to submit the final transaction amount after the Authorize request is approved.Use `subscriberId`, `transactionId` and `merchantTransactionId` from Authorize call in the Capture request. The transaction can also be sent in using ConnectPayPaymentNumber instead of `fdAccountID`.
@@ -616,7 +724,9 @@ For more examples and details on API please go to below Link:
 [API Explorer](https://qa-developer.fiserv.com/product/ConnectPay/api/?type=post&path=/transaction/capture&branch=develop&version=1.0.0)
 
 ### Request Body after payload encryption and befor transmission
+
 For a sample request body **AFTER** payload encryption and before transmission: 
+
 ```json
 {
     "componentX": "ju5PPi7k4K2jtI0z47qKcHnQGRrIymN+dK+PVlWjKyufoaUHJqjqOAbjsQZ0q3sLciBkEVWm5jGbWQoGf2e9Us+yfYu8ua2hz3wOIRSymHdx8qKuoexQiKhLWnp/GAL0+TIdzb/CvNijuJkOe1XSzEoFdFjYgRNMV8LJM3G/izn48kZm9gexM/iJenJyzwFoqXJc7EcWrC3C0RlkBF5jTgZzTGCvBpxDq4pw3CjFDsGvFy5Gg26B1KRcRDctrFpLV697QAW//hWyS91NYB68S3TIo/B6/LfUjj9bOY3fM+i+5BY2oV7zbLLyvA+CKfLFRBoXtevfBJyndrUDFD0EBA==",
@@ -624,22 +734,28 @@ For a sample request body **AFTER** payload encryption and before transmission:
     "componentDelta": "OEIyAAUL1Py3/oKewtNXswtkYOw+krJP0EFhucFWFXSug0TCV7kqL67Mk5PTzVqNWTAyPl0lK6ac2EBK3kxskC6WpzpJI4qSv7/9JSfQ7zAYUiKAKPobIXpHAJ7BuHSMlMkv/6UTJvdIRsgDaqfAbD5pqG5KDbRzXpzmLIpVJnGyPCkwwm+F36wGbe1ccuvzDHNL77e6XSmm2LpzO/NAGJRjMGXdLQ9XKFvjr/gK0ruO2gdqglomlvy3MG8BSvLCAYkOL1CAB4wF8ovsfpOAAV92KRdqxeMISntCc0/Fxg7fs9JILmn4ZkgiSgha1CsN"
 }
 ```
+
 Response Body may contain either componentDelta or componentFallBack elements.
 <ol>
-    <li>componentDelta: is encrypted ConnectPayAPI response</li>
-    <li>componentFallBack : is unencrypted response and is only triggered in cases of ,Sessiontimeout(responsefromApigee) and Encryption decryptionlogicfailsonConnectPayAPI(inthiscaseencryption/decryption failed so not able to give back encrypted response).</li>
+<li>componentDelta: is encrypted ConnectPayAPI response</li>
+<li>componentFallBack : is unencrypted response and is only triggered in cases of ,Session timeout(response from Apigee) and Encryption decryption logic fails on ConnectPayAPI(in this case encryption/decryption failed so not able to give back encrypted response).</li>
 </ol>
 
 ### Make The Request
+
 Using the correct endpoint, headers, and encrypted payload, we can then make the call. The ConnectPay backend will decrypt the payload and process the request. It will then return the response encrypted with the AES key and IV provided by componentX and componentY. An example of the output is shown below:
+
 ```json
 {
 "componentDelta": "cRD5xVaJab13iRQ7l6No6ot9YPTFT3bi/qapHYGgsNmxQ8nT2mtIz7uLLHz5kdp5JEmDjiP1dXMNPg8jP5rIZQf/5dtMfFLq7YL7FQY/boTsd7BoJg7reDeeAk6l9+76gaSAZMIRJGYS4fhy1bgClx2jIeWo4fLlfildeHnghCU1ElR8XhFi3oyd8hU+YEpDENP5IJJMVxjnYChuFX8paVy/SAYFMESBXSTIgPi6Y/kJc/bswlxaa9Yei4GnD+Ny1laVs4HqJp32JJ+NHJIYdZr5117AY0JJxJ9oudnkK6J8oPnnXhLCBGxNCRDJG3AVLRxDnQcds/cSiwAVREHr4nn848IEsUb27wJR7SiDxVaELxme9CNZ1dB0tPYQ1wux3ymWtnUgLfVRFsHH3EeucbHv8uIc8dxcwxZReROzVS8="
 }
 ```
+
 ### Complonent Fallback
+
 JSON sample data without payload encryption (componentFallBack)
-```json
+
+```json 
 {
 "componentFallBack": "{\r\n \"transactionStatus\" : \"DECLINED\",\r\n \"transactionStatusCo
 de\" : 420,\r\n \"referenceTransactionID\" : \"APIGEE-a-90f-4946-ff14-
@@ -647,7 +763,9 @@ de\" : 420,\r\n \"referenceTransactionID\" : \"APIGEE-a-90f-4946-ff14-
 \"Client-Token\",\r\n \"errorReason\" : \"Session time out\"\r\n } ]\r\n}"
 }
 ```
+
 ## ACH Refund Transaction
+
 Merchants who want to process ACH Transactions through FirstAPI must make server-to-server calls and pass the necessary encrypted payload as required for that particular case.
 
 Use this to initiate a refund request from a previously approved purchase/authorized transaction. Please note that the refund will be processed on the original account used for the transaction.
@@ -668,7 +786,9 @@ For more examples and details on API please go to below Link:
 [API Explorer](https://qa-developer.fiserv.com/product/ConnectPay/api/?type=post&path=/transaction/refund&branch=develop&version=1.0.0)
 
 ### Request Body after payload encryption and befor transmission
+
 For a sample request body **AFTER** payload encryption and before transmission: 
+
 ```json
 {
     "componentX": "ju5PPi7k4K2jtI0z47qKcHnQGRrIymN+dK+PVlWjKyufoaUHJqjqOAbjsQZ0q3sLciBkEVWm5jGbWQoGf2e9Us+yfYu8ua2hz3wOIRSymHdx8qKuoexQiKhLWnp/GAL0+TIdzb/CvNijuJkOe1XSzEoFdFjYgRNMV8LJM3G/izn48kZm9gexM/iJenJyzwFoqXJc7EcWrC3C0RlkBF5jTgZzTGCvBpxDq4pw3CjFDsGvFy5Gg26B1KRcRDctrFpLV697QAW//hWyS91NYB68S3TIo/B6/LfUjj9bOY3fM+i+5BY2oV7zbLLyvA+CKfLFRBoXtevfBJyndrUDFD0EBA==",
@@ -676,20 +796,25 @@ For a sample request body **AFTER** payload encryption and before transmission:
     "componentDelta": "OEIyAAUL1Py3/oKewtNXswtkYOw+krJP0EFhucFWFXSug0TCV7kqL67Mk5PTzVqNWTAyPl0lK6ac2EBK3kxskC6WpzpJI4qSv7/9JSfQ7zAYUiKAKPobIXpHAJ7BuHSMlMkv/6UTJvdIRsgDaqfAbD5pqG5KDbRzXpzmLIpVJnGyPCkwwm+F36wGbe1ccuvzDHNL77e6XSmm2LpzO/NAGJRjMGXdLQ9XKFvjr/gK0ruO2gdqglomlvy3MG8BSvLCAYkOL1CAB4wF8ovsfpOAAV92KRdqxeMISntCc0/Fxg7fs9JILmn4ZkgiSgha1CsN"
 }
 ```
+
 Response Body may contain either componentDelta or componentFallBack elements.
 <ol>
-    <li>componentDelta: is encrypted ConnectPayAPI response</li>
-    <li>componentFallBack : is unencrypted response and is only triggered in cases of ,Sessiontimeout(responsefromApigee) and Encryption decryptionlogicfailsonConnectPayAPI(inthiscaseencryption/decryption failed so not able to give back encrypted response).</li>
+<li>componentDelta: is encrypted ConnectPayAPI response</li>
+<li>componentFallBack : is unencrypted response and is only triggered in cases of ,Session timeout(response from Apigee) and Encryption decryption logic fails on ConnectPayAPI(in this case encryption/decryption failed so not able to give back encrypted response).</li>
 </ol>
 
 ### Make The Request
+
 Using the correct endpoint, headers, and encrypted payload, we can then make the call. The ConnectPay backend will decrypt the payload and process the request. It will then return the response encrypted with the AES key and IV provided by componentX and componentY. An example of the output is shown below:
+
 ```json
 {
 "componentDelta": "cRD5xVaJab13iRQ7l6No6ot9YPTFT3bi/qapHYGgsNmxQ8nT2mtIz7uLLHz5kdp5JEmDjiP1dXMNPg8jP5rIZQf/5dtMfFLq7YL7FQY/boTsd7BoJg7reDeeAk6l9+76gaSAZMIRJGYS4fhy1bgClx2jIeWo4fLlfildeHnghCU1ElR8XhFi3oyd8hU+YEpDENP5IJJMVxjnYChuFX8paVy/SAYFMESBXSTIgPi6Y/kJc/bswlxaa9Yei4GnD+Ny1laVs4HqJp32JJ+NHJIYdZr5117AY0JJxJ9oudnkK6J8oPnnXhLCBGxNCRDJG3AVLRxDnQcds/cSiwAVREHr4nn848IEsUb27wJR7SiDxVaELxme9CNZ1dB0tPYQ1wux3ymWtnUgLfVRFsHH3EeucbHv8uIc8dxcwxZReROzVS8="
 }
 ```
+
 ## ACH Void Transaction
+
 Merchants who want to process ACH Transactions through FirstAPI must make server-to-server calls and pass the necessary encrypted payload as required for that particular case.
 
 Use this to initiate a void request from a previously approved purchase/authorized transaction. Please note that the void will be processed on the original account used for the transaction.
@@ -708,7 +833,9 @@ For more examples and details on API please go to below Link:
 [API Explorer](https://qa-developer.fiserv.com/product/ConnectPay/api/?type=post&path=/transaction/refund&branch=develop&version=1.0.0)
 
 ### Request Body after payload encryption and befor transmission
+
 For a sample request body **AFTER** payload encryption and before transmission: 
+
 ```json
 {
     "componentX": "ju5PPi7k4K2jtI0z47qKcHnQGRrIymN+dK+PVlWjKyufoaUHJqjqOAbjsQZ0q3sLciBkEVWm5jGbWQoGf2e9Us+yfYu8ua2hz3wOIRSymHdx8qKuoexQiKhLWnp/GAL0+TIdzb/CvNijuJkOe1XSzEoFdFjYgRNMV8LJM3G/izn48kZm9gexM/iJenJyzwFoqXJc7EcWrC3C0RlkBF5jTgZzTGCvBpxDq4pw3CjFDsGvFy5Gg26B1KRcRDctrFpLV697QAW//hWyS91NYB68S3TIo/B6/LfUjj9bOY3fM+i+5BY2oV7zbLLyvA+CKfLFRBoXtevfBJyndrUDFD0EBA==",
@@ -716,20 +843,25 @@ For a sample request body **AFTER** payload encryption and before transmission:
     "componentDelta": "OEIyAAUL1Py3/oKewtNXswtkYOw+krJP0EFhucFWFXSug0TCV7kqL67Mk5PTzVqNWTAyPl0lK6ac2EBK3kxskC6WpzpJI4qSv7/9JSfQ7zAYUiKAKPobIXpHAJ7BuHSMlMkv/6UTJvdIRsgDaqfAbD5pqG5KDbRzXpzmLIpVJnGyPCkwwm+F36wGbe1ccuvzDHNL77e6XSmm2LpzO/NAGJRjMGXdLQ9XKFvjr/gK0ruO2gdqglomlvy3MG8BSvLCAYkOL1CAB4wF8ovsfpOAAV92KRdqxeMISntCc0/Fxg7fs9JILmn4ZkgiSgha1CsN"
 }
 ```
+
 Response Body may contain either componentDelta or componentFallBack elements.
 <ol>
-    <li>componentDelta: is encrypted ConnectPayAPI response</li>
-    <li>componentFallBack : is unencrypted response and is only triggered in cases of ,Sessiontimeout(responsefromApigee) and Encryption decryptionlogicfailsonConnectPayAPI(inthiscaseencryption/decryption failed so not able to give back encrypted response).</li>
+<li>componentDelta: is encrypted ConnectPayAPI response</li>
+<li>componentFallBack : is unencrypted response and is only triggered in cases of ,Session timeout(response from Apigee) and Encryption decryption logic fails on ConnectPayAPI(in this case encryption/decryption failed so not able to give back encrypted response).</li>
 </ol>
 
 ### Make The Request
+
 Using the correct endpoint, headers, and encrypted payload, we can then make the call. The ConnectPay backend will decrypt the payload and process the request. It will then return the response encrypted with the AES key and IV provided by componentX and componentY. An example of the output is shown below:
+
 ```json
 {
 "componentDelta": "cRD5xVaJab13iRQ7l6No6ot9YPTFT3bi/qapHYGgsNmxQ8nT2mtIz7uLLHz5kdp5JEmDjiP1dXMNPg8jP5rIZQf/5dtMfFLq7YL7FQY/boTsd7BoJg7reDeeAk6l9+76gaSAZMIRJGYS4fhy1bgClx2jIeWo4fLlfildeHnghCU1ElR8XhFi3oyd8hU+YEpDENP5IJJMVxjnYChuFX8paVy/SAYFMESBXSTIgPi6Y/kJc/bswlxaa9Yei4GnD+Ny1laVs4HqJp32JJ+NHJIYdZr5117AY0JJxJ9oudnkK6J8oPnnXhLCBGxNCRDJG3AVLRxDnQcds/cSiwAVREHr4nn848IEsUb27wJR7SiDxVaELxme9CNZ1dB0tPYQ1wux3ymWtnUgLfVRFsHH3EeucbHv8uIc8dxcwxZReROzVS8="
 }
 ```
+
 ## ACH Collection Fee Notification Transaction
+
 Merchants who want to process ACH Transactions through FirstAPI must make server-to-server calls and the pass necessary encrypted payload as required for that particular case.
 
 Per Reg E requirements, this service is required for in-person, point of sale transaction use cases to display applicable state collection fee and cost to the consumer prior to transacting. For other payment uses cases (i.e. online transactions) this service is not needed, rather a link to our collection fee and cost table is displayed in the checkout page. Please refer to the Legal and Compliance section in the ConnectPay Merchant Guide. <!--Where is this guide?-->
@@ -746,7 +878,9 @@ For more examples and details on API please goto below Link:
 [API Explorer](https://qa-developer.fiserv.com/product/ConnectPay/api/?type=post&path=/transaction/refund&branch=develop&version=1.0.0)
 
 ### Request Body after payload encryption and befor transmission
+
 For a sample request body **AFTER** payload encryption and before transmission: 
+
 ```json
 {
     "componentX": "ju5PPi7k4K2jtI0z47qKcHnQGRrIymN+dK+PVlWjKyufoaUHJqjqOAbjsQZ0q3sLciBkEVWm5jGbWQoGf2e9Us+yfYu8ua2hz3wOIRSymHdx8qKuoexQiKhLWnp/GAL0+TIdzb/CvNijuJkOe1XSzEoFdFjYgRNMV8LJM3G/izn48kZm9gexM/iJenJyzwFoqXJc7EcWrC3C0RlkBF5jTgZzTGCvBpxDq4pw3CjFDsGvFy5Gg26B1KRcRDctrFpLV697QAW//hWyS91NYB68S3TIo/B6/LfUjj9bOY3fM+i+5BY2oV7zbLLyvA+CKfLFRBoXtevfBJyndrUDFD0EBA==",
@@ -754,20 +888,25 @@ For a sample request body **AFTER** payload encryption and before transmission:
     "componentDelta": "OEIyAAUL1Py3/oKewtNXswtkYOw+krJP0EFhucFWFXSug0TCV7kqL67Mk5PTzVqNWTAyPl0lK6ac2EBK3kxskC6WpzpJI4qSv7/9JSfQ7zAYUiKAKPobIXpHAJ7BuHSMlMkv/6UTJvdIRsgDaqfAbD5pqG5KDbRzXpzmLIpVJnGyPCkwwm+F36wGbe1ccuvzDHNL77e6XSmm2LpzO/NAGJRjMGXdLQ9XKFvjr/gK0ruO2gdqglomlvy3MG8BSvLCAYkOL1CAB4wF8ovsfpOAAV92KRdqxeMISntCc0/Fxg7fs9JILmn4ZkgiSgha1CsN"
 }
 ```
+
 Response Body may contain either componentDelta or componentFallBack elements.
 <ol>
-    <li>componentDelta: is encrypted ConnectPayAPI response</li>
-    <li>componentFallBack : is unencrypted response and is only triggered in cases of ,Sessiontimeout(responsefromApigee) and Encryption decryptionlogicfailsonConnectPayAPI(inthiscaseencryption/decryption failed so not able to give back encrypted response).</li>
+<li>componentDelta: is encrypted ConnectPayAPI response</li>
+<li>componentFallBack : is unencrypted response and is only triggered in cases of ,Session timeout(response from Apigee) and Encryption decryption logic fails on ConnectPayAPI(in this case encryption/decryption failed so not able to give back encrypted response).</li>
 </ol>
 
 ### Make The Request
+
 Using the correct endpoint, headers, and encrypted payload, we can then make the call. The ConnectPay backend will decrypt the payload and process the request. It will then return the response encrypted with the AES key and IV provided by componentX and componentY. An example of the output is shown below:
+
 ```json
 {
 "componentDelta": "cRD5xVaJab13iRQ7l6No6ot9YPTFT3bi/qapHYGgsNmxQ8nT2mtIz7uLLHz5kdp5JEmDjiP1dXMNPg8jP5rIZQf/5dtMfFLq7YL7FQY/boTsd7BoJg7reDeeAk6l9+76gaSAZMIRJGYS4fhy1bgClx2jIeWo4fLlfildeHnghCU1ElR8XhFi3oyd8hU+YEpDENP5IJJMVxjnYChuFX8paVy/SAYFMESBXSTIgPi6Y/kJc/bswlxaa9Yei4GnD+Ny1laVs4HqJp32JJ+NHJIYdZr5117AY0JJxJ9oudnkK6J8oPnnXhLCBGxNCRDJG3AVLRxDnQcds/cSiwAVREHr4nn848IEsUb27wJR7SiDxVaELxme9CNZ1dB0tPYQ1wux3ymWtnUgLfVRFsHH3EeucbHv8uIc8dxcwxZReROzVS8="
 }
 ```
-## Next Steps 
+
+## Next Steps
+
 Now you will want to integrate to your respective MOBILE SDK's please follow links to the mobile types
 
 [SDK Landing Page](https://qa-developer.fiserv.com/product/ConnectPay/docs/?path=./documentation/connectpaysdklanding.md&branch=develop)
