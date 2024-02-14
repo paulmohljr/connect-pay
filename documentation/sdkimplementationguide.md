@@ -218,13 +218,13 @@ When the ConnectPayAPI provides a Nonce back to the Merchant during a use case, 
 
 In either of the api calls, merchant have the option to retrieve the banking information in clear/masked. A merchant specific setting enables a merchant to retrieve the banking information either in clear or in mask as per business.
 
-Use Case 1 (Nonce Get Data, Setting ON) – Merchant needs to get the account details (new `fdAccountId`) of the consumer in clear by providing the nonce generated at the time of enrollment. Refer to Section
+Use Case 1 (Nonce Get Data, Setting ON) – Merchant needs to get the account details (new `fdAccountId`) of the consumer in clear by providing the nonce generated at the time of enrollment. See Tab Below
 
-Use Case 2 (Nonce Get Data, Setting OFF) – Merchant needs to get the account details (new `fdAccountId`) of the consumer in masked by providing the nonce generated at the time of enrollment. Refer to Section
+Use Case 2 (Nonce Get Data, Setting OFF) – Merchant needs to get the account details (new `fdAccountId`) of the consumer in masked by providing the nonce generated at the time of enrollment. See Tab Below
 
-Use Case 3 (Consumer Get Data, Setting ON) – Merchant needs to get the consumer information any time after enrollment and the account details of the consumer needs to be in clear. Refer to Section
+Use Case 3 (Consumer Get Data, Setting ON) – Merchant needs to get the consumer information any time after enrollment and the account details of the consumer needs to be in clear. See Tab Below
 
-Use Case 4 (Consumer Get Data, Setting OFF) – Merchant needs to get the consumer information any time after enrollment and the account details of the consumer needs to be in mask. Refer to Section
+Use Case 4 (Consumer Get Data, Setting OFF) – Merchant needs to get the consumer information any time after enrollment and the account details of the consumer needs to be in mask. See Tab Below
 
 |Attribute|Value|
 |---------|-----|
@@ -234,7 +234,10 @@ Use Case 4 (Consumer Get Data, Setting OFF) – Merchant needs to get the consum
 Link to API Explorer for structure and attribute details <!-- Need to Update after getting API link-->
  [API Explorer](https://qa-developer.fiserv.com/product/ConnectPay/api/?type=post&path=/consumerprofile/add&branch=develop&version=1.0.0)
 
-
+<!--
+type: tab
+titles: Online Bank Login, Manual Enrollment
+-->
 ### Use Case 1 - NONCE GET DATA, Setting ON 
 #### Get Data Request Specification
 
@@ -258,6 +261,10 @@ Using the correct endpoint, headers, and encrypted payload, we can then make the
 "componentDelta": "cRD5xVaJab13iRQ7l6No6ot9YPTFT3bi/qapHYGgsNmxQ8nT2mtIz7uLLHz5kdp5JEmDjiP1dXMNPg8jP5rIZQf/5dtMfFLq7YL7FQY/boTsd7BoJg7reDeeAk6l9+76gaSAZMIRJGYS4fhy1bgClx2jIeWo4fLlfildeHnghCU1ElR8XhFi3oyd8hU+YEpDENP5IJJMVxjnYChuFX8paVy/SAYFMESBXSTIgPi6Y/kJc/bswlxaa9Yei4GnD+Ny1laVs4HqJp32JJ+NHJIYdZr5117AY0JJxJ9oudnkK6J8oPnnXhLCBGxNCRDJG3AVLRxDnQcds/cSiwAVREHr4nn848IEsUb27wJR7SiDxVaELxme9CNZ1dB0tPYQ1wux3ymWtnUgLfVRFsHH3EeucbHv8uIc8dxcwxZReROzVS8="
 }
 ```
+<!--
+type: tab
+titles: Online Bank Login, Manual Enrollment
+-->
 ### Use Case 2 - NONCE GET DATA, Setting OFF
 #### Get Data Request Specification
 Sample request body with NONCE before payload encryption:
@@ -280,6 +287,10 @@ Using the correct endpoint, headers, and encrypted payload, we can then make the
 "componentDelta": "cRD5xVaJab13iRQ7l6No6ot9YPTFT3bi/qapHYGgsNmxQ8nT2mtIz7uLLHz5kdp5JEmDjiP1dXMNPg8jP5rIZQf/5dtMfFLq7YL7FQY/boTsd7BoJg7reDeeAk6l9+76gaSAZMIRJGYS4fhy1bgClx2jIeWo4fLlfildeHnghCU1ElR8XhFi3oyd8hU+YEpDENP5IJJMVxjnYChuFX8paVy/SAYFMESBXSTIgPi6Y/kJc/bswlxaa9Yei4GnD+Ny1laVs4HqJp32JJ+NHJIYdZr5117AY0JJxJ9oudnkK6J8oPnnXhLCBGxNCRDJG3AVLRxDnQcds/cSiwAVREHr4nn848IEsUb27wJR7SiDxVaELxme9CNZ1dB0tPYQ1wux3ymWtnUgLfVRFsHH3EeucbHv8uIc8dxcwxZReROzVS8="
 }
 ```
+<!--
+type: tab
+titles: Online Bank Login, Manual Enrollment
+-->
 ### Use Case 3 - Consumer GET DATA, SETTING ON
 #### Get Data Request Specification
 
@@ -334,7 +345,10 @@ Using the correct endpoint, headers, and encrypted payload, we can then make the
 "componentDelta": "cRD5xVaJab13iRQ7l6No6ot9YPTFT3bi/qapHYGgsNmxQ8nT2mtIz7uLLHz5kdp5JEmDjiP1dXMNPg8jP5rIZQf/5dtMfFLq7YL7FQY/boTsd7BoJg7reDeeAk6l9+76gaSAZMIRJGYS4fhy1bgClx2jIeWo4fLlfildeHnghCU1ElR8XhFi3oyd8hU+YEpDENP5IJJMVxjnYChuFX8paVy/SAYFMESBXSTIgPi6Y/kJc/bswlxaa9Yei4GnD+Ny1laVs4HqJp32JJ+NHJIYdZr5117AY0JJxJ9oudnkK6J8oPnnXhLCBGxNCRDJG3AVLRxDnQcds/cSiwAVREHr4nn848IEsUb27wJR7SiDxVaELxme9CNZ1dB0tPYQ1wux3ymWtnUgLfVRFsHH3EeucbHv8uIc8dxcwxZReROzVS8="
 }
 ```
-
+<!--
+type: tab
+titles: Online Bank Login, Manual Enrollment
+-->
 ### Use Case 4 - Consumer GET DATA, SETTING OFF
 #### Get Data Request Specification 
 
@@ -389,8 +403,6 @@ Using the correct endpoint, headers, and encrypted payload, we can then make the
 "componentDelta": "cRD5xVaJab13iRQ7l6No6ot9YPTFT3bi/qapHYGgsNmxQ8nT2mtIz7uLLHz5kdp5JEmDjiP1dXMNPg8jP5rIZQf/5dtMfFLq7YL7FQY/boTsd7BoJg7reDeeAk6l9+76gaSAZMIRJGYS4fhy1bgClx2jIeWo4fLlfildeHnghCU1ElR8XhFi3oyd8hU+YEpDENP5IJJMVxjnYChuFX8paVy/SAYFMESBXSTIgPi6Y/kJc/bswlxaa9Yei4GnD+Ny1laVs4HqJp32JJ+NHJIYdZr5117AY0JJxJ9oudnkK6J8oPnnXhLCBGxNCRDJG3AVLRxDnQcds/cSiwAVREHr4nn848IEsUb27wJR7SiDxVaELxme9CNZ1dB0tPYQ1wux3ymWtnUgLfVRFsHH3EeucbHv8uIc8dxcwxZReROzVS8="
 }
 ```
-
-
 ## Get Consumer Account Details
 The Get Consumer Account Details API call is used to retrieve any account specific details required before calling a ConnectPay SDK Use Case.
 
@@ -408,8 +420,6 @@ For example when the end user wants to close the account, this API can be called
 
 For more examples and details on API please go to below Link: 
 [API Explorer](https://qa-developer.fiserv.com/product/ConnectPay/api/?type=post&path=/account/getaccountdetails&branch=develop&version=1.0.0)
-
-<!-- Need to add from page 106 table? Need to check with Matthew on if those details are available-->
 
 ### Request Body after payload encryption and before transmission
 For a sample request body **AFTER** payload encryption and before transmission: 
@@ -539,6 +549,7 @@ JSON sample data without payload encryption (componentFallBack)
 de\" : 420,\r\n \"referenceTransactionID\" : \"APIGEE-a-90f-4946-ff14-
 36aa4b9a6325\",\r\n \"transactionStatusDescription\" : \"Unauthorized\",\r\n \"responseVerbia ge\" : \"Unauthorized\",\r\n \"errorDetails\" : [ {\r\n \"errorCode\" : 4250,\r\n \"errorField\" :
 \"Client-Token\",\r\n \"errorReason\" : \"Session time out\"\r\n } ]\r\n}"
+}
 ```
 ## ACH Authorize Transaction
 Merchants who want to process ACH Transactions through FirstAPI must make server-to-server calls and pass the necessary encrypted payload as required for that particular case.
@@ -586,6 +597,7 @@ JSON sample data without payload encryption (componentFallBack)
 de\" : 420,\r\n \"referenceTransactionID\" : \"APIGEE-a-90f-4946-ff14-
 36aa4b9a6325\",\r\n \"transactionStatusDescription\" : \"Unauthorized\",\r\n \"responseVerbia ge\" : \"Unauthorized\",\r\n \"errorDetails\" : [ {\r\n \"errorCode\" : 4250,\r\n \"errorField\" :
 \"Client-Token\",\r\n \"errorReason\" : \"Session time out\"\r\n } ]\r\n}"
+}
 ```
 ## ACH Capture Transaction
 Merchants who want to process ACH Transactions through FirstAPI must make server-to-server calls and pass the necessary encrypted payload as required for that particular case.
@@ -633,6 +645,7 @@ JSON sample data without payload encryption (componentFallBack)
 de\" : 420,\r\n \"referenceTransactionID\" : \"APIGEE-a-90f-4946-ff14-
 36aa4b9a6325\",\r\n \"transactionStatusDescription\" : \"Unauthorized\",\r\n \"responseVerbia ge\" : \"Unauthorized\",\r\n \"errorDetails\" : [ {\r\n \"errorCode\" : 4250,\r\n \"errorField\" :
 \"Client-Token\",\r\n \"errorReason\" : \"Session time out\"\r\n } ]\r\n}"
+}
 ```
 ## ACH Refund Transaction
 Merchants who want to process ACH Transactions through FirstAPI must make server-to-server calls and pass the necessary encrypted payload as required for that particular case.
@@ -729,7 +742,7 @@ Per Reg E requirements, this service is required for in-person, point of sale tr
 |Production API EndPoint| https://prod.api.firstdata.com/gateway/v2/connectpay/transactions/collectionfee|
 |Http Method| POST|
 
-For more examples and details on API please go to below Link: 
+For more examples and details on API please goto below Link: 
 [API Explorer](https://qa-developer.fiserv.com/product/ConnectPay/api/?type=post&path=/transaction/refund&branch=develop&version=1.0.0)
 
 ### Request Body after payload encryption and befor transmission
