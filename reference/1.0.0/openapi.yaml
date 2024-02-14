@@ -71,7 +71,7 @@ paths:
       # Command find on this page "200-CPAPI_GET_SESSION_TOKEN" to go to the response code examples section
       responses:
         '200':
-          $ref: '#/components/responses/200-CPAPI_GET_SESSION_TOKEN'
+          $ref: '#/components/responses/200-CreateSessionTokenResponsePayloadSamples'
         '201':
           $ref: '#/components/responses/201-CPAPI_GET_SESSION_TOKEN'
         '202':
@@ -1731,27 +1731,12 @@ components:
     201-CPAPI_GET_SESSION_TOKEN:
       description: | 
         The request was successfully fulfilled and resulted in one or multiple new resources being created
-      content: 
-        application/json: 
-          schema: 
-            $ref: '#components/schemas/CPAPIGenericResponse'
-          examples: 
     202-CPAPI_GET_SESSION_TOKEN:
       description: | 
         The request has been accepted for processing, but the processing has not been finished yet
-      content: 
-        application/json: 
-          schema: 
-            $ref: '#components/schemas/CPAPIGenericResponse'
-          examples: 
     204-CPAPI_GET_SESSION_TOKEN:
       description: | 
         The request has succeeded, but the client doesn't need to navigate away from its current page
-      content: 
-        application/json: 
-          schema: 
-            $ref: '#components/schemas/CPAPIGenericResponse'
-          examples: 
     400-CPAPI_GET_SESSION_TOKEN:
       description: | 
         Bad request
@@ -2042,8 +2027,12 @@ components:
                   errorCode: nan
                   errorField: nan
                   errorReason: nan
-
-  #This is the start of the ___ response examples
+    #This is a seperate pathway, do not worry about this response example below
+    401-AuthenticationErrorPayloadSample:
+      description: |
+        ### HTTP 401 Response.
+        #### Authentication error. Probably due to incorrect Authorization header calculation.
+    #This is the start of the ___ response examples
     200-GetPublicKeyResponsePayloadSamples:
       description: |
         ### HTTP 200 Response.
