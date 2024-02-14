@@ -32,8 +32,12 @@ tags:
     description: These set of services assist pulling ACH wallet information for consumer on file to select one of the valted account for PayByBank Transactions
   - name: Transactions
     description: These set of services are for processing ACH Transactions
+# This is the endpoint that will show
 paths:
   '/security/createsessiontoken':
+    # This is similar to a file directory of showing which is a subgroup of which
+    #Here Create Sesssion Token is under the Security Services folder/parent group 
+    #It is also which type of RESTful API call it is which in this case it is a Post
     post:
       x-proxy-name: Create Session
       x-group-name: Security Services
@@ -42,14 +46,17 @@ paths:
       summary: |
         Generates a time bound public key and session token.
         Should be used by merchants who use PayByBank SDKs.
+      # This is the description of the API shown below the endpoint
       description: |
         The Create Session Token API call is used to create a session token and to retrieve the RSA public encryption key generated for this session.
         This API is secured as it requires the Authorization header that can only be derived using the API Secret stored in the Merchant’s server.
+      # The parameters are the headers
       parameters:
         - $ref: '#/components/parameters/contentTypeParam'
         - $ref: '#/components/parameters/apiKeyParam'
         - $ref: '#/components/parameters/timestampParam'
         - $ref: '#/components/parameters/authorizationParam'
+      #This documentation is the same as the Response example portion which path is referenced in the next comment below
       requestBody:
         content:
           application/json:
@@ -60,17 +67,25 @@ paths:
                 $ref: '#/components/examples/CreateSessionTokenRequestPayloadSample'
               RequestWithAccountInformationPayloadSample:
                 $ref: '#/components/examples/CreateSessionTokenRequestWithAccountInformationPayloadSample'
+      # This is the part that starts to reference the example response code pages
+      # Command find on this page "200-CPAPI_GET_SESSION_TOKEN" to go to the response code examples section
       responses:
         '200':
-          $ref: '#/components/responses/200-CreateSessionTokenResponsePayloadSamples'
-        '100':
-          $ref: '#/components/responses/100-CreateSessionTokenResponsePayloadSamples'
+          $ref: '#/components/responses/200-CPAPI_GET_SESSION_TOKEN'
+        '201':
+          $ref: '#/components/responses/201-CPAPI_GET_SESSION_TOKEN'
+        '202':
+          $ref: '#/components/responses/202-CPAPI_GET_SESSION_TOKEN'
+        '204':
+          $ref: '#/components/responses/204-CPAPI_GET_SESSION_TOKEN'
+        '400':
+          $ref: '#/components/responses/400-CPAPI_GET_SESSION_TOKEN'
         '401':
-          $ref: '#/components/responses/401-CreateSessionTokenResponsePayloadSamples'
-        '450':
-          $ref: '#/components/responses/450-CreateSessionTokenResponsePayloadSamples'
+          $ref: '#/components/responses/401-CPAPI_GET_SESSION_TOKEN'
+        '409':
+          $ref: '#/components/responses/409-CPAPI_GET_SESSION_TOKEN'
         '500':
-          $ref: '#/components/responses/500-CreateSessionTokenResponsePayloadSamples'
+          $ref: '#/components/responses/500-200-CPAPI_GET_SESSION_TOKEN'
 
   '/security/getpublickey':
     post:
@@ -1678,9 +1693,10 @@ components:
                 organizationId: s0b500qh
                 sessionId: 3ca6ee0408028f118f102ed0b64779353789ebe3              
   responses:
-    200-CreateSessionTokenResponsePayloadSamples:
+  #This is the start of the Create Session Token response examples
+    200-CreateSessionTokenResponsePayloadSamples: 
       description: |
-        ### HTTP 200 Response.
+        Success
       content:
         application/json:
           schema:
@@ -1699,284 +1715,335 @@ components:
                   publicKey: MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAo8jR693ueb0BGPasFMf1V9QP6VpElKu1x/Qpu8M4DhX0o0VimgAd3TY0TPAK6Tl+DkkC0ana1u/NjEVomoZXP15jWEBSFG2DciiMPLtzbvrobwdmWnWQHSX9licUb5jf0fOKe2gx7q0CY095+SkVjytnQGdc315WYMMo/a1EUXzFhy1ZMkj6riZ+wEneQITsN1haKqS6Q6wQMBjHBrsFomaU2qPrnlrpuZjXUP5rt5+CYCGdwLEiCGNGe47tqP48Yk3snn+yVdPWnOfuz5aG3dNdteV5zVhMkVGIdmrJTgAh1auCOxNc44GTGo3rQn9WD5p4Lo8aLGkyHjv3kmvDLQIDAQAB
                   algorithm: RSA/None/OAEPWithSHA512AndMGF1Padding
                   status: ACTIVE
-    100-CreateSessionTokenResponsePayloadSamples:
-      description: |
-        ### HTTP 100 Response.
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/CPAPIGenericResponse' 
-          examples:
-            100-Error-1010-publicKeyRequired:
+    # This is the title of the response codes and will use this as part of the path reference to show the response codes
+    200-CPAPI_GET_SESSION_TOKEN: 
+      # This is the description of what will show on the response code page for the respective HTTP response
+      description: | 
+        Success
+      # This defines each field such as what datatype should be passed and etc. Search CPAPIGenericResponse on page to find specific code
+      content: 
+        application/json: 
+          # This is the reference to the type talked about above
+          schema: 
+            $ref: '#components/schemas/CPAPIGenericResponse'
+          # This is where you put the payload examples
+          examples: 
+    201-CPAPI_GET_SESSION_TOKEN:
+      description: | 
+        The request was successfully fulfilled and resulted in one or multiple new resources being created
+      content: 
+        application/json: 
+          schema: 
+            $ref: '#components/schemas/CPAPIGenericResponse'
+          examples: 
+    202-CPAPI_GET_SESSION_TOKEN:
+      description: | 
+        The request has been accepted for processing, but the processing has not been finished yet
+      content: 
+        application/json: 
+          schema: 
+            $ref: '#components/schemas/CPAPIGenericResponse'
+          examples: 
+    204-CPAPI_GET_SESSION_TOKEN:
+      description: | 
+        The request has succeeded, but the client doesn't need to navigate away from its current page
+      content: 
+        application/json: 
+          schema: 
+            $ref: '#components/schemas/CPAPIGenericResponse'
+          examples: 
+    400-CPAPI_GET_SESSION_TOKEN:
+      description: | 
+        Bad request
+      content: 
+        application/json: 
+          schema: 
+            $ref: '#components/schemas/CPAPIGenericResponse'
+          examples: 
+            1010-publicKeyRequired:
               value: 
                 transactionStatus: ERROR
                 transactionStatusCode: 100
-                referenceTransactionID: 99be0e16-3855-44b9-83f5654bc3dd
+                referenceTransactionID: 14ddbc50-86a4-79bd-d3e6-9218e92e5374
                 transactionStatusDescription: Input is invalid 
                 errorDetails: 
                   errorCode: 1010
                   errorField: publicKeyRequired
                   errorReason: Field did not have a valid format
-            100-Error-1010-type:
+            1010-type:
               value: 
                 transactionStatus: ERROR
                 transactionStatusCode: 100
-                referenceTransactionID: 99be0e16-3855-44b9-83f5654bc3dd
+                referenceTransactionID: 8c946c3d-c5a2-5347-1191-da8a28ce1db1
                 transactionStatusDescription: Input is invalid 
                 errorDetails: 
                   errorCode: 1010
                   errorField: type
                   errorReason: Field did not have a valid format
-            100-Error-1020-publicKeyRequired:
+            1020-publicKeyRequired:
               value: 
                 transactionStatus: ERROR
                 transactionStatusCode: 100
-                referenceTransactionID: 99be0e16-3855-44b9-83f5654bc3dd
+                referenceTransactionID: ca236707-b083-d591-6944-c0d014c76b5e
                 transactionStatusDescription: Input is invalid
                 errorDetails: 
                   errorCode: 1020
                   errorField: publicKeyRequired
                   errorReason: Field contained a bad value
-            100-Error-1030-publicKeyRequired:
+            1030-publicKeyRequired:
               value: 
                 transactionStatus: ERROR
                 transactionStatusCode: 100
-                referenceTransactionID: 99be0e16-3855-44b9-83f5654bc3dd
+                referenceTransactionID: 335e8e99-0c08-40ca-6ea8-3c46479dd0da
                 transactionStatusDescription: Input is invalid 
                 errorDetails: 
                   errorCode: 1030
                   errorField: publicKeyRequired
                   errorReason: Required field did not have a value
-            100-Error-1030-type:
+            1030-type:
               value: 
                 transactionStatus: ERROR
                 transactionStatusCode: 100
-                referenceTransactionID: 99be0e16-3855-44b9-83f5654bc3dd
+                referenceTransactionID: 8dd8c5bb-d691-515b-c902-65c6d325e705
                 transactionStatusDescription: Input is invalid 
                 errorDetails: 
                   errorCode: 1030
                   errorField: type
                   errorReason: Required field did not have a value
-            100-Error-1035-publicKeyRequired:
+            1035-publicKeyRequired:
               value: 
                 transactionStatus: ERROR
                 transactionStatusCode: 100
-                referenceTransactionID: 99be0e16-3855-44b9-83f5654bc3dd
+                referenceTransactionID: 05c6a934-3744-3a99-cee3-61b6713b6560
                 transactionStatusDescription: Input is invalid 
                 errorDetails: 
                   errorCode: 1035
                   errorField: publicKeyRequired
                   errorReason: Required field is missing
-            100-Error-1035-type:
+            1035-type:
               value: 
                 transactionStatus: ERROR
                 transactionStatusCode: 100
-                referenceTransactionID: 99be0e16-3855-44b9-83f5654bc3dd
+                referenceTransactionID: ae779604-1804-5385-77b3-6a182e54d938
                 transactionStatusDescription: Input is invalid 
                 errorDetails: 
                   errorCode: 1035
                   errorField: type
                   errorReason: Required field is missing
-            100-Error-1040-customer:
+            1040-customer:
               value: 
                 transactionStatus: ERROR
                 transactionStatusCode: 100
-                referenceTransactionID: 99be0e16-3855-44b9-83f5654bc3dd
+                referenceTransactionID: b01312c9-876b-a55e-0179-74dc83e90aeb
                 transactionStatusDescription: Input is invalid
                 errorDetails: 
                   errorCode: 1040
                   errorField: customer
                   errorReason: Required block did not have a value
-            100-Error-1040-security:
+            1040-security:
               value: 
                 transactionStatus: ERROR
                 transactionStatusCode: 100
-                referenceTransactionID: 99be0e16-3855-44b9-83f5654bc3dd
+                referenceTransactionID: 7b54c297-c9dc-1da5-3a8c-249e106a3c58
                 transactionStatusDescription: Input is invalid
                 errorDetails: 
                   errorCode: 1040
                   errorField: security
                   errorReason: Required block did not have a value
-            100-Error-1040-account:
+            1040-account:
               value: 
                 transactionStatus: ERROR
                 transactionStatusCode: 100
-                referenceTransactionID: 99be0e16-3855-44b9-83f5654bc3dd
+                referenceTransactionID: 605a87d5-5142-090d-e3ee-386244886a9a
                 transactionStatusDescription: Input is invalid 
                 errorDetails: 
                   errorCode: 1040
                   errorField: account
                   errorReason: Required block did not have a value
-            100-Error-1045-customer:
+            1045-customer:
               value: 
                 transactionStatus: ERROR
                 transactionStatusCode: 100
-                referenceTransactionID: 99be0e16-3855-44b9-83f5654bc3dd
+                referenceTransactionID: a0b75dd2-705e-d2ab-5ed6-5878cb68d321
                 transactionStatusDescription: Input is invalid
                 errorDetails: 
                   errorCode: 1045
                   errorField: customer
                   errorReason: Required block is missing
-            100-Error-1045-security:
+            1045-security:
               value: 
                 transactionStatus: ERROR
                 transactionStatusCode: 100
-                referenceTransactionID: 99be0e16-3855-44b9-83f5654bc3dd
+                referenceTransactionID: 93d5a921-edc4-a13d-0be7-90ae72502d95
                 transactionStatusDescription: Input is invalid
                 errorDetails: 
                   errorCode: 1045
                   errorField: security
                   errorReason: Required block is missing
-            100-Error-1045-account:
+            1045-account:
               value: 
                 transactionStatus: ERROR
                 transactionStatusCode: 100
-                referenceTransactionID: 99be0e16-3855-44b9-83f5654bc3dd
+                referenceTransactionID: e9a9020c-25b7-bc64-2d1b-a7b9ec34e1ba
                 transactionStatusDescription: Input is invalid 
                 errorDetails: 
                   errorCode: 1045
                   errorField: account
                   errorReason: Required block is missing
-            100-Error-1060-PartnerID:
+            1060-PartnerID:
               value: 
                 transactionStatus: ERROR
                 transactionStatusCode: 100
-                referenceTransactionID: 99be0e16-3855-44b9-83f5654bc3dd
+                referenceTransactionID: 64402053-7de9-4503-0213-9c0b740b367a
                 transactionStatusDescription: Input is invalid 
                 errorDetails: 
                   errorCode: 1060
                   errorField: PartnerID
                   errorReason: Required Header Field is missing
-            100-Error-1060-SubscriberId:
+            1060-SubscriberId:
               value: 
                 transactionStatus: ERROR
                 transactionStatusCode: 100
-                referenceTransactionID: 99be0e16-3855-44b9-83f5654bc3dd
+                referenceTransactionID: 4d9a36b7-d691-a7da-aa41-45e5bece8523
                 transactionStatusDescription: Input is invalid 
-                errorDetails: 
+                errorDetails:
                   errorCode: 1060
                   errorField: SubscriberId
                   errorReason: Required Header Field is missing
-            100-Error-1060fdAccountID:
+            1060-fdAccountID:
               value: 
                 transactionStatus: ERROR
                 transactionStatusCode: 100
-                referenceTransactionID: 99be0e16-3855-44b9-83f5654bc3dd
+                referenceTransactionID: c2a00876-a5e8-a9ec-419a-78c549762840
                 transactionStatusDescription: Input is invalid 
                 errorDetails: 
                   errorCode: 1060
                   errorField: fdAccountID
                   errorReason: Required Header Field is missing
-            100-Error-1060-issuedOn:
+            1060-issuedOn:
               value: 
                 transactionStatus: ERROR
                 transactionStatusCode: 100
-                referenceTransactionID: 99be0e16-3855-44b9-83f5654bc3dd
+                referenceTransactionID: 46eb6da0-3718-564c-753a-0cb28694bbb9
                 transactionStatusDescription: Input is invalid 
                 errorDetails: 
                   errorCode: 1060
                   errorField: issuedOn
                   errorReason: Required Header Field is missing
-            100-Error-1060-expiresInSeconds:
+            1060-expiresInSeconds:
               value: 
                 transactionStatus: ERROR
                 transactionStatusCode: 100
-                referenceTransactionID: 99be0e16-3855-44b9-83f5654bc3dd
+                referenceTransactionID: e3e4ce47-82d9-06a9-2080-0ce1eb8bdb43
                 transactionStatusDescription: Input is invalid 
                 errorDetails: 
                   errorCode: 1060
                   errorField: expiresInSeconds
                   errorReason: Required Header Field is missing
-            100-Error-1060-Client-Token:
+            1060-Client-Token:
               value: 
                 transactionStatus: ERROR
                 transactionStatusCode: 100
-                referenceTransactionID: 99be0e16-3855-44b9-83f5654bc3dd
+                referenceTransactionID: 7453bc5b-3227-2dd3-5d17-5c86293c1b58
                 transactionStatusDescription: Input is invalid 
                 errorDetails: 
                   errorCode: 1060
                   errorField: Client-Token
                   errorReason: Required Header Field is missing
-            100-Error-1080-account:
+            1080-account:
               value: 
                 transactionStatus: ERROR
                 transactionStatusCode: 100
-                referenceTransactionID: 99be0e16-3855-44b9-83f5654bc3dd
+                referenceTransactionID: 15bb022e-098d-8e64-380c-cc09126646c0
                 transactionStatusDescription: Input is invalid 
                 errorDetails: 
                   errorCode: 1080
                   errorField: account
                   errorReason: Block contain values more than that is allowed
-    401-CreateSessionTokenResponsePayloadSamples:
-      description: |
-        ### HTTP 401 Response.
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/CPAPIGenericResponse' #check this
-          examples:
-            401-Declined-4550-PartnerID:
-              value: 
-                transactionStatus: DECLINED
-                transactionStatusCode: 401
-                referenceTransactionID: 99be0e16-3855-44b9-83f5654bc3dd
-                transactionStatusDescription: Unauthorize
-                errorDetails: 
-                  errorCode: 4550
-                  errorField: PartnerID
-                  errorReason: Partner is not opt for this service
-    450-CreateSessionTokenResponsePayloadSamples:
-      description: |
-        ### HTTP 450 Response.
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/CPAPIGenericResponse' #check this
-          examples:
-            450-Declined-4500-PartnerID:
+            4500-PartnerID:
               value: 
                 transactionStatus: DECLINED
                 transactionStatusCode: 450
-                referenceTransactionID: 99be0e16-3855-44b9-83f5654bc3dd
+                referenceTransactionID: 56374808-8b74-5c15-c3d7-a42c5c6d9cab
                 transactionStatusDescription: Partner Not Found
                 errorDetails: 
                   errorCode: 4500
                   errorField: PartnerID
                   errorReason: PartnerID not Found
-    500-CreateSessionTokenResponsePayloadSamples:
-      description: |
-        ### HTTP 500 Response.
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/CPAPIGenericResponse' #check this
-          examples:
-            500-Error-5112-UCOM_GET_PUBLIC_KEY:
+    401-CPAPI_GET_SESSION_TOKEN:
+      description: | 
+        Unauthorized
+      content: 
+        application/json: 
+          schema: 
+            $ref: '#components/schemas/CPAPIGenericResponse'
+          examples: 
+            4550-PartnerID:
+              value: 
+                transactionStatus: DECLINED
+                transactionStatusCode: 401
+                referenceTransactionID: 51e63397-d626-2660-1284-335ad828859c
+                transactionStatusDescription: Unauthorize
+                errorDetails: 
+                  errorCode: 4550
+                  errorField: PartnerID
+                  errorReason: Partner is not opt for this service
+    403-CPAPI_GET_SESSION_TOKEN:
+      description: | 
+        Forbidden
+      content: 
+        application/json: 
+          schema: 
+            $ref: '#components/schemas/CPAPIGenericResponse'
+          examples: 
+    409-CPAPI_GET_SESSION_TOKEN:
+      description: | 
+        Indicates a conflict with the current state of a resource
+      content: 
+        application/json: 
+          schema: 
+            $ref: '#components/schemas/CPAPIGenericResponse'
+          examples: 
+    500-CPAPI_GET_SESSION_TOKEN:
+      description: | 
+        An unexpected server error occured
+      content: 
+        application/json: 
+          schema: 
+            $ref: '#components/schemas/CPAPIGenericResponse'
+          examples: 
+            5112-UCOMM_GET_PUBLIC_KEY:
               value: 
                 transactionStatus: ERROR
                 transactionStatusCode: 500
-                referenceTransactionID: 99be0e16-3855-44b9-83f5654bc3dd
+                referenceTransactionID: ee370809-076c-dbd1-6d3d-bee5b9696002
                 transactionStatusDescription: General Error
                 errorDetails: 
                   errorCode: 5112
                   errorField: UCOMM_GET_PUBLIC_KEY
                   errorReason: Please try again after some time, If issue persist please contact customer support
-            500-Error-5340-Oauth_Token:
+            5340-OauthToken:
               value: 
                 transactionStatus: ERROR
                 transactionStatusCode: 500
-                referenceTransactionID: 99be0e16-3855-44b9-83f5654bc3dd
+                referenceTransactionID: d8998d61-952a-d542-9a92-386d29133b43
                 transactionStatusDescription: General Error
                 errorDetails: 
                   errorCode: 5340
                   errorField: Oauth Token
                   errorReason: Configuration Error, Please contact customer support
-    401-AuthenticationErrorPayloadSample:
-      description: |
-        ### HTTP 401 Response.
-        #### Authentication error. Probably due to incorrect Authorization header calculation.
+            nan-nan:
+              value: 
+                transactionStatus: 
+                transactionStatusCode: 500
+                referenceTransactionID: 36dd67d4-d25b-cd77-767d-07704a676457
+                transactionStatusDescription: General Error
+                errorDetails: 
+                  errorCode: nan
+                  errorField: nan
+                  errorReason: nan
 
-
+  #This is the start of the ___ response examples
     200-GetPublicKeyResponsePayloadSamples:
       description: |
         ### HTTP 200 Response.
