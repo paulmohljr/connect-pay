@@ -38,6 +38,8 @@ Example Response Payload:
 }
 ```
 ### Step 2: Add Consumer Profile
+> Note: This section will teach how to utilize the guide once the prerequisites have been completed.
+
 At this step, all prerequisites have been complete in order to make our first call. First, the request payload must be created. The entire payload must be encrypted using different encryption methods. It must also be decrypted in order to decode the response payload into something that is readable. We will use the "Add Consumer Profile" as the example API. 
 
 > Note: We will need to use the "tokenID" for the "Client-Token" header as well as the RSA "publicKey" in order to encrypt a portion of the payload before making the API call. Save these two pieces of information from the "Create Session Token" API used earlier in order to complete the call.

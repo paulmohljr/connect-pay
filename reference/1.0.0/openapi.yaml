@@ -85,7 +85,7 @@ paths:
         '409':
           $ref: '#/components/responses/409-CPAPI_GET_SESSION_TOKEN'
         '500':
-          $ref: '#/components/responses/500-200-CPAPI_GET_SESSION_TOKEN'
+          $ref: '#/components/responses/500-CPAPI_GET_SESSION_TOKEN'
 
   '/security/getpublickey':
     post:
