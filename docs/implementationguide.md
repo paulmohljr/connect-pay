@@ -114,15 +114,12 @@ Verify that the transaction was successful. As shown above, the transaction was 
 Congratulations, you have successfully used ConnectPay's API. The steps above apply to all ConnectPay API's except for the "Create Session Token" API and the "Get Public Key Service" API. These APIs do not need the request payload to be encrypted prior to making a call. Please repeat steps 1 and 2 for the API below to complete an ACH transaction.
 
 ### Step 3: Consumer Enrollment
-There are two ways to enroll customers. The steps for either enrolling consumers through online bank login or manual enrollment are listed below. It is also possible to have both types of enrollment methods as part of the merchant application. 
+There are two ways to enroll customers. The steps for either enrolling consumers through online bank login or manual enrollment are listed below. It is also possible to have both types of enrollment methods as part of the merchant application.
 
 <!--
 type: tab
 titles: Online Bank Login, Manual Enrollment
 -->
-
-### Step 3 Option 1: Online Bank Login
-
 
 <span style="font-size: 1.25em; color: var(--bs-heading-color)">
 Option 1: Online Bank Login
@@ -172,13 +169,15 @@ The Consumer Enrollment call is for any new consumer enrollment purpose. This is
 <details>
 <summary>Step b: Micro-Deposit Validation</summary>
 <br>
-Use this method to complete micro deposit validation to authenticate your bank account after a manual enrollment.ConnectPayAPI Direct Integration Guide. Kindly note it might take a few days for the micro deposits to appear on your bank account. Once bank account is successfully authenticated, the ACH payment option gets activated for transaction. For MAS to ConnectPayAPI Server call, MAS needs to pass the fdAccountID in payload request. <p>
+Use this method to complete micro deposit validation to authenticate your bank account after a manual enrollment.ConnectPayAPI Direct Integration Guide. Kindly note it might take a few days for the micro deposits to appear on your bank account. Once bank account is successfully authenticated, the ACH payment option gets activated for transaction. For MAS to ConnectPayAPI Server call, MAS needs to pass the `fdAccountID` in payload request. <p>
 
 [![](/assets/images/button.png '')]()
 </details>
 
 <!-- type: tab-end -->
 
+
+>Note: If you are using our API please continue to Step 4 and also in our API explorer. However, if you are utilizing our [SDK](https://github.com/Fiserv/connect-pay/blob/develop/documentation/connectpaysdklanding.md) section please follow this link in this information.
 
 ### Step 4: ACH Transactions
 These APIs are for the merchant to implement depending on the use case of the end-user/consumer. These API's are exclusively used for some form of processing ACH transactions.
